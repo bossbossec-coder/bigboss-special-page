@@ -49,9 +49,15 @@ def _read_one_file(path: Path) -> pd.DataFrame:
     if df.empty:
         raise ValueError("有効なデータ行がありません")
 
+    # 日付はExcelの日付型のほか、"2026/9/10" や "2026-9-10" のようにセルによって
+    # 表記が揃っていないテキストが混在しても読めるよう、1件ずつ形式を推定する
+    # （format="mixed" を指定しないと、先頭の値から推定した1つの形式を全件に
+    # 適用しようとして、形式が混在する列でエラーになることがある）。
+    parsed_date = pd.to_datetime(df["日付"], format="mixed", errors="coerce")
+
     out = pd.DataFrame(
         {
-            "date": pd.to_datetime(df["日付"]).dt.normalize(),
+            "date": parsed_date.dt.normalize(),
             "store": df["店舗名"].astype(str).str.strip(),
             "sales": pd.to_numeric(df["売上金額"], errors="coerce"),
         }
@@ -59,6 +65,10 @@ def _read_one_file(path: Path) -> pd.DataFrame:
     out["customers"] = (
         pd.to_numeric(df["客数"], errors="coerce") if "客数" in df.columns else pd.NA
     )
+
+    bad_dates = out["date"].isna()
+    if bad_dates.any():
+        raise ValueError("日付列に日付として読み取れない値があります")
 
     bad_sales = out["sales"].isna()
     if bad_sales.any():

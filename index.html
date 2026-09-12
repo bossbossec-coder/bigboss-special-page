@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<!--
+  酒のビッグボス「ボジョレー・ヌーボー特集ページ」
+  ------------------------------------------------
+  楽天市場のフリーページ／特集ページ用に作成した単一HTMLファイルです。
+  画像はすべてCSS/インラインSVGで表現しているため、外部画像なしでも表示できますが、
+  実際に公開する際は下記の「★差し替えポイント」を実店舗の情報に合わせて更新してください。
+
+  ★差し替えポイント一覧
+   1. 商品ラインナップ（.product-card）: 商品名・価格・商品ページURL・商品画像
+   2. 解禁日カウントダウンの表示（.hero-date）: 年度が変わったら日付を更新
+   3. 送料無料ラインや予約締切などのキャンペーン条件（.cta-note）
+   4. ショップ公式リンク（.js-shop-link）: 実際の商品検索結果ページURLに差し替え推奨
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ボジョレー・ヌーボー2026 解禁特集 | 酒のビッグボス</title>
+<style>
+  :root{
+    --wine-dark:#3d0d1f;
+    --wine:#6b1030;
+    --wine-light:#8f2540;
+    --gold:#c9a227;
+    --gold-light:#e8c766;
+    --cream:#faf3e6;
+    --paper:#fffaf2;
+    --ink:#241512;
+    --bb-yellow:#ffcc00;
+    --bb-black:#1a1a1a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    padding:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    line-height:1.8;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:900px;margin:0 auto;}
+
+  /* ===== ショップ識別バー ===== */
+  .shop-bar{
+    background:repeating-linear-gradient(45deg,var(--bb-yellow) 0 18px,var(--bb-black) 18px 36px);
+    padding:3px 0;
+  }
+  .shop-bar-inner{
+    background:var(--bb-black);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:10px 18px;
+    max-width:900px;
+    margin:0 auto;
+    font-size:13px;
+  }
+  .shop-bar-logo{
+    font-size:16px;
+    font-weight:900;
+    letter-spacing:.05em;
+    color:var(--bb-yellow);
+  }
+  .shop-bar-nav a{
+    color:#fff;
+    text-decoration:none;
+    margin-left:16px;
+    border-bottom:1px solid rgba(255,255,255,.4);
+    white-space:nowrap;
+  }
+  .shop-bar-nav a:hover{border-color:var(--bb-yellow);color:var(--bb-yellow);}
+
+  /* ===== ヒーロー ===== */
+  .hero{
+    position:relative;
+    background:radial-gradient(ellipse at 30% 20%, var(--wine-light) 0%, var(--wine) 45%, var(--wine-dark) 100%);
+    color:var(--cream);
+    text-align:center;
+    padding:56px 20px 64px;
+    overflow:hidden;
+  }
+  .hero-vines{
+    position:absolute;
+    inset:0;
+    opacity:.35;
+    pointer-events:none;
+  }
+  .hero-eyebrow{
+    display:inline-block;
+    font-size:12px;
+    letter-spacing:.3em;
+    color:var(--gold-light);
+    border:1px solid var(--gold-light);
+    padding:5px 16px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-family:"Times New Roman","Yu Mincho","Hiragino Mincho ProN",serif;
+    font-size:clamp(34px,7vw,58px);
+    margin:0 0 8px;
+    letter-spacing:.04em;
+    text-shadow:0 2px 12px rgba(0,0,0,.35);
+  }
+  .hero h1 small{
+    display:block;
+    font-size:.4em;
+    letter-spacing:.5em;
+    color:var(--gold-light);
+    margin-top:10px;
+  }
+  .hero p.lead{
+    max-width:520px;
+    margin:18px auto 28px;
+    font-size:15px;
+    color:#f1e3d3;
+  }
+  .hero-date{
+    display:inline-flex;
+    align-items:center;
+    gap:14px;
+    background:rgba(0,0,0,.28);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    padding:16px 28px;
+    font-size:14px;
+  }
+  .hero-date .num{
+    font-size:26px;
+    font-weight:900;
+    color:var(--bb-yellow);
+  }
+  .hero-cta{
+    margin-top:30px;
+  }
+  .btn{
+    display:inline-block;
+    background:var(--bb-yellow);
+    color:var(--bb-black);
+    font-weight:900;
+    padding:14px 38px;
+    border-radius:999px;
+    text-decoration:none;
+    font-size:16px;
+    letter-spacing:.05em;
+    box-shadow:0 6px 0 #a8850a;
+    transition:transform .15s;
+  }
+  .btn:hover{transform:translateY(-2px);}
+
+  /* ===== セクション共通 ===== */
+  section{padding:56px 20px;}
+  .section-title{
+    text-align:center;
+    margin:0 0 8px;
+    font-size:26px;
+    font-weight:900;
+    color:var(--wine);
+    letter-spacing:.06em;
+  }
+  .section-title span{
+    display:block;
+    font-size:12px;
+    color:var(--gold);
+    letter-spacing:.3em;
+    margin-bottom:6px;
+    font-weight:700;
+  }
+  .section-sub{
+    text-align:center;
+    max-width:600px;
+    margin:0 auto 36px;
+    color:#5a4a44;
+    font-size:14px;
+  }
+
+  /* ===== イントロ ===== */
+  .intro{background:var(--paper);}
+  .intro-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+    max-width:820px;
+    margin:0 auto;
+    align-items:center;
+  }
+  .intro-card{
+    background:var(--cream);
+    border:1px solid #e6d7bd;
+    border-radius:16px;
+    padding:26px;
+    font-size:14px;
+    color:#4a3a34;
+  }
+  .intro-card h3{
+    margin:0 0 10px;
+    color:var(--wine);
+    font-size:16px;
+  }
+  @media (max-width:640px){.intro-grid{grid-template-columns:1fr;}}
+
+  /* ===== 商品ラインナップ ===== */
+  .lineup{background:var(--cream);}
+  .product-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    max-width:900px;
+    margin:0 auto;
+  }
+  .product-card{
+    background:var(--paper);
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid #e6d7bd;
+    text-align:center;
+    transition:box-shadow .15s, transform .15s;
+  }
+  .product-card:hover{box-shadow:0 10px 24px rgba(107,16,48,.15);transform:translateY(-3px);}
+  .product-card a.card-link{text-decoration:none;color:inherit;display:block;}
+  .product-thumb{
+    background:linear-gradient(160deg,#f3e6d0,#e8d5ae);
+    padding:22px 0 10px;
+    position:relative;
+  }
+  .product-badge{
+    position:absolute;
+    top:10px;
+    left:10px;
+    background:var(--wine);
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:999px;
+  }
+  .product-info{padding:14px 16px 20px;}
+  .product-type{
+    font-size:11px;
+    color:var(--gold);
+    font-weight:700;
+    letter-spacing:.1em;
+  }
+  .product-name{
+    font-size:14px;
+    font-weight:700;
+    margin:6px 0 8px;
+    color:var(--ink);
+    min-height:38px;
+  }
+  .product-price{
+    font-size:12px;
+    color:#8a7a6a;
+  }
+  .product-note{
+    margin-top:38px;
+    text-align:center;
+    font-size:12px;
+    color:#8a7a6a;
+  }
+  @media (max-width:700px){.product-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:420px){.product-grid{grid-template-columns:1fr 1fr;gap:12px;}}
+
+  /* ===== 楽しみ方ガイド ===== */
+  .guide{background:var(--wine-dark);color:var(--cream);}
+  .guide .section-title{color:var(--bb-yellow);}
+  .guide .section-sub{color:#e3cfc2;}
+  .guide-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    max-width:880px;
+    margin:0 auto;
+  }
+  .guide-card{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(232,199,102,.35);
+    border-radius:16px;
+    padding:26px 18px;
+    text-align:center;
+  }
+  .guide-icon{margin:0 auto 14px;}
+  .guide-card h4{margin:0 0 8px;font-size:15px;color:var(--gold-light);}
+  .guide-card p{margin:0;font-size:13px;color:#e3cfc2;}
+  @media (max-width:700px){.guide-grid{grid-template-columns:1fr;}}
+
+  /* ===== ペアリング ===== */
+  .pairing{background:var(--paper);}
+  .pairing-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+    max-width:880px;
+    margin:0 auto;
+  }
+  .pairing-card{
+    background:var(--cream);
+    border-radius:16px;
+    padding:24px 16px;
+    text-align:center;
+    border:1px solid #e6d7bd;
+  }
+  .pairing-card .emoji-badge{
+    width:56px;height:56px;line-height:56px;
+    border-radius:50%;
+    background:var(--wine);
+    color:#fff;
+    margin:0 auto 12px;
+    font-size:22px;
+  }
+  .pairing-card h4{margin:0 0 6px;font-size:14px;color:var(--wine);}
+  .pairing-card p{margin:0;font-size:12.5px;color:#5a4a44;}
+  @media (max-width:700px){.pairing-grid{grid-template-columns:1fr;}}
+
+  /* ===== CTA バナー ===== */
+  .cta-banner{
+    background:repeating-linear-gradient(45deg,var(--bb-yellow) 0 16px,#ffe680 16px 32px);
+    padding:44px 20px;
+    text-align:center;
+  }
+  .cta-inner{
+    background:var(--bb-black);
+    color:#fff;
+    max-width:640px;
+    margin:0 auto;
+    border-radius:20px;
+    padding:34px 24px;
+  }
+  .cta-inner h3{
+    margin:0 0 10px;
+    font-size:22px;
+    color:var(--bb-yellow);
+  }
+  .cta-inner p{margin:0 0 22px;font-size:13px;color:#e6e6e6;}
+  .cta-note{margin-top:14px;font-size:11px;color:#b8b8b8;}
+
+  /* ===== フッター（ショップ情報） ===== */
+  footer{
+    background:var(--bb-black);
+    color:#cfcfcf;
+    padding:40px 20px 30px;
+    font-size:12.5px;
+  }
+  .footer-inner{max-width:760px;margin:0 auto;text-align:center;}
+  .footer-inner h5{
+    color:var(--bb-yellow);
+    font-size:15px;
+    letter-spacing:.1em;
+    margin:0 0 12px;
+  }
+  .footer-badges{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:16px 0;
+  }
+  .footer-badges span{
+    border:1px solid #555;
+    border-radius:999px;
+    padding:4px 12px;
+    font-size:11px;
+  }
+  .footer-inner a{color:var(--gold-light);text-decoration:none;}
+  .footer-inner a:hover{text-decoration:underline;}
+  .footer-inner p{margin:6px 0;color:#9a9a9a;}
+  .copyright{margin-top:20px;font-size:11px;color:#666;}
+</style>
+</head>
+<body>
+
+  <!-- ショップ識別バー -->
+  <div class="shop-bar">
+    <div class="shop-bar-inner">
+      <div class="shop-bar-logo">酒のビッグボス</div>
+      <nav class="shop-bar-nav">
+        <a class="js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">ショップトップ</a>
+        <a class="js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">全商品一覧</a>
+        <a class="js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/info.html" target="_blank" rel="noopener">店舗情報</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- ヒーロー -->
+  <div class="hero">
+    <svg class="hero-vines" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g fill="none" stroke="#e8c766" stroke-width="2">
+        <path d="M0 40 C 150 10, 250 90, 420 50 S 700 10, 900 60"/>
+        <path d="M0 260 C 150 290, 250 210, 420 250 S 700 290, 900 240"/>
+      </g>
+      <g fill="#e8c766">
+        <circle cx="120" cy="35" r="6"/><circle cx="140" cy="48" r="6"/><circle cx="132" cy="60" r="6"/>
+        <circle cx="760" cy="55" r="6"/><circle cx="780" cy="68" r="6"/><circle cx="772" cy="80" r="6"/>
+        <circle cx="120" cy="255" r="6"/><circle cx="140" cy="268" r="6"/><circle cx="132" cy="242" r="6"/>
+        <circle cx="760" cy="245" r="6"/><circle cx="780" cy="258" r="6"/><circle cx="772" cy="232" r="6"/>
+      </g>
+    </svg>
+    <div class="hero-eyebrow">酒のビッグボス presents</div>
+    <h1>Beaujolais Nouveau<small>ボジョレー・ヌーボー 解禁特集 2026</small></h1>
+    <p class="lead">今年もフランス・ボジョレー地区から、できたてほやほやの新酒が到着。<br>世界のお酒がなんでも揃う酒のビッグボスが、解禁の瞬間を全力でお届けします。</p>
+    <div class="hero-date">
+      <div>解禁日</div>
+      <div class="num">2026.11.19 (木)</div>
+      <div>午前0時 解禁</div>
+    </div>
+    <div class="hero-cta">
+      <a class="btn js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">早期予約はこちら ▶</a>
+    </div>
+  </div>
+
+  <!-- イントロ：ボジョレー・ヌーボーとは -->
+  <section class="intro">
+    <div class="section-title"><span>ABOUT</span>ボジョレー・ヌーボーとは？</div>
+    <p class="section-sub">その年に収穫されたガメイ種のブドウを、わずか数ヶ月で仕上げる「その年最初のワイン」。フレッシュな果実味と軽やかな飲み口が魅力で、毎年11月の解禁日を心待ちにするファンが世界中にいます。</p>
+    <div class="intro-grid">
+      <div class="intro-card">
+        <h3>🍇 産地</h3>
+        フランス・ブルゴーニュ地方南部「ボジョレー」地区。花崗岩質の土壌で育つガメイ種が、みずみずしい果実味を生み出します。
+      </div>
+      <div class="intro-card">
+        <h3>📅 解禁ルール</h3>
+        毎年11月の第3木曜日、世界中で一斉に解禁されます。2026年は11月19日(木)。日付をまたいだ瞬間から販売スタートです。
+      </div>
+    </div>
+  </section>
+
+  <!-- 商品ラインナップ -->
+  <section class="lineup">
+    <div class="section-title"><span>PICK UP</span>今年の注目ラインナップ</div>
+    <p class="section-sub">酒のビッグボスがセレクトした、この時期だけの限定ボトル。人気生産者の新酒をいち早くチェック。</p>
+
+    <!-- ★差し替えポイント：以下6枠を実際の商品（画像・商品名・価格・URL）に差し替えてください -->
+    <div class="product-grid">
+
+      <div class="product-card">
+        <a class="card-link js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">
+          <div class="product-thumb">
+            <span class="product-badge">定番</span>
+            <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
+              <rect x="28" y="0" width="14" height="18" rx="2" fill="#6b1030"/>
+              <path d="M22 18 h26 l6 14 v50 a6 6 0 0 1 -6 6 H22 a6 6 0 0 1 -6 -6 V32 Z" fill="#3d0d1f"/>
+              <rect x="18" y="45" width="34" height="20" fill="#c9a227" opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="product-info">
+            <div class="product-type">赤 / ミディアムボディ</div>
+            <div class="product-name">ジョルジュ デュブッフ<br>ボジョレー・ヌーボー</div>
+            <div class="product-price">価格は商品ページをご確認ください</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="product-card">
+        <a class="card-link js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">
+          <div class="product-thumb">
+            <span class="product-badge">限定</span>
+            <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
+              <rect x="28" y="0" width="14" height="18" rx="2" fill="#8f2540"/>
+              <path d="M22 18 h26 l6 14 v50 a6 6 0 0 1 -6 6 H22 a6 6 0 0 1 -6 -6 V32 Z" fill="#4a1526"/>
+              <rect x="18" y="45" width="34" height="20" fill="#e8c766" opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="product-info">
+            <div class="product-type">赤 / ライトボディ</div>
+            <div class="product-name">ルイ ジャド<br>ボジョレー・ヌーボー</div>
+            <div class="product-price">価格は商品ページをご確認ください</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="product-card">
+        <a class="card-link js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">
+          <div class="product-thumb">
+            <span class="product-badge">人気</span>
+            <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
+              <rect x="28" y="0" width="14" height="18" rx="2" fill="#6b1030"/>
+              <path d="M22 18 h26 l6 14 v50 a6 6 0 0 1 -6 6 H22 a6 6 0 0 1 -6 -6 V32 Z" fill="#3d0d1f"/>
+              <rect x="18" y="45" width="34" height="20" fill="#c9a227" opacity="0.85"/>
+            </svg>
+          </div>
+          <div class="product-info">
+            <div class="product-type">赤 / ミディアムボディ</div>
+            <div class="product-name">ドルーアン<br>ボジョレー・ヌーボー</div>
+            <div class="product-price">価格は商品ページをご確認ください</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="product-card">
+        <a class="card-link js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">
+          <div class="product-thumb">
+            <span class="product-badge">飲み比べ</span>
+            <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
+              <rect x="20" y="0" width="12" height="16" rx="2" fill="#8f2540"/>
+              <path d="M15 16 h22 l5 12 v48 a5 5 0 0 1 -5 5 H15 a5 5 0 0 1 -5 -5 V28 Z" fill="#4a1526"/>
+              <rect x="40" y="0" width="12" height="16" rx="2" fill="#6b1030"/>
+              <path d="M35 16 h22 l5 12 v48 a5 5 0 0 1 -5 5 H35 a5 5 0 0 1 -5 -5 V28 Z" fill="#3d0d1f"/>
+            </svg>
+          </div>
+          <div class="product-info">
+            <div class="product-type">赤・白 / 飲み比べセット</div>
+            <div class="product-name">ボジョレー・ヌーボー<br>赤＆白 飲み比べ2本セット</div>
+            <div class="product-price">価格は商品ページをご確認ください</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="product-card">
+        <a class="card-link js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">
+          <div class="product-thumb">
+            <span class="product-badge">白</span>
+            <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
+              <rect x="28" y="0" width="14" height="18" rx="2" fill="#c9a227"/>
+              <path d="M22 18 h26 l6 14 v50 a6 6 0 0 1 -6 6 H22 a6 6 0 0 1 -6 -6 V32 Z" fill="#e8d5ae"/>
+              <rect x="18" y="45" width="34" height="20" fill="#6b1030" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="product-info">
+            <div class="product-type">白 / 辛口</div>
+            <div class="product-name">ボジョレー・ヌーボー<br>ブラン（白）</div>
+            <div class="product-price">価格は商品ページをご確認ください</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="product-card">
+        <a class="card-link js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">
+          <div class="product-thumb">
+            <span class="product-badge">ギフト</span>
+            <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
+              <rect x="10" y="30" width="50" height="45" rx="4" fill="#6b1030"/>
+              <rect x="10" y="30" width="50" height="10" fill="#c9a227"/>
+              <rect x="30" y="30" width="10" height="45" fill="#c9a227"/>
+            </svg>
+          </div>
+          <div class="product-info">
+            <div class="product-type">ギフトセット</div>
+            <div class="product-name">ボジョレー・ヌーボー<br>解禁記念ギフトBOX</div>
+            <div class="product-price">価格は商品ページをご確認ください</div>
+          </div>
+        </a>
+      </div>
+
+    </div>
+    <p class="product-note">※ 掲載商品は入荷状況により変更・終了となる場合がございます。詳細・ご購入は商品ページをご確認ください。</p>
+  </section>
+
+  <!-- 楽しみ方ガイド -->
+  <section class="guide">
+    <div class="section-title"><span>HOW TO ENJOY</span>おいしい楽しみ方</div>
+    <p class="section-sub">フレッシュさが命のボジョレー・ヌーボー。ちょっとしたコツで、おいしさがぐっと引き立ちます。</p>
+    <div class="guide-grid">
+      <div class="guide-card">
+        <svg class="guide-icon" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="none" stroke="#e8c766" stroke-width="2"/><path d="M13 22c0-6 4-10 7-14 3 4 7 8 7 14a7 7 0 1 1 -14 0Z" fill="#e8c766"/></svg>
+        <h4>少し冷やして</h4>
+        <p>8〜14℃程度、軽く冷やすとフレッシュな果実味が引き立ちます。冷蔵庫で30分ほど冷やすのが目安です。</p>
+      </div>
+      <div class="guide-card">
+        <svg class="guide-icon" width="40" height="40" viewBox="0 0 40 40"><path d="M14 4h12l-2 18a6 6 0 0 1 -8 0Z" fill="none" stroke="#e8c766" stroke-width="2"/><line x1="20" y1="22" x2="20" y2="34" stroke="#e8c766" stroke-width="2"/><line x1="13" y1="34" x2="27" y2="34" stroke="#e8c766" stroke-width="2"/></svg>
+        <h4>大きめのグラスで</h4>
+        <p>香りが広がりやすい、ふくらみのあるグラスがおすすめ。注ぐ量は控えめにして香りを楽しんで。</p>
+      </div>
+      <div class="guide-card">
+        <svg class="guide-icon" width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="#e8c766" stroke-width="2"/><path d="M20 10v10l7 4" fill="none" stroke="#e8c766" stroke-width="2" stroke-linecap="round"/></svg>
+        <h4>早めに飲みきる</h4>
+        <p>フレッシュさを楽しむお酒なので、開栓後はできるだけ早めに、年内を目安に飲みきるのがおすすめです。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ペアリング -->
+  <section class="pairing">
+    <div class="section-title"><span>PAIRING</span>おすすめのおつまみ</div>
+    <p class="section-sub">軽やかな飲み口だからこそ、幅広い料理と好相性。ご家庭で気軽に楽しめる組み合わせをご紹介します。</p>
+    <div class="pairing-grid">
+      <div class="pairing-card">
+        <div class="emoji-badge">🧀</div>
+        <h4>チーズの盛り合わせ</h4>
+        <p>カマンベールやゴーダなど、クセの少ないチーズと好相性。</p>
+      </div>
+      <div class="pairing-card">
+        <div class="emoji-badge">🍗</div>
+        <h4>から揚げ・フライ</h4>
+        <p>果実味と酸味が油っこさをさっぱりと流してくれます。</p>
+      </div>
+      <div class="pairing-card">
+        <div class="emoji-badge">🍖</div>
+        <h4>生ハム・パテ</h4>
+        <p>塩気のある前菜と合わせて、食前酒としても楽しめます。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA バナー -->
+  <div class="cta-banner">
+    <div class="cta-inner">
+      <h3>解禁を待ちきれない方へ、早期予約受付中！</h3>
+      <p>数量限定のため、売り切れる前にお早めにご予約ください。<br>ご予約分は解禁日以降、順次発送いたします。</p>
+      <a class="btn js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">商品一覧をチェックする ▶</a>
+      <p class="cta-note">※ 送料無料条件・予約締切日は商品ページの記載をご確認ください。</p>
+    </div>
+  </div>
+
+  <!-- フッター：ショップ情報 -->
+  <footer>
+    <div class="footer-inner">
+      <h5>酒のビッグボス（運営：有限会社習志野酒店）</h5>
+      <p>世界のお酒がなんでも揃う、酒・飲料・食品とギフトの専門ショップ。国内外7,000品以上を取り揃え、年中無休・24時間受注受付、365日発送に対応しています。</p>
+      <div class="footer-badges">
+        <span>SHOP OF THE YEAR 受賞ショップ</span>
+        <span>年中無休</span>
+        <span>送料無料商品多数</span>
+      </div>
+      <p>
+        <a class="js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">ショップトップページ</a>
+        ／
+        <a class="js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/info.html" target="_blank" rel="noopener">店舗詳細情報</a>
+      </p>
+      <p class="copyright">&copy; 酒のビッグボス（有限会社習志野酒店）</p>
+    </div>
+  </footer>
+
+</body>
+</html>

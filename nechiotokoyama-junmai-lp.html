@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<!--
+  根知男山 純米（渡辺酒造店）楽天ランディングページ
+  ------------------------------------------------
+  対象商品URL（蔵元公式サイト）: https://www.watanabeshuzouten.com/c/sake/jyunmai/gd147
+  参考デザイン: https://item.rakuten.co.jp/bellevie-harima/food-01235/
+
+  ★重要：内容についての注意
+  このセッションのネットワーク制限により、上記2つのURLに直接アクセスして
+  ページ内容を取得することができませんでした（プロキシによりブロック）。
+  そのため、
+   ・商品情報は「渡辺酒造店（新潟県糸魚川市・根知男山）」に関する公開情報をもとに
+     蔵の特徴・製法・受賞歴等を調査してまとめたものです。
+     URLの構成（/c/sake/jyunmai/gd147 = 純米カテゴリの商品）から、蔵の看板商品である
+     「根知男山 純米」を想定して構成しています。
+   ・参考にとご指定いただいた楽天ページのデザインも直接確認できなかったため、
+     一般的に高CVRとされる食品・日本酒系ランディングページの型
+     （温かみのある配色、ストーリーテリング形式の見出し、大きな写真、
+     こだわり訴求、実績・受賞歴、スペック表、購入導線の複数配置）を踏まえて構成しています。
+
+  ▼公開前に必ずご確認・差し替えください
+   1. 商品名・価格・容量・原材料・精米歩合・アルコール分（.spec-table）
+      → 実際の商品ページの記載内容に置き換えてください
+   2. 受賞歴・エピソード（第四章セクション）
+      → 実際にこの商品（純米）が対象の受賞かどうかを確認してください
+   3. 購入ボタンのリンク先（.js-buy-link）
+      → 実際の楽天商品ページURLに差し替えてください
+   4. 画像（.hero-visual, .story-visual）
+      → 現在はイラスト（SVG）のプレースホルダーです。
+        実際の商品・蔵・田んぼ写真（横1600×縦900px, 16:9）に差し替えてください。
+        画像点数：5枚（ヒーロー1枚＋各章1枚×4章）
+   5. 酒類販売ページのため、未成年飲酒防止に関する表記（フッター）は
+      削除せずに残してください（景品表示法・酒税法関連の観点から推奨）。
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>根知男山 純米 | 渡辺酒造店 ― 米づくりから醸す、根知谷の純米酒</title>
+<style>
+  :root{
+    --indigo-deep:#1c2a33;
+    --indigo:#26404f;
+    --indigo-light:#3d5c6e;
+    --gold:#b8860b;
+    --gold-light:#d9b45a;
+    --rice:#f4ecd8;
+    --paper:#fffcf5;
+    --ink:#2a231a;
+    --sub:#5c5346;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    padding:0;
+    background:var(--rice);
+    color:var(--ink);
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    line-height:1.85;
+  }
+  a{color:inherit;}
+  img,.visual-svg{max-width:100%;display:block;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  /* ===== 年齢確認・注意バー ===== */
+  .age-bar{
+    background:var(--indigo-deep);
+    color:#e8dfc9;
+    text-align:center;
+    font-size:12px;
+    padding:8px 12px;
+    letter-spacing:.03em;
+  }
+
+  /* ===== ヒーロー（大タイトル） ===== */
+  .hero{
+    background:var(--paper);
+    padding:44px 0 0;
+  }
+  .hero-inner{max-width:1040px;margin:0 auto;padding:0 20px;text-align:center;}
+  .hero-eyebrow{
+    display:inline-block;
+    font-size:12px;
+    letter-spacing:.28em;
+    color:var(--gold);
+    border:1px solid var(--gold);
+    padding:5px 18px;
+    border-radius:999px;
+    margin-bottom:20px;
+    font-weight:700;
+  }
+  .hero h1{
+    font-family:"Times New Roman","Yu Mincho","Hiragino Mincho ProN",serif;
+    font-size:clamp(28px,5.2vw,46px);
+    margin:0 0 14px;
+    letter-spacing:.05em;
+    color:var(--indigo-deep);
+  }
+  .hero h1 small{
+    display:block;
+    font-size:.36em;
+    letter-spacing:.35em;
+    color:var(--gold);
+    margin-top:14px;
+    font-weight:700;
+  }
+  .hero p.lead{
+    max-width:600px;
+    margin:0 auto 28px;
+    font-size:15px;
+    color:var(--sub);
+  }
+  .hero-badges{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:32px;
+  }
+  .hero-badges span{
+    background:var(--indigo);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    padding:8px 16px;
+    border-radius:999px;
+    letter-spacing:.03em;
+  }
+
+  /* ===== 画像共通（16:9 / 1600x900想定） ===== */
+  .visual-box{
+    width:100%;
+    aspect-ratio:16/9;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 14px 34px rgba(28,42,51,.18);
+    background:var(--indigo-deep);
+  }
+  .visual-box svg{width:100%;height:100%;display:block;}
+  .hero-visual{margin:0 0 34px;}
+  .hero-visual .visual-box{border-radius:0;box-shadow:none;}
+
+  .btn{
+    display:inline-block;
+    background:var(--gold);
+    color:#fff;
+    font-weight:900;
+    padding:15px 42px;
+    border-radius:999px;
+    text-decoration:none;
+    font-size:16px;
+    letter-spacing:.05em;
+    box-shadow:0 6px 0 #8a6608;
+    transition:transform .15s;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .hero-cta{padding:0 20px 40px;text-align:center;}
+  .cta-note{margin-top:12px;font-size:11px;color:var(--sub);}
+
+  /* ===== ストーリーセクション（小見出し＋テキスト＋画像 の繰り返し） ===== */
+  .story{background:var(--rice);padding:8px 0 8px;}
+  .story-block{padding:52px 0;}
+  .story-block:nth-child(even){background:var(--paper);}
+  .story-num{
+    display:inline-block;
+    font-family:"Times New Roman",serif;
+    font-size:13px;
+    letter-spacing:.3em;
+    color:var(--gold);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .story-block h2{
+    font-size:22px;
+    margin:0 0 18px;
+    color:var(--indigo-deep);
+    font-weight:900;
+    letter-spacing:.03em;
+    line-height:1.6;
+  }
+  .story-block p.body-text{
+    max-width:680px;
+    margin:0 0 28px;
+    font-size:14.5px;
+    color:var(--sub);
+  }
+
+  /* ===== スペック表 ===== */
+  .spec{background:var(--indigo-deep);color:#f4ecd8;padding:56px 0;}
+  .spec h2{
+    text-align:center;
+    font-size:22px;
+    margin:0 0 30px;
+    color:var(--gold-light);
+    letter-spacing:.08em;
+  }
+  .spec-table{
+    width:100%;
+    max-width:680px;
+    margin:0 auto;
+    border-collapse:collapse;
+    font-size:13.5px;
+  }
+  .spec-table th,.spec-table td{
+    padding:14px 16px;
+    border-bottom:1px solid rgba(244,236,216,.2);
+    text-align:left;
+  }
+  .spec-table th{
+    width:34%;
+    color:var(--gold-light);
+    font-weight:700;
+    white-space:nowrap;
+  }
+  .spec-note{
+    max-width:680px;
+    margin:20px auto 0;
+    font-size:11.5px;
+    color:#c9bfa4;
+  }
+
+  /* ===== CTAバナー ===== */
+  .cta-banner{
+    background:linear-gradient(135deg,var(--gold-light),var(--gold));
+    padding:48px 20px;
+    text-align:center;
+  }
+  .cta-inner{
+    background:var(--indigo-deep);
+    color:#fff;
+    max-width:640px;
+    margin:0 auto;
+    border-radius:20px;
+    padding:36px 26px;
+  }
+  .cta-inner h3{
+    margin:0 0 12px;
+    font-size:21px;
+    color:var(--gold-light);
+    font-family:"Yu Mincho","Hiragino Mincho ProN",serif;
+  }
+  .cta-inner p{margin:0 0 22px;font-size:13px;color:#e6ddc9;}
+
+  /* ===== フッター ===== */
+  footer{
+    background:#15202a;
+    color:#b9c2c9;
+    padding:36px 20px 28px;
+    font-size:12px;
+  }
+  .footer-inner{max-width:760px;margin:0 auto;text-align:center;}
+  .footer-inner h5{
+    color:var(--gold-light);
+    font-size:14px;
+    letter-spacing:.08em;
+    margin:0 0 10px;
+  }
+  .footer-inner p{margin:6px 0;color:#98a2aa;}
+  .footer-inner a{color:var(--gold-light);text-decoration:none;}
+  .footer-inner a:hover{text-decoration:underline;}
+  .age-notice{
+    margin-top:18px;
+    padding:14px;
+    border:1px solid rgba(217,180,90,.4);
+    border-radius:10px;
+    font-size:11px;
+    color:#d9d0bb;
+  }
+  .copyright{margin-top:18px;font-size:10.5px;color:#5f6a71;}
+
+  @media (max-width:640px){
+    .story-block{padding:40px 0;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- 年齢確認バー -->
+  <div class="age-bar">20歳未満の方の飲酒は法律で禁止されています。お酒は20歳になってから。</div>
+
+  <!-- ===== 大タイトル（ヒーロー） ===== -->
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">新潟県糸魚川市 根知谷 純米酒</div>
+      <h1>田んぼも、水も、根知の恵みだけで。<small>根知男山 純米 ｜ 渡辺酒造店</small></h1>
+      <p class="lead">
+        米づくりから酒づくりまで、蔵人が自らの手で手がける「根知ドメーヌ」の純米酒。<br>
+        芳醇な旨みと、するりと切れる辛口のキレをご堪能ください。
+      </p>
+      <div class="hero-badges">
+        <span>全量自家栽培米</span>
+        <span>根知谷の伏流水仕込み</span>
+        <span>芳醇旨口・辛口キレ</span>
+      </div>
+    </div>
+
+    <!-- 画像01（1600×900）: 根知谷の田んぼと蔵、夕景のイメージ -->
+    <div class="hero-visual">
+      <div class="visual-box">
+        <svg class="visual-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="根知谷の田んぼと夕景のイメージ">
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f4d99a"/>
+              <stop offset="45%" stop-color="#e3a95f"/>
+              <stop offset="100%" stop-color="#26404f"/>
+            </linearGradient>
+            <linearGradient id="fieldGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c9a227"/>
+              <stop offset="100%" stop-color="#7a5c1f"/>
+            </linearGradient>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f4ecd8" stop-opacity=".55"/>
+              <stop offset="100%" stop-color="#26404f" stop-opacity=".55"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="1600" height="900" fill="url(#skyGrad)"/>
+          <!-- 山並み -->
+          <path d="M0 430 L200 300 L360 400 L520 260 L700 380 L900 280 L1100 400 L1300 300 L1600 420 L1600 500 L0 500 Z" fill="#3d5c6e" opacity=".7"/>
+          <path d="M0 470 L260 360 L480 450 L720 340 L980 460 L1220 360 L1600 470 L1600 560 L0 560 Z" fill="#26404f" opacity=".85"/>
+          <!-- 太陽 -->
+          <circle cx="1180" cy="270" r="70" fill="#fff3d0" opacity=".85"/>
+          <!-- 棚田（水鏡） -->
+          <g opacity=".9">
+            <path d="M0 560 L1600 560 L1600 900 L0 900 Z" fill="url(#fieldGrad)"/>
+            <path d="M0 600 L1600 560 L1600 620 L0 660 Z" fill="url(#waterGrad)"/>
+            <path d="M0 700 L1600 660 L1600 720 L0 760 Z" fill="url(#waterGrad)"/>
+            <path d="M0 800 L1600 760 L1600 820 L0 860 Z" fill="url(#waterGrad)"/>
+          </g>
+          <!-- 稲穂のシルエット -->
+          <g fill="#4a3a1f" opacity=".55">
+            <path d="M120 650 q10 -40 0 -70 q-10 30 0 70 Z"/>
+            <path d="M180 660 q10 -46 0 -80 q-10 34 0 80 Z"/>
+            <path d="M240 655 q10 -42 0 -74 q-10 32 0 74 Z"/>
+            <path d="M1350 700 q10 -40 0 -70 q-10 30 0 70 Z"/>
+            <path d="M1410 710 q10 -46 0 -80 q-10 34 0 80 Z"/>
+            <path d="M1470 705 q10 -42 0 -74 q-10 32 0 74 Z"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <a class="btn js-buy-link" href="https://item.rakuten.co.jp/xxxxxxxx/xxxxxxxx/" target="_blank" rel="noopener">商品ページでご購入はこちら ▶</a>
+      <p class="cta-note">※ 実際の商品ページURLに差し替えてください。価格・在庫は商品ページをご確認ください。</p>
+    </div>
+  </div>
+
+  <!-- ===== ストーリー（小見出し＋テキスト＋画像 × 4） ===== -->
+  <div class="story">
+
+    <!-- 第一章 -->
+    <div class="story-block">
+      <div class="wrap">
+        <div class="story-num">CHAPTER 01</div>
+        <h2>全国でも珍しい"酒蔵が育てる米"。根知ドメーヌという挑戦</h2>
+        <p class="body-text">
+          2003年、渡辺酒造店は自社田での米づくりに乗り出しました。苗づくりから田植え、稲刈りまで、すべて蔵人自らの手で行い、
+          自社田は15haにまで拡大。ワイナリーが自ら畑を持つように、酒蔵が米を育てる――全国でも数少ない「ドメーヌ」の酒蔵です。
+          使うのは根知谷で収穫された米だけ。土地の個性が、そのままお酒の個性になります。
+        </p>
+
+        <!-- 画像02（1600×900）: 根知谷の棚田で稲刈りをする蔵人のイメージ -->
+        <div class="visual-box">
+          <svg class="visual-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="根知谷で稲刈りをする蔵人のイメージ">
+            <defs>
+              <linearGradient id="skyGrad2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#dcefe6"/>
+                <stop offset="100%" stop-color="#a8c9b6"/>
+              </linearGradient>
+            </defs>
+            <rect width="1600" height="900" fill="url(#skyGrad2)"/>
+            <path d="M0 380 L300 300 L600 360 L900 280 L1200 350 L1600 300 L1600 420 L0 420 Z" fill="#5c7a68" opacity=".55"/>
+            <rect x="0" y="420" width="1600" height="480" fill="#c9a227"/>
+            <g fill="#7a5c1f">
+              <rect x="0" y="420" width="1600" height="10" opacity=".5"/>
+            </g>
+            <!-- 稲の束 -->
+            <g fill="#b8860b" opacity=".9">
+              <path d="M180 900 q0 -140 30 -220 q30 80 30 220 Z"/>
+              <path d="M300 900 q0 -160 30 -240 q30 80 30 240 Z"/>
+              <path d="M420 900 q0 -140 30 -220 q30 80 30 220 Z"/>
+              <path d="M1180 900 q0 -150 30 -230 q30 80 30 230 Z"/>
+              <path d="M1300 900 q0 -170 30 -250 q30 80 30 250 Z"/>
+              <path d="M1420 900 q0 -150 30 -230 q30 80 30 230 Z"/>
+            </g>
+            <!-- 蔵人（シンプルなシルエット） -->
+            <g transform="translate(760,560)">
+              <circle cx="0" cy="0" r="26" fill="#2a231a"/>
+              <path d="M-34 30 h68 v190 a10 10 0 0 1 -10 10 h-48 a10 10 0 0 1 -10 -10 Z" fill="#26404f"/>
+              <rect x="-46" y="34" width="30" height="120" rx="10" fill="#26404f"/>
+              <rect x="16" y="34" width="30" height="120" rx="10" fill="#26404f"/>
+              <rect x="-14" y="230" width="14" height="90" fill="#1c2a33"/>
+              <rect x="4" y="230" width="14" height="90" fill="#1c2a33"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二章 -->
+    <div class="story-block">
+      <div class="wrap">
+        <div class="story-num">CHAPTER 02</div>
+        <h2>北アルプスが磨いた、根知谷のやわらかな軟水</h2>
+        <p class="body-text">
+          仕込み水に使うのは、北アルプスの伏流水が育んだ根知谷の軟水。硬すぎず、やわらかな口当たりで、
+          米の旨みをじっくりと引き出します。米も、水も、空気も――根知谷という土地がまるごと詰まった一本です。
+        </p>
+
+        <!-- 画像03（1600×900）: 山あいの清流・湧き水のイメージ -->
+        <div class="visual-box">
+          <svg class="visual-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="根知谷の伏流水・清流のイメージ">
+            <defs>
+              <linearGradient id="waterGrad2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#dfeef2"/>
+                <stop offset="100%" stop-color="#3d5c6e"/>
+              </linearGradient>
+            </defs>
+            <rect width="1600" height="900" fill="url(#waterGrad2)"/>
+            <path d="M0 260 L400 150 L800 240 L1200 140 L1600 230 L1600 900 L0 900 Z" fill="#26404f" opacity=".25"/>
+            <path d="M0 500 C 300 460, 500 560, 800 500 C 1100 440, 1300 560, 1600 500 L1600 900 L0 900 Z" fill="#f4ecd8" opacity=".18"/>
+            <path d="M0 620 C 320 580, 520 660, 800 610 C 1080 560, 1300 650, 1600 600 L1600 900 L0 900 Z" fill="#ffffff" opacity=".22"/>
+            <g fill="#ffffff" opacity=".3">
+              <circle cx="420" cy="360" r="8"/>
+              <circle cx="900" cy="300" r="6"/>
+              <circle cx="1180" cy="380" r="10"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第三章 -->
+    <div class="story-block">
+      <div class="wrap">
+        <div class="story-num">CHAPTER 03</div>
+        <h2>芳醇な旨みと、すっと消える辛口のキレ</h2>
+        <p class="body-text">
+          口に含むと広がる、とろりとした米のコクと旨み。それでいて後味はすっきり辛口で、食事の箸を止めません。
+          「普段着のように気軽に呑んでいただきたい」という蔵の想いのとおり、毎日の晩酌にすっと馴染む一本です。
+          冷やでも、常温でも、ぬる燗でも。
+        </p>
+
+        <!-- 画像04（1600×900）: グラスに注がれた純米酒と料理のイメージ -->
+        <div class="visual-box">
+          <svg class="visual-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="グラスに注がれた純米酒のイメージ">
+            <defs>
+              <linearGradient id="tableGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#efe3c6"/>
+                <stop offset="100%" stop-color="#d9c79a"/>
+              </linearGradient>
+              <linearGradient id="sakeGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fdf6e3"/>
+                <stop offset="100%" stop-color="#e8d29a"/>
+              </linearGradient>
+            </defs>
+            <rect width="1600" height="900" fill="url(#tableGrad)"/>
+            <rect x="0" y="560" width="1600" height="340" fill="#c9a227" opacity=".18"/>
+            <!-- 徳利 -->
+            <g transform="translate(500,430)">
+              <path d="M-40 260 h80 v-140 a40 40 0 0 0 -14 -30 l-10 -70 h-32 l-10 70 a40 40 0 0 0 -14 30 Z" fill="#26404f"/>
+              <rect x="-16" y="0" width="32" height="24" rx="6" fill="#1c2a33"/>
+            </g>
+            <!-- おちょこ -->
+            <g transform="translate(720,560)">
+              <path d="M-34 90 L34 90 L22 20 a24 10 0 0 0 -44 0 Z" fill="#fdf6e3" stroke="#b8860b" stroke-width="3"/>
+              <path d="M-20 30 a24 10 0 0 0 40 0 v50 h-40 Z" fill="url(#sakeGrad)"/>
+            </g>
+            <!-- 小皿(肴) -->
+            <g transform="translate(1020,650)">
+              <ellipse cx="0" cy="0" rx="150" ry="46" fill="#fdf6e3" stroke="#c9a227" stroke-width="3"/>
+              <circle cx="-40" cy="-4" r="16" fill="#b8860b" opacity=".7"/>
+              <circle cx="10" cy="4" r="14" fill="#7a5c1f" opacity=".7"/>
+              <circle cx="50" cy="-8" r="12" fill="#b8860b" opacity=".6"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第四章 -->
+    <div class="story-block">
+      <div class="wrap">
+        <div class="story-num">CHAPTER 04</div>
+        <h2>世界も認めた、根知谷の実力</h2>
+        <p class="body-text">
+          根知男山は、世界的な酒コンクール「インターナショナル・ワイン・チャレンジ（IWC）」で高い評価を受けるなど、
+          国内外から注目を集めてきた銘柄です（受賞の対象カテゴリーは商品ページにてご確認ください）。
+          人口減少が進む根知の集落で、米づくりから酒づくりまでを一貫して行い、地域と共に歩む――
+          その物語もあわせて、ぜひ味わってみてください。
+        </p>
+
+        <!-- 画像05（1600×900）: 乾杯・食卓のイメージ -->
+        <div class="visual-box">
+          <svg class="visual-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="乾杯・食卓のイメージ">
+            <defs>
+              <radialGradient id="glowGrad" cx="50%" cy="40%" r="60%">
+                <stop offset="0%" stop-color="#f4d99a" stop-opacity=".9"/>
+                <stop offset="100%" stop-color="#26404f" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect width="1600" height="900" fill="#1c2a33"/>
+            <circle cx="800" cy="360" r="420" fill="url(#glowGrad)"/>
+            <!-- おちょこ2つで乾杯 -->
+            <g transform="translate(680,480) rotate(-12)">
+              <path d="M-34 90 L34 90 L22 20 a24 10 0 0 0 -44 0 Z" fill="#fdf6e3" stroke="#d9b45a" stroke-width="3"/>
+              <path d="M-20 30 a24 10 0 0 0 40 0 v50 h-40 Z" fill="#e8d29a"/>
+            </g>
+            <g transform="translate(920,480) rotate(12)">
+              <path d="M-34 90 L34 90 L22 20 a24 10 0 0 0 -44 0 Z" fill="#fdf6e3" stroke="#d9b45a" stroke-width="3"/>
+              <path d="M-20 30 a24 10 0 0 0 40 0 v50 h-40 Z" fill="#e8d29a"/>
+            </g>
+            <!-- キラキラ -->
+            <g fill="#f4d99a" opacity=".8">
+              <circle cx="800" cy="260" r="4"/>
+              <circle cx="760" cy="300" r="3"/>
+              <circle cx="840" cy="310" r="3"/>
+              <circle cx="800" cy="230" r="2"/>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== スペック表 ===== -->
+  <div class="spec">
+    <div class="wrap">
+      <h2>商品スペック</h2>
+      <table class="spec-table">
+        <tr><th>商品名</th><td>根知男山 純米（要確認・商品ページの表記に差し替え）</td></tr>
+        <tr><th>製造者</th><td>合名会社 渡辺酒造店（新潟県糸魚川市根知）</td></tr>
+        <tr><th>原材料名</th><td>米・米こうじ（要確認）</td></tr>
+        <tr><th>精米歩合</th><td>要確認・商品ページでご確認ください</td></tr>
+        <tr><th>アルコール分</th><td>要確認・商品ページでご確認ください</td></tr>
+        <tr><th>内容量</th><td>要確認（720ml／1.8L等、商品ページの記載に差し替え）</td></tr>
+        <tr><th>保存方法</th><td>直射日光を避け、冷暗所で保存してください</td></tr>
+      </table>
+      <p class="spec-note">※ 上記スペックはプレースホルダーです。実際の商品ラベル・商品ページの記載内容に必ず差し替えてください。</p>
+    </div>
+  </div>
+
+  <!-- ===== CTAバナー ===== -->
+  <div class="cta-banner">
+    <div class="cta-inner">
+      <h3>根知谷が育てた、一杯を。</h3>
+      <p>米づくりから酒づくりまで、根知の恵みだけで醸された純米酒。<br>晩酌にも、大切な方への贈り物にも。</p>
+      <a class="btn js-buy-link" href="https://item.rakuten.co.jp/xxxxxxxx/xxxxxxxx/" target="_blank" rel="noopener">商品ページでご購入はこちら ▶</a>
+    </div>
+  </div>
+
+  <!-- ===== フッター ===== -->
+  <footer>
+    <div class="footer-inner">
+      <h5>根知男山 ｜ 合名会社 渡辺酒造店</h5>
+      <p>新潟県糸魚川市根知にて、米づくりから酒づくりまでを一貫して手がける「根知ドメーヌ」の酒蔵です。</p>
+      <p><a class="js-shop-link" href="https://www.watanabeshuzouten.com/" target="_blank" rel="noopener">蔵元公式サイトはこちら</a></p>
+      <div class="age-notice">
+        20歳未満の飲酒は法律で禁止されています。お酒は適量を、楽しくお召し上がりください。<br>
+        妊娠中や授乳期の飲酒、飲酒運転は絶対におやめください。
+      </div>
+      <p class="copyright">&copy; 根知男山／合名会社 渡辺酒造店</p>
+    </div>
+  </footer>
+
+</body>
+</html>

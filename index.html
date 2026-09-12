@@ -35,6 +35,13 @@
     --ink:#241512;
     --bb-yellow:#ffcc00;
     --bb-black:#1a1a1a;
+    --garden-green:#5c6b3f;
+    --garden-green-dark:#333d20;
+    --garden-gold:#e3b463;
+    --wood:#7a5230;
+    --wood-dark:#4a2f18;
+    --fr-blue:#1b4e8f;
+    --fr-red:#c8102e;
   }
   *{box-sizing:border-box;}
   body{
@@ -82,18 +89,18 @@
   }
   .shop-bar-nav a:hover{border-color:var(--bb-yellow);color:var(--bb-yellow);}
 
-  /* ===== ヒーロー ===== */
+  /* ===== ヒーロー：フランスの庭園テラス風 ===== */
   .hero{
     position:relative;
-    background:radial-gradient(ellipse at 30% 20%, var(--wine-light) 0%, var(--wine) 45%, var(--wine-dark) 100%);
-    color:var(--cream);
+    background:linear-gradient(180deg, #efd9a0 0%, #d8b96a 32%, var(--wood) 78%, var(--wood-dark) 100%);
+    color:var(--ink);
     text-align:center;
     overflow:hidden;
-    min-height:640px;
+    min-height:680px;
     display:flex;
     flex-direction:column;
     justify-content:center;
-    padding:56px 20px 40px;
+    padding:52px 20px 40px;
   }
   .hero-scene{
     position:absolute;
@@ -106,7 +113,7 @@
     position:absolute;
     inset:0;
     z-index:1;
-    background:linear-gradient(180deg, rgba(61,13,31,.35) 0%, rgba(61,13,31,.55) 45%, rgba(61,13,31,.88) 100%);
+    background:linear-gradient(180deg, rgba(51,61,32,.28) 0%, rgba(51,61,32,.12) 40%, rgba(74,47,24,.55) 100%);
     pointer-events:none;
   }
   .hero-content{position:relative;z-index:2;}
@@ -114,61 +121,114 @@
     display:inline-block;
     font-size:12px;
     letter-spacing:.3em;
-    color:var(--gold-light);
-    border:1px solid var(--gold-light);
-    padding:5px 16px;
+    color:#fff;
+    background:var(--fr-red);
+    padding:5px 18px;
     border-radius:999px;
     margin-bottom:18px;
+    box-shadow:0 2px 6px rgba(0,0,0,.25);
   }
+  .hero-title-wrap{position:relative;display:inline-block;margin:0 0 14px;}
+  .brush{position:absolute;height:14px;opacity:.9;}
+  .brush path{stroke:none;}
+  .brush-red{left:-6%;top:-10px;width:46%;transform:rotate(-2deg);}
+  .brush-blue{right:-6%;bottom:-6px;width:46%;transform:rotate(2deg);}
   .hero h1{
-    font-family:"Times New Roman","Yu Mincho","Hiragino Mincho ProN",serif;
-    font-size:clamp(34px,7vw,58px);
-    margin:0 0 8px;
-    letter-spacing:.04em;
-    text-shadow:0 2px 12px rgba(0,0,0,.35);
+    font-family:"Brush Script MT","Segoe Script","Yu Mincho","Hiragino Mincho ProN",cursive,serif;
+    font-size:clamp(36px,7.5vw,64px);
+    margin:0;
+    letter-spacing:.02em;
+    color:#fffaf0;
+    text-shadow:0 3px 14px rgba(40,20,5,.55);
+    font-style:italic;
   }
   .hero h1 small{
     display:block;
-    font-size:.4em;
-    letter-spacing:.5em;
-    color:var(--gold-light);
-    margin-top:10px;
-  }
-  .hero p.lead{
-    max-width:520px;
-    margin:18px auto 28px;
-    font-size:15px;
-    color:#f1e3d3;
-  }
-  .hero-date{
-    display:inline-flex;
-    align-items:center;
-    gap:14px;
-    background:rgba(0,0,0,.28);
-    border:1px solid var(--gold);
-    border-radius:14px;
-    padding:16px 28px;
-    font-size:14px;
-  }
-  .hero-date .num{
-    font-size:26px;
+    font-family:"Yu Gothic","Hiragino Kaku Gothic ProN",sans-serif;
+    font-style:normal;
+    font-size:.32em;
+    letter-spacing:.4em;
+    color:var(--garden-gold);
+    margin-top:12px;
     font-weight:900;
-    color:var(--bb-yellow);
+  }
+  .hero-jp-banner{
+    display:inline-block;
+    position:relative;
+    background:var(--paper);
+    color:#181008;
+    font-weight:900;
+    font-size:clamp(20px,3.6vw,28px);
+    padding:14px 30px;
+    margin:22px 0 10px;
+    transform:rotate(-1.2deg);
+    clip-path:polygon(1% 8%,6% 0,94% 3%,99% 12%,97% 88%,92% 100%,4% 97%,2% 85%);
+    box-shadow:0 8px 18px rgba(0,0,0,.3);
+    line-height:1.4;
+  }
+  .hero-jp-banner .brush{height:8px;}
+  .hero-jp-banner .brush-red{left:6%;bottom:-4px;top:auto;width:36%;}
+  .hero-jp-banner .brush-blue{right:6%;bottom:auto;top:-6px;width:36%;}
+  .hero p.lead{
+    max-width:540px;
+    margin:18px auto 26px;
+    font-size:15px;
+    color:#fffaf0;
+    text-shadow:0 1px 6px rgba(0,0,0,.4);
+  }
+  .hero-badges{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+  .wax-seal{
+    width:118px;height:118px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #d9203f, var(--fr-red) 55%, #8a0c22 100%);
+    border:3px solid var(--garden-gold);
+    box-shadow:0 6px 16px rgba(0,0,0,.4), inset 0 0 0 6px rgba(255,255,255,.08);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    line-height:1.1;
+  }
+  .wax-seal .yr{font-size:12px;letter-spacing:.1em;opacity:.85;}
+  .wax-seal .md{font-size:24px;font-weight:900;}
+  .wax-seal .kanji{font-size:13px;font-weight:700;}
+  .countdown-pill{
+    display:inline-flex;
+    align-items:baseline;
+    gap:8px;
+    background:rgba(24,16,8,.55);
+    border:1px solid var(--garden-gold);
+    border-radius:999px;
+    padding:12px 26px;
+    color:#fffaf0;
+  }
+  .countdown-pill .cd-num{
+    font-size:28px;
+    font-weight:900;
+    color:var(--garden-gold);
   }
   .hero-cta{
-    margin-top:30px;
+    margin-top:28px;
   }
   .btn{
     display:inline-block;
-    background:var(--bb-yellow);
-    color:var(--bb-black);
+    background:var(--garden-gold);
+    color:#241206;
     font-weight:900;
     padding:14px 38px;
     border-radius:999px;
     text-decoration:none;
     font-size:16px;
     letter-spacing:.05em;
-    box-shadow:0 6px 0 #a8850a;
+    box-shadow:0 6px 0 #a87a2e;
     transition:transform .15s;
   }
   .btn:hover{transform:translateY(-2px);}
@@ -302,9 +362,9 @@
   @media (max-width:420px){.product-grid{grid-template-columns:1fr 1fr;gap:12px;}}
 
   /* ===== 楽しみ方ガイド ===== */
-  .guide{background:var(--wine-dark);color:var(--cream);}
-  .guide .section-title{color:var(--bb-yellow);}
-  .guide .section-sub{color:#e3cfc2;}
+  .guide{background:linear-gradient(180deg, var(--garden-green-dark), #23291a);color:var(--cream);}
+  .guide .section-title{color:var(--garden-gold);}
+  .guide .section-sub{color:#dcd8c4;}
   .guide-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
@@ -354,22 +414,28 @@
 
   /* ===== CTA バナー ===== */
   .cta-banner{
-    background:repeating-linear-gradient(45deg,var(--bb-yellow) 0 16px,#ffe680 16px 32px);
-    padding:44px 20px;
+    background:linear-gradient(135deg, var(--garden-gold), #c98f3a);
+    padding:6px 0 44px;
     text-align:center;
   }
+  .cta-banner-stripe{
+    height:8px;
+    background:linear-gradient(90deg, var(--fr-blue) 0 33%, #fff 33% 66%, var(--fr-red) 66% 100%);
+    margin-bottom:36px;
+  }
   .cta-inner{
-    background:var(--bb-black);
+    background:var(--wood-dark);
     color:#fff;
     max-width:640px;
     margin:0 auto;
     border-radius:20px;
     padding:34px 24px;
+    border:1px solid rgba(227,180,99,.4);
   }
   .cta-inner h3{
     margin:0 0 10px;
     font-size:22px;
-    color:var(--bb-yellow);
+    color:var(--garden-gold);
   }
   .cta-inner p{margin:0 0 22px;font-size:13px;color:#e6e6e6;}
   .cta-note{margin-top:14px;font-size:11px;color:#b8b8b8;}
@@ -415,122 +481,159 @@
       <div class="shop-bar-logo">酒のビッグボス</div>
       <nav class="shop-bar-nav">
         <a class="js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">ショップトップ</a>
-        <a href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">ボジョレー一覧</a>
+        <a href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">ボジョレー一覧</a>
         <a class="js-shop-link" href="https://www.rakuten.co.jp/bigbossshibazaki/info.html" target="_blank" rel="noopener">店舗情報</a>
       </nav>
     </div>
   </div>
 
-  <!-- ヒーロー：豪華な食卓とワイングラスの演出 -->
+  <!-- ヒーロー：フランスの庭園テラスを思わせる豪華な食卓演出 -->
   <div class="hero">
     <div class="hero-scene" aria-hidden="true">
-      <svg viewBox="0 0 1000 640" preserveAspectRatio="xMidYMax slice">
+      <svg viewBox="0 0 1000 680" preserveAspectRatio="xMidYMax slice">
         <defs>
           <linearGradient id="wineFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#a8163f"/>
-            <stop offset="100%" stop-color="#4a0e24"/>
+            <stop offset="0%" stop-color="#c22447"/>
+            <stop offset="100%" stop-color="#5a0f26"/>
           </linearGradient>
-          <linearGradient id="tableCloth" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#5a1428"/>
-            <stop offset="100%" stop-color="#2a0714"/>
+          <linearGradient id="woodTable" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8a5a34"/>
+            <stop offset="100%" stop-color="#4a2f18"/>
           </linearGradient>
-          <radialGradient id="candleGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#ffdf8a" stop-opacity=".9"/>
-            <stop offset="100%" stop-color="#ffdf8a" stop-opacity="0"/>
+          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff3cf" stop-opacity=".85"/>
+            <stop offset="100%" stop-color="#fff3cf" stop-opacity="0"/>
           </radialGradient>
-          <radialGradient id="bokehGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#e8c766" stop-opacity=".55"/>
-            <stop offset="100%" stop-color="#e8c766" stop-opacity="0"/>
+          <radialGradient id="leafBokeh" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#8aa25a" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#8aa25a" stop-opacity="0"/>
           </radialGradient>
           <filter id="soften" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="8"/>
+            <feGaussianBlur stdDeviation="9"/>
           </filter>
         </defs>
 
-        <!-- 背景の玉ボケ（キャンドルライトのイメージ） -->
+        <!-- 背景：木漏れ日と緑の玉ボケ（庭園テラスのイメージ） -->
         <g>
-          <circle cx="120" cy="120" r="55" fill="url(#bokehGrad)" filter="url(#soften)"/>
-          <circle cx="860" cy="90" r="70" fill="url(#bokehGrad)" filter="url(#soften)"/>
-          <circle cx="780" cy="220" r="30" fill="url(#bokehGrad)" filter="url(#soften)"/>
-          <circle cx="200" cy="260" r="26" fill="url(#bokehGrad)" filter="url(#soften)"/>
-          <circle cx="500" cy="80" r="40" fill="url(#bokehGrad)" filter="url(#soften)"/>
-          <circle cx="920" cy="330" r="45" fill="url(#bokehGrad)" filter="url(#soften)"/>
+          <circle cx="110" cy="100" r="60" fill="url(#leafBokeh)" filter="url(#soften)"/>
+          <circle cx="880" cy="80" r="80" fill="url(#sunGlow)" filter="url(#soften)"/>
+          <circle cx="760" cy="200" r="34" fill="url(#leafBokeh)" filter="url(#soften)"/>
+          <circle cx="180" cy="230" r="28" fill="url(#leafBokeh)" filter="url(#soften)"/>
+          <circle cx="470" cy="70" r="46" fill="url(#sunGlow)" filter="url(#soften)"/>
+          <circle cx="940" cy="320" r="50" fill="url(#leafBokeh)" filter="url(#soften)"/>
+          <circle cx="60" cy="330" r="36" fill="url(#leafBokeh)" filter="url(#soften)"/>
         </g>
 
-        <!-- テーブル -->
-        <rect x="0" y="470" width="1000" height="170" fill="url(#tableCloth)"/>
-        <rect x="0" y="466" width="1000" height="6" fill="#e8c766" opacity=".55"/>
-
-        <!-- 奥：ワインボトル -->
-        <g transform="translate(455,300)">
-          <rect x="-16" y="-92" width="32" height="40" rx="4" fill="#c9a227"/>
-          <path d="M-24 -52 h48 l10 24 v150 a12 12 0 0 1 -12 12 h-44 a12 12 0 0 1 -12 -12 v-150 Z" fill="#2c0a18"/>
-          <rect x="-30" y="10" width="60" height="46" rx="2" fill="#f3e6d0" opacity=".92"/>
-          <text x="0" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#6b1030" font-family="Georgia, serif">Nouveau</text>
+        <!-- 木製テーブル -->
+        <rect x="0" y="500" width="1000" height="180" fill="url(#woodTable)"/>
+        <rect x="0" y="496" width="1000" height="6" fill="#e3b463" opacity=".7"/>
+        <g stroke="#3a2410" stroke-width="1" opacity=".35">
+          <line x1="0" y1="530" x2="1000" y2="530"/>
+          <line x1="0" y1="565" x2="1000" y2="565"/>
+          <line x1="0" y1="605" x2="1000" y2="605"/>
         </g>
 
-        <!-- 手前左：ワイングラス（大） -->
-        <g transform="translate(300,330) scale(1.5)">
+        <!-- 中央：ワインボトル -->
+        <g transform="translate(430,300)">
+          <rect x="-14" y="-96" width="28" height="38" rx="4" fill="#e3b463"/>
+          <path d="M-22 -58 h44 l9 22 v168 a11 11 0 0 1 -11 11 h-40 a11 11 0 0 1 -11 -11 v-168 Z" fill="#2c0a18"/>
+          <rect x="-27" y="6" width="54" height="50" rx="3" fill="#fbf4e4"/>
+          <text x="0" y="24" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6b1030" font-family="Georgia, serif">BEAUJOLAIS</text>
+          <text x="0" y="38" text-anchor="middle" font-size="9" fill="#8f2540" font-family="Georgia, serif">NOUVEAU 2026</text>
+        </g>
+
+        <!-- 右：ワイングラス（大・豪華に強調） -->
+        <g transform="translate(640,340) scale(1.7)">
           <path d="M40 4 C16 4 10 40 10 62 C10 96 22 118 40 118 C58 118 70 96 70 62 C70 40 64 4 40 4 Z"
-                fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-          <path d="M15 58 C15 90 25 118 40 118 C55 118 65 90 65 58 C57 68 48 73 40 73 C32 73 23 68 15 58 Z" fill="url(#wineFill)"/>
-          <rect x="37" y="118" width="6" height="52" fill="rgba(255,255,255,0.4)"/>
-          <ellipse cx="40" cy="174" rx="22" ry="6" fill="rgba(255,255,255,0.4)"/>
-          <ellipse cx="25" cy="34" rx="5" ry="13" fill="#ffffff" opacity=".3"/>
+                fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
+          <path d="M14 56 C14 90 25 118 40 118 C55 118 66 90 66 56 C57 67 49 72 40 72 C31 72 23 67 14 56 Z" fill="url(#wineFill)"/>
+          <rect x="37" y="118" width="6" height="54" fill="rgba(255,255,255,0.45)"/>
+          <ellipse cx="40" cy="176" rx="23" ry="6" fill="rgba(255,255,255,0.45)"/>
+          <ellipse cx="24" cy="32" rx="5" ry="14" fill="#ffffff" opacity=".35"/>
         </g>
 
-        <!-- 手前右：ワイングラス（中） -->
-        <g transform="translate(600,350) scale(1.25)">
-          <path d="M40 4 C16 4 10 40 10 62 C10 96 22 118 40 118 C58 118 70 96 70 62 C70 40 64 4 40 4 Z"
-                fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-          <path d="M15 66 C15 94 25 118 40 118 C55 118 65 94 65 66 C57 74 48 78 40 78 C32 78 23 74 15 66 Z" fill="url(#wineFill)"/>
-          <rect x="37" y="118" width="6" height="52" fill="rgba(255,255,255,0.4)"/>
-          <ellipse cx="40" cy="174" rx="22" ry="6" fill="rgba(255,255,255,0.4)"/>
-          <ellipse cx="25" cy="34" rx="5" ry="13" fill="#ffffff" opacity=".3"/>
+        <!-- 左手前：チーズ・パン・生ハムの盛り合わせ -->
+        <g transform="translate(90,500)">
+          <ellipse cx="60" cy="70" rx="95" ry="20" fill="#3a2410" opacity=".25"/>
+          <path d="M0 55 L70 55 L35 5 Z" fill="#f3e2b0"/>
+          <circle cx="18" cy="42" r="3" fill="#8f2540"/>
+          <circle cx="34" cy="26" r="3" fill="#8f2540"/>
+          <path d="M60 60 q30 -22 64 -6 q-4 16 -30 18 q-24 2 -34 -12 Z" fill="#c0463f"/>
+          <ellipse cx="120" cy="40" rx="26" ry="14" fill="#e8d3a0"/>
         </g>
 
-        <!-- キャンドル -->
-        <g transform="translate(500,420)">
-          <circle cx="0" cy="-28" r="34" fill="url(#candleGlow)"/>
-          <rect x="-8" y="0" width="16" height="46" rx="3" fill="#f3e6d0"/>
-          <path d="M0 -30 C 6 -20 6 -10 0 -2 C -6 -10 -6 -20 0 -30 Z" fill="#ffcf6b"/>
+        <!-- 右下：ぶどうの房 -->
+        <g transform="translate(840,470)">
+          <circle cx="0" cy="0" r="10" fill="#5a1428"/>
+          <circle cx="17" cy="7" r="10" fill="#3d0d1f"/>
+          <circle cx="7" cy="18" r="10" fill="#5a1428"/>
+          <circle cx="25" cy="20" r="10" fill="#3d0d1f"/>
+          <circle cx="14" cy="-9" r="10" fill="#3d0d1f"/>
+          <path d="M12 -18 q4 -10 12 -12" stroke="#5c6b3f" stroke-width="3" fill="none"/>
         </g>
 
-        <!-- チーズ＆グレープ（豪華な食卓の演出） -->
-        <g transform="translate(150,470)">
-          <path d="M0 40 L60 40 L30 0 Z" fill="#e8c766" opacity=".9"/>
-          <circle cx="10" cy="30" r="2.5" fill="#8f2540"/>
-          <circle cx="24" cy="20" r="2.5" fill="#8f2540"/>
+        <!-- ローズマリーの小枝 -->
+        <g transform="translate(300,540)" stroke="#5c6b3f" stroke-width="2" opacity=".8">
+          <line x1="0" y1="0" x2="46" y2="-10"/>
+          <line x1="6" y1="-2" x2="10" y2="-8"/>
+          <line x1="16" y1="-4" x2="20" y2="-10"/>
+          <line x1="26" y1="-6" x2="30" y2="-12"/>
+          <line x1="36" y1="-8" x2="40" y2="-14"/>
         </g>
-        <g transform="translate(800,460)">
-          <circle cx="0" cy="0" r="9" fill="#8f2540"/>
-          <circle cx="16" cy="6" r="9" fill="#6b1030"/>
-          <circle cx="8" cy="16" r="9" fill="#8f2540"/>
-          <circle cx="24" cy="18" r="9" fill="#6b1030"/>
-          <circle cx="14" cy="-8" r="9" fill="#6b1030"/>
-        </g>
-
-        <!-- 手前の玉ボケ（近景の光） -->
-        <circle cx="90" cy="500" r="20" fill="url(#bokehGrad)" filter="url(#soften)"/>
-        <circle cx="930" cy="520" r="26" fill="url(#bokehGrad)" filter="url(#soften)"/>
       </svg>
     </div>
     <div class="hero-overlay"></div>
 
     <div class="hero-content">
       <div class="hero-eyebrow">酒のビッグボス presents</div>
-      <h1>Beaujolais Nouveau<small>ボジョレー・ヌーボー 解禁特集 2026</small></h1>
-      <p class="lead">今年もフランス・ボジョレー地区から、できたてほやほやの新酒が到着。<br>華やかな食卓を彩る一本を、世界のお酒がなんでも揃う酒のビッグボスがお届けします。</p>
-      <div class="hero-date">
-        <div>解禁日</div>
-        <div class="num">2026.11.19 (木)</div>
-        <div>午前0時 解禁</div>
+
+      <div class="hero-title-wrap">
+        <svg class="brush brush-red" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 40,14 60,6 C80,-2 100,10 118,4 L118,10 C100,16 80,4 60,12 C40,20 20,8 2,14 Z" fill="#c8102e"/></svg>
+        <h1>Beaujolais Nouveau<small>ボジョレー・ヌーボー 解禁特集 2026</small></h1>
+        <svg class="brush brush-blue" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 40,14 60,6 C80,-2 100,10 118,4 L118,10 C100,16 80,4 60,12 C40,20 20,8 2,14 Z" fill="#1b4e8f"/></svg>
       </div>
+
+      <div class="hero-jp-banner">
+        <svg class="brush brush-red" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 40,14 60,6 C80,-2 100,10 118,4 L118,10 C100,16 80,4 60,12 C40,20 20,8 2,14 Z" fill="#c8102e"/></svg>
+        解禁日にお届け
+        <svg class="brush brush-blue" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 40,14 60,6 C80,-2 100,10 118,4 L118,10 C100,16 80,4 60,12 C40,20 20,8 2,14 Z" fill="#1b4e8f"/></svg>
+      </div>
+
+      <p class="lead">今年もフランス・ボジョレー地区から、できたてほやほやの新酒が到着。<br>華やかな食卓を彩る一本を、世界のお酒がなんでも揃う酒のビッグボスがお届けします。</p>
+
+      <div class="hero-badges">
+        <div class="wax-seal">
+          <span class="yr">2026</span>
+          <span class="md">11/19</span>
+          <span class="kanji">解禁</span>
+        </div>
+        <div class="countdown-pill">
+          <span>解禁まであと</span>
+          <span class="cd-num" id="days-left">--</span>
+          <span>日</span>
+        </div>
+      </div>
+
       <div class="hero-cta">
-        <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">早期予約はこちら ▶</a>
+        <a class="btn" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">早期予約はこちら ▶</a>
       </div>
     </div>
   </div>
+
+  <script>
+    (function(){
+      var el = document.getElementById('days-left');
+      if(!el) return;
+      var target = new Date('2026-11-19T00:00:00+09:00').getTime();
+      var now = new Date().getTime();
+      var diff = target - now;
+      if(diff <= 0){
+        el.parentNode.innerHTML = '<span>ボジョレー・ヌーヴォー 解禁中！</span>';
+        return;
+      }
+      el.textContent = Math.ceil(diff / 86400000);
+    })();
+  </script>
 
   <!-- イントロ：ボジョレー・ヌーボーとは -->
   <section class="intro">
@@ -558,7 +661,7 @@
     <div class="product-grid">
 
       <div class="product-card">
-        <a class="card-link" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">
+        <a class="card-link" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">
           <div class="product-thumb">
             <span class="product-badge">単品</span>
             <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
@@ -578,7 +681,7 @@
       </div>
 
       <div class="product-card">
-        <a class="card-link" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">
+        <a class="card-link" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">
           <div class="product-thumb">
             <span class="product-badge">2本セット</span>
             <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
@@ -599,7 +702,7 @@
       </div>
 
       <div class="product-card">
-        <a class="card-link" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">
+        <a class="card-link" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">
           <div class="product-thumb">
             <span class="product-badge">グラス付</span>
             <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
@@ -619,7 +722,7 @@
       </div>
 
       <div class="product-card">
-        <a class="card-link" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">
+        <a class="card-link" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">
           <div class="product-thumb">
             <span class="product-badge">クーラー付</span>
             <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
@@ -639,7 +742,7 @@
       </div>
 
       <div class="product-card">
-        <a class="card-link" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">
+        <a class="card-link" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">
           <div class="product-thumb">
             <span class="product-badge">ケース</span>
             <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
@@ -660,7 +763,7 @@
       </div>
 
       <div class="product-card">
-        <a class="card-link" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">
+        <a class="card-link" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">
           <div class="product-thumb">
             <span class="product-badge">ハーフ</span>
             <svg width="70" height="90" viewBox="0 0 70 90" style="margin:0 auto;">
@@ -680,7 +783,7 @@
       </div>
 
     </div>
-    <p class="product-note">※ 上記はカテゴリページの商品構成をもとにした一部ラインナップです。全商品・最新価格は<a class="js-shop-link" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">こちらの商品一覧ページ</a>でご確認ください。</p>
+    <p class="product-note">※ 上記はカテゴリページの商品構成をもとにした一部ラインナップです。全商品・最新価格は<a class="js-shop-link" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">こちらの商品一覧ページ</a>でご確認ください。</p>
   </section>
 
   <!-- 楽しみ方ガイド -->
@@ -731,10 +834,11 @@
 
   <!-- CTA バナー -->
   <div class="cta-banner">
+    <div class="cta-banner-stripe"></div>
     <div class="cta-inner">
       <h3>解禁を待ちきれない方へ、早期予約受付中！</h3>
       <p>数量限定のため、売り切れる前にお早めにご予約ください。<br>ご予約分は解禁日以降、順次発送いたします。</p>
-      <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000002530/?l-id=shoptop_shopmenu_medama_category_4" target="_blank" rel="noopener">商品一覧をチェックする ▶</a>
+      <a class="btn" href="https://search.rakuten.co.jp/search/mall/%E3%83%9C%E3%82%B8%E3%83%A7%E3%83%AC%E3%83%BC%E3%83%8C%E3%83%BC%E3%83%9C%E3%83%BC2026/?l-id=shoptop_shopmenu_search_bar&sid=224915" target="_blank" rel="noopener">商品一覧をチェックする ▶</a>
       <p class="cta-note">※ 送料無料条件・予約締切日は商品ページの記載をご確認ください。</p>
     </div>
   </div>

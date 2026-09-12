@@ -12,6 +12,11 @@ import pandas as pd
 REQUIRED_COLUMNS = ["日付", "店舗名", "売上金額"]
 OPTIONAL_COLUMNS = ["客数", "備考"]
 
+# データが入っているシート名の候補（入力テンプレートは「売上入力」、
+# サンプル生成データは「売上」という名前を使う）。見つからない場合は
+# 必須列を持つ最初のシート、それも無ければ先頭シートにフォールバックする。
+PREFERRED_SHEET_NAMES = ["売上入力", "売上"]
+
 
 @dataclass
 class LoadResult:
@@ -19,8 +24,21 @@ class LoadResult:
     errors: list[str]  # 読み込みに失敗したファイルとその理由
 
 
+def _pick_sheet_name(xl: pd.ExcelFile) -> str:
+    for name in PREFERRED_SHEET_NAMES:
+        if name in xl.sheet_names:
+            return name
+    for name in xl.sheet_names:
+        cols = [str(c).strip() for c in xl.parse(name, nrows=0).columns]
+        if all(c in cols for c in REQUIRED_COLUMNS):
+            return name
+    return xl.sheet_names[0]
+
+
 def _read_one_file(path: Path) -> pd.DataFrame:
-    df = pd.read_excel(path, sheet_name=0, engine="openpyxl")
+    xl = pd.ExcelFile(path, engine="openpyxl")
+    sheet_name = _pick_sheet_name(xl)
+    df = xl.parse(sheet_name)
     df.columns = [str(c).strip() for c in df.columns]
 
     missing = [c for c in REQUIRED_COLUMNS if c not in df.columns]

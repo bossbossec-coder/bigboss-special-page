@@ -212,6 +212,81 @@ def yoy_daily_series(df: pd.DataFrame, year: int, month: int) -> pd.DataFrame:
     return merged
 
 
+def monthly_yoy_series(df: pd.DataFrame, as_of: date, months: int = 12) -> pd.DataFrame:
+    """基準日から遡ったNヶ月分（デフォルト12ヶ月）の月別実績を、前年同月と比較する。
+
+    直近の月（基準日を含む月）が営業途中の場合は、今年・前年とも
+    「月初から基準日と同じ日数分」で揃えて比較する（それ以外の月はフル月同士で比較）。
+    """
+    rows = []
+    base_index = as_of.year * 12 + (as_of.month - 1)
+    for offset in range(months - 1, -1, -1):
+        idx = base_index - offset
+        year, month0 = divmod(idx, 12)
+        month = month0 + 1
+        is_partial = (year == as_of.year and month == as_of.month)
+        day_limit = as_of.day if is_partial else days_in_month(year, month)
+
+        this_month_all = month_slice(df, year, month)
+        this_total = float(this_month_all[this_month_all["date"].dt.day <= day_limit]["sales"].sum())
+
+        last_month_all = month_slice(df, year - 1, month)
+        has_last_year = not last_month_all.empty
+        last_total = (
+            float(last_month_all[last_month_all["date"].dt.day <= day_limit]["sales"].sum())
+            if has_last_year
+            else None
+        )
+
+        yoy_pct = None
+        if last_total:
+            yoy_pct = (this_total - last_total) / last_total * 100
+
+        rows.append(
+            {
+                "year": year,
+                "month": month,
+                "label": f"{year}年{month}月",
+                "this_year": this_total,
+                "last_year": last_total,
+                "yoy_pct": yoy_pct,
+                "is_partial": is_partial,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def calendar_year_yoy(df: pd.DataFrame, as_of: date) -> dict:
+    """暦年（1月〜12月）の累計売上を前年同期間と比較する。"""
+    year = as_of.year
+    cutoff_this = as_of
+    try:
+        cutoff_last = as_of.replace(year=year - 1)
+    except ValueError:
+        cutoff_last = as_of.replace(year=year - 1, day=28)
+
+    this_year_ytd_df = df[(df["date"].dt.year == year) & (df["date"].dt.date <= cutoff_this)]
+    last_year_ytd_df = df[(df["date"].dt.year == year - 1) & (df["date"].dt.date <= cutoff_last)]
+    last_year_full_df = df[df["date"].dt.year == year - 1]
+
+    this_year_ytd = float(this_year_ytd_df["sales"].sum())
+    last_year_ytd = float(last_year_ytd_df["sales"].sum()) if not last_year_ytd_df.empty else None
+    last_year_full_total = float(last_year_full_df["sales"].sum()) if not last_year_full_df.empty else None
+
+    yoy_pct = None
+    if last_year_ytd:
+        yoy_pct = (this_year_ytd - last_year_ytd) / last_year_ytd * 100
+
+    return {
+        "year": year,
+        "as_of": as_of,
+        "this_year_ytd": this_year_ytd,
+        "last_year_ytd": last_year_ytd,
+        "yoy_pct": yoy_pct,
+        "last_year_full_total": last_year_full_total,
+    }
+
+
 def store_ranking(df: pd.DataFrame, year: int, month: int, as_of: date) -> pd.DataFrame:
     """店舗別の当月累計売上と前年同期間比を算出する。"""
     this_month = month_slice(df, year, month)

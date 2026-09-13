@@ -28,7 +28,7 @@ COMPARISON_COLOR = "#BAB0AC"
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent / "data" / "incoming"
 
-st.set_page_config(page_title="多店舗売上ダッシュボード", layout="wide")
+st.set_page_config(page_title="売上ダッシュボード", layout="wide")
 
 # スマートフォンなど狭い画面向けの調整（余白・文字サイズを詰めて情報を収めやすくする）。
 # レイアウトの列(st.columns)自体はStreamlit標準機能で狭い画面では自動的に縦積みになる。
@@ -89,7 +89,7 @@ def store_color_map(stores: list[str]) -> dict[str, str]:
     return {store: STORE_COLORS[i % len(STORE_COLORS)] for i, store in enumerate(sorted(stores))}
 
 
-st.title("多店舗売上ダッシュボード")
+st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")
 
 with st.sidebar:
@@ -127,6 +127,8 @@ if records.empty:
         "テスト用のサンプルデータは `scripts/generate_sample_data.py` で生成できます。"
     )
     st.stop()
+
+records, external_records = dl.split_external_sales(records)
 
 all_stores = sorted(records["store"].unique().tolist())
 with st.sidebar:
@@ -244,6 +246,20 @@ st.dataframe(daily_store_display, use_container_width=True, hide_index=True, hei
 
 st.divider()
 
+st.markdown("#### 店舗別ランキング（当月累計・前年同期間比）")
+ranking = dl.store_ranking(filtered, target_year, target_month, as_of)
+ranking_display = pd.DataFrame(
+    {
+        "店舗": ranking["store"],
+        "当月累計売上": ranking["mtd_sales"].map(format_yen),
+        "前年同期間売上": ranking["last_year_mtd_sales"].map(format_yen),
+        "前年比": ranking["yoy_pct"].map(format_pct),
+    }
+)
+st.dataframe(ranking_display, use_container_width=True, hide_index=True)
+
+st.divider()
+
 st.markdown("#### 月別前年比（直近12ヶ月）")
 monthly_yoy = dl.monthly_yoy_series(filtered, as_of, months=12)
 fig3 = go.Figure()
@@ -281,20 +297,6 @@ monthly_display = pd.DataFrame(
 )
 st.dataframe(monthly_display, use_container_width=True, hide_index=True)
 
-st.divider()
-
-st.markdown("#### 店舗別ランキング（当月累計・前年同期間比）")
-ranking = dl.store_ranking(filtered, target_year, target_month, as_of)
-ranking_display = pd.DataFrame(
-    {
-        "店舗": ranking["store"],
-        "当月累計売上": ranking["mtd_sales"].map(format_yen),
-        "前年同期間売上": ranking["last_year_mtd_sales"].map(format_yen),
-        "前年比": ranking["yoy_pct"].map(format_pct),
-    }
-)
-st.dataframe(ranking_display, use_container_width=True, hide_index=True)
-
 st.markdown("#### 全期間 日別売上推移")
 daily = dl.daily_totals(filtered)
 fig2 = go.Figure()
@@ -325,4 +327,36 @@ ycol4.metric(
     f"{year_yoy['year'] - 1}年 実績（暦年フル）",
     format_yen_compact(year_yoy["last_year_full_total"]),
     help=f"参考: 前年1年間（1月〜12月）の実績合計 / 正確な金額: {format_yen(year_yoy['last_year_full_total'])}",
+)
+
+st.divider()
+
+st.markdown("#### 外販売上")
+st.caption("店舗名が「外販」の実績のみを集計。店舗売上とは合算・比較しません（スポット売上のため）。")
+external_yoy_today = dl.yoy_same_day(external_records, as_of)
+external_progress = dl.month_progress(external_records, target_year, target_month, as_of)
+ecol1, ecol2, ecol3 = st.columns(3)
+ecol1.metric(
+    "本日の売上合計",
+    format_yen_compact(external_yoy_today["today_total"]),
+    help=format_yen(external_yoy_today["today_total"]),
+)
+ecol2.metric(
+    "前年同日比",
+    format_pct(external_yoy_today["pct_change"]),
+    help=f"前年同日（{external_yoy_today['last_year_date']}）: {format_yen(external_yoy_today['last_year_total'])}",
+)
+external_mtd_diff = (
+    external_progress["mtd_total"] - external_progress["last_year_mtd_total"]
+    if external_progress["last_year_mtd_total"] is not None
+    else None
+)
+ecol3.metric(
+    f"当月累計（{external_progress['elapsed_days']}/{external_progress['total_days']}日）",
+    format_yen_compact(external_progress["mtd_total"]),
+    delta=format_delta(external_mtd_diff, external_progress["mtd_yoy_pct"]),
+    help=(
+        f"正確な金額: {format_yen(external_progress['mtd_total'])} "
+        f"/ 前年同期間: {format_yen(external_progress['last_year_mtd_total'])}"
+    ),
 )

@@ -17,6 +17,10 @@ OPTIONAL_COLUMNS = ["客数", "備考"]
 # 必須列を持つ最初のシート、それも無ければ先頭シートにフォールバックする。
 PREFERRED_SHEET_NAMES = ["売上入力", "売上"]
 
+# 「店舗名」列にこの値が入っている行は、店舗の売上ではなく外販（スポット売上）として扱い、
+# 店舗別の合計・比較には一切含めない。
+EXTERNAL_SALES_STORE = "外販"
+
 
 @dataclass
 class LoadResult:
@@ -118,6 +122,18 @@ def filter_stores(df: pd.DataFrame, stores: list[str] | None) -> pd.DataFrame:
     if not stores:
         return df
     return df[df["store"].isin(stores)]
+
+
+def split_external_sales(
+    df: pd.DataFrame, external_store: str = EXTERNAL_SALES_STORE
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """店舗名が外販（スポット売上）の行を切り出す。
+
+    戻り値は (店舗売上のみ, 外販売上のみ) のタプル。店舗別の合計・ランキング・
+    前年比などはすべて店舗売上側だけを使い、外販売上を一切混ぜないようにする。
+    """
+    is_external = df["store"] == external_store
+    return df[~is_external].copy(), df[is_external].copy()
 
 
 def daily_totals(df: pd.DataFrame) -> pd.DataFrame:

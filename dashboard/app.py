@@ -227,15 +227,17 @@ with right:
 
 st.divider()
 
-st.markdown(f"#### 店舗別・日別売上（{target_year}年{target_month}月、前年同日比込み）")
-daily_store = dl.daily_store_table(filtered, target_year, target_month)
+st.markdown("#### 店舗別・日別売上（前年同日比込み）")
+st.caption(f"対象日: {as_of}")
+daily_store = dl.daily_store_snapshot(filtered, as_of)
+daily_store_mtd_yoy = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")["yoy_pct"]
 daily_store_display = pd.DataFrame(
     {
-        "日付": daily_store["date"].dt.strftime("%Y-%m-%d"),
         "店舗": daily_store["store"],
         "当日売上": daily_store["sales"].map(format_yen),
         "前年同日売上": daily_store["last_year_sales"].map(format_yen),
         "前年同日比": daily_store["yoy_pct"].map(format_pct),
+        "当月累計前年比": daily_store["store"].map(daily_store_mtd_yoy).map(format_pct),
     }
 )
 st.dataframe(daily_store_display, use_container_width=True, hide_index=True, height=350)

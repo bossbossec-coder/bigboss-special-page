@@ -298,36 +298,27 @@ def calendar_year_yoy(df: pd.DataFrame, as_of: date) -> dict:
     }
 
 
-def _shift_year(ts: pd.Timestamp, years: int) -> pd.Timestamp:
+def daily_store_snapshot(df: pd.DataFrame, target_date: date) -> pd.DataFrame:
+    """指定日の店舗別売上を、前年同日の売上・前年比とあわせて一覧化する。"""
     try:
-        return ts.replace(year=ts.year + years)
+        last_year_date = target_date.replace(year=target_date.year - 1)
     except ValueError:
         # 2/29のようなケースは2/28に読み替える
-        return ts.replace(year=ts.year + years, day=28)
+        last_year_date = target_date.replace(year=target_date.year - 1, day=28)
 
+    today_df = df[df["date"].dt.date == target_date][["store", "sales"]]
+    last_year_df = df[df["date"].dt.date == last_year_date][["store", "sales"]].rename(
+        columns={"sales": "last_year_sales"}
+    )
 
-def daily_store_table(df: pd.DataFrame, year: int, month: int) -> pd.DataFrame:
-    """対象月の日ごと・店舗ごとの売上を、前年同日の売上・前年比とあわせて一覧化する。"""
-    this_month = month_slice(df, year, month)
-    columns = ["date", "store", "sales", "last_year_sales", "yoy_pct"]
-    if this_month.empty:
-        return pd.DataFrame(columns=columns)
-
-    this_month = this_month.copy()
-    this_month["last_year_date"] = this_month["date"].apply(lambda d: _shift_year(d, -1))
-
-    last_year_lookup = df.rename(
-        columns={"date": "last_year_date", "sales": "last_year_sales"}
-    )[["last_year_date", "store", "last_year_sales"]]
-
-    merged = this_month.merge(last_year_lookup, on=["last_year_date", "store"], how="left")
+    merged = pd.merge(today_df, last_year_df, on="store", how="outer").fillna(0)
     merged["yoy_pct"] = merged.apply(
         lambda r: ((r["sales"] - r["last_year_sales"]) / r["last_year_sales"] * 100)
-        if pd.notna(r["last_year_sales"]) and r["last_year_sales"] > 0
+        if r["last_year_sales"] > 0
         else None,
         axis=1,
     )
-    return merged[columns].sort_values(["date", "store"], ascending=[False, True])
+    return merged.sort_values("store")
 
 
 def store_ranking(df: pd.DataFrame, year: int, month: int, as_of: date) -> pd.DataFrame:

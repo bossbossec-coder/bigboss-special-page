@@ -74,6 +74,17 @@ def format_pct(value: float | None) -> str:
     return f"{sign}{value:.1f}%"
 
 
+def format_delta(diff: float | None, pct: float | None) -> str | None:
+    """st.metricのdelta表示用。前年差分額（億・万円単位）と前年比をまとめる。"""
+    if diff is None or pd.isna(diff):
+        return None
+    sign = "+" if diff >= 0 else "-"
+    text = f"{sign}{format_yen_compact(abs(diff))}"
+    if pct is not None and not pd.isna(pct):
+        text += f" ({format_pct(pct)})"
+    return text
+
+
 def store_color_map(stores: list[str]) -> dict[str, str]:
     return {store: STORE_COLORS[i % len(STORE_COLORS)] for i, store in enumerate(sorted(stores))}
 
@@ -149,17 +160,32 @@ col2.metric(
     format_pct(yoy_today["pct_change"]),
     help=f"前年同日（{yoy_today['last_year_date']}）: {format_yen(yoy_today['last_year_total'])}",
 )
+mtd_diff = (
+    progress["mtd_total"] - progress["last_year_mtd_total"]
+    if progress["last_year_mtd_total"] is not None
+    else None
+)
 col3.metric(
     f"当月累計（{progress['elapsed_days']}/{progress['total_days']}日）",
     format_yen_compact(progress["mtd_total"]),
-    help=format_yen(progress["mtd_total"]),
+    delta=format_delta(mtd_diff, progress["mtd_yoy_pct"]),
+    help=f"正確な金額: {format_yen(progress['mtd_total'])} / 前年同期間: {format_yen(progress['last_year_mtd_total'])}",
 )
 forecast = progress["forecast_yoy_adjusted"] or progress["forecast_run_rate"]
 forecast_note = "前年同月比ベース" if progress["forecast_yoy_adjusted"] else "当月ペース（単純日次平均）ベース"
+forecast_diff = (
+    forecast - progress["last_year_full_total"]
+    if progress["last_year_full_total"] is not None
+    else None
+)
 col4.metric(
     "月末着地予測",
     format_yen_compact(forecast),
-    help=f"{forecast_note} / 正確な金額: {format_yen(forecast)}",
+    delta=format_delta(forecast_diff, progress["forecast_yoy_pct"]),
+    help=(
+        f"{forecast_note} / 正確な金額: {format_yen(forecast)} "
+        f"/ 前年実績（フル月）: {format_yen(progress['last_year_full_total'])}"
+    ),
 )
 
 st.divider()
@@ -201,25 +227,18 @@ with right:
 
 st.divider()
 
-st.markdown("#### 年間前年比（暦年合計・1月〜基準日）")
-year_yoy = dl.calendar_year_yoy(filtered, as_of)
-ycol1, ycol2, ycol3, ycol4 = st.columns(4)
-ycol1.metric(
-    f"{year_yoy['year']}年 累計（1/1〜{as_of.strftime('%m/%d')}）",
-    format_yen_compact(year_yoy["this_year_ytd"]),
-    help=format_yen(year_yoy["this_year_ytd"]),
+st.markdown(f"#### 店舗別・日別売上（{target_year}年{target_month}月、前年同日比込み）")
+daily_store = dl.daily_store_table(filtered, target_year, target_month)
+daily_store_display = pd.DataFrame(
+    {
+        "日付": daily_store["date"].dt.strftime("%Y-%m-%d"),
+        "店舗": daily_store["store"],
+        "当日売上": daily_store["sales"].map(format_yen),
+        "前年同日売上": daily_store["last_year_sales"].map(format_yen),
+        "前年同日比": daily_store["yoy_pct"].map(format_pct),
+    }
 )
-ycol2.metric(
-    f"{year_yoy['year'] - 1}年 同期間累計",
-    format_yen_compact(year_yoy["last_year_ytd"]),
-    help=format_yen(year_yoy["last_year_ytd"]),
-)
-ycol3.metric("前年比", format_pct(year_yoy["yoy_pct"]))
-ycol4.metric(
-    f"{year_yoy['year'] - 1}年 実績（暦年フル）",
-    format_yen_compact(year_yoy["last_year_full_total"]),
-    help=f"参考: 前年1年間（1月〜12月）の実績合計 / 正確な金額: {format_yen(year_yoy['last_year_full_total'])}",
-)
+st.dataframe(daily_store_display, use_container_width=True, hide_index=True, height=350)
 
 st.divider()
 
@@ -283,3 +302,25 @@ fig2.update_layout(
     margin=dict(l=10, r=10, t=10, b=10), height=300,
 )
 st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar": False})
+
+st.divider()
+
+st.markdown("#### 年間前年比（暦年合計・1月〜基準日）")
+year_yoy = dl.calendar_year_yoy(filtered, as_of)
+ycol1, ycol2, ycol3, ycol4 = st.columns(4)
+ycol1.metric(
+    f"{year_yoy['year']}年 累計（1/1〜{as_of.strftime('%m/%d')}）",
+    format_yen_compact(year_yoy["this_year_ytd"]),
+    help=format_yen(year_yoy["this_year_ytd"]),
+)
+ycol2.metric(
+    f"{year_yoy['year'] - 1}年 同期間累計",
+    format_yen_compact(year_yoy["last_year_ytd"]),
+    help=format_yen(year_yoy["last_year_ytd"]),
+)
+ycol3.metric("前年比", format_pct(year_yoy["yoy_pct"]))
+ycol4.metric(
+    f"{year_yoy['year'] - 1}年 実績（暦年フル）",
+    format_yen_compact(year_yoy["last_year_full_total"]),
+    help=f"参考: 前年1年間（1月〜12月）の実績合計 / 正確な金額: {format_yen(year_yoy['last_year_full_total'])}",
+)

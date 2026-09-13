@@ -158,6 +158,15 @@ def month_progress(df: pd.DataFrame, year: int, month: int, as_of: date) -> dict
         growth_ratio = mtd_total / last_year_mtd_total
         forecast_yoy_adjusted = last_year_full_total * growth_ratio
 
+    mtd_yoy_pct = None
+    if last_year_mtd_total > 0:
+        mtd_yoy_pct = (mtd_total - last_year_mtd_total) / last_year_mtd_total * 100
+
+    forecast = forecast_yoy_adjusted or forecast_run_rate
+    forecast_yoy_pct = None
+    if last_year_full_total > 0:
+        forecast_yoy_pct = (forecast - last_year_full_total) / last_year_full_total * 100
+
     return {
         "year": year,
         "month": month,
@@ -169,6 +178,8 @@ def month_progress(df: pd.DataFrame, year: int, month: int, as_of: date) -> dict
         "forecast_yoy_adjusted": forecast_yoy_adjusted,
         "last_year_mtd_total": last_year_mtd_total if last_year_mtd_total else None,
         "last_year_full_total": last_year_full_total if last_year_full_total else None,
+        "mtd_yoy_pct": mtd_yoy_pct,
+        "forecast_yoy_pct": forecast_yoy_pct,
     }
 
 
@@ -285,6 +296,38 @@ def calendar_year_yoy(df: pd.DataFrame, as_of: date) -> dict:
         "yoy_pct": yoy_pct,
         "last_year_full_total": last_year_full_total,
     }
+
+
+def _shift_year(ts: pd.Timestamp, years: int) -> pd.Timestamp:
+    try:
+        return ts.replace(year=ts.year + years)
+    except ValueError:
+        # 2/29のようなケースは2/28に読み替える
+        return ts.replace(year=ts.year + years, day=28)
+
+
+def daily_store_table(df: pd.DataFrame, year: int, month: int) -> pd.DataFrame:
+    """対象月の日ごと・店舗ごとの売上を、前年同日の売上・前年比とあわせて一覧化する。"""
+    this_month = month_slice(df, year, month)
+    columns = ["date", "store", "sales", "last_year_sales", "yoy_pct"]
+    if this_month.empty:
+        return pd.DataFrame(columns=columns)
+
+    this_month = this_month.copy()
+    this_month["last_year_date"] = this_month["date"].apply(lambda d: _shift_year(d, -1))
+
+    last_year_lookup = df.rename(
+        columns={"date": "last_year_date", "sales": "last_year_sales"}
+    )[["last_year_date", "store", "last_year_sales"]]
+
+    merged = this_month.merge(last_year_lookup, on=["last_year_date", "store"], how="left")
+    merged["yoy_pct"] = merged.apply(
+        lambda r: ((r["sales"] - r["last_year_sales"]) / r["last_year_sales"] * 100)
+        if pd.notna(r["last_year_sales"]) and r["last_year_sales"] > 0
+        else None,
+        axis=1,
+    )
+    return merged[columns].sort_values(["date", "store"], ascending=[False, True])
 
 
 def store_ranking(df: pd.DataFrame, year: int, month: int, as_of: date) -> pd.DataFrame:

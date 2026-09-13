@@ -17,6 +17,7 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from lib import data_loader as dl  # noqa: E402
+from lib import github_sync as gh  # noqa: E402
 
 # 店舗識別用の固定カラー順（10店舗分）。店舗が増えたら末尾に追加する。
 STORE_COLORS = [
@@ -89,6 +90,14 @@ def store_color_map(stores: list[str]) -> dict[str, str]:
     return {store: STORE_COLORS[i % len(STORE_COLORS)] for i, store in enumerate(sorted(stores))}
 
 
+def get_secret(name: str) -> str | None:
+    """st.secretsが未設定（ローカル実行など）でもエラーにならないよう安全に読む。"""
+    try:
+        return st.secrets.get(name)
+    except Exception:
+        return None
+
+
 st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")
 
@@ -101,6 +110,56 @@ with st.sidebar:
     as_of = st.date_input("基準日（本日扱いにする日付）", value=date.today())
 
 data_dir = Path(data_dir_input)
+
+ADMIN_PASSWORD = get_secret("admin_password")
+GITHUB_TOKEN = get_secret("github_token")
+GITHUB_REPO = get_secret("github_repo")
+GITHUB_BRANCH = get_secret("github_branch")
+
+with st.sidebar:
+    st.divider()
+    with st.expander("📤 データ登録（Excelアップロード）"):
+        upload_unlocked = True
+        if ADMIN_PASSWORD:
+            entered_password = st.text_input("パスワード", type="password", key="admin_password_input")
+            upload_unlocked = entered_password == ADMIN_PASSWORD
+            if entered_password and not upload_unlocked:
+                st.error("パスワードが違います。")
+
+        if upload_unlocked:
+            uploaded_files = st.file_uploader(
+                "売上Excelを選択してください（複数選択可）",
+                type=["xlsx"],
+                accept_multiple_files=True,
+                key="sales_file_uploader",
+            )
+            if uploaded_files and st.button("この内容を登録する", use_container_width=True):
+                data_dir.mkdir(parents=True, exist_ok=True)
+                for uploaded_file in uploaded_files:
+                    content = uploaded_file.getvalue()
+                    (data_dir / uploaded_file.name).write_bytes(content)
+
+                    if GITHUB_TOKEN and GITHUB_REPO and GITHUB_BRANCH:
+                        sync_result = gh.upload_file_to_github(
+                            repo=GITHUB_REPO,
+                            branch=GITHUB_BRANCH,
+                            token=GITHUB_TOKEN,
+                            path_in_repo=f"dashboard/data/incoming/{uploaded_file.name}",
+                            content_bytes=content,
+                            commit_message=f"売上データ追加: {uploaded_file.name}",
+                        )
+                        if sync_result.ok:
+                            st.success(f"{uploaded_file.name}: 登録しました（GitHubにも保存済み）")
+                        else:
+                            st.warning(
+                                f"{uploaded_file.name}: 画面には反映しましたが、GitHubへの保存に失敗しました。"
+                                f"次回の再起動で消える可能性があります（{sync_result.message}）"
+                            )
+                    else:
+                        st.success(f"{uploaded_file.name}: 登録しました")
+
+                st.cache_data.clear()
+                st.rerun()
 
 
 @st.cache_data(show_spinner="Excelファイルを読み込み中...")

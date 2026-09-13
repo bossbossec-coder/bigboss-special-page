@@ -2,3 +2,4 @@ data/incoming/*.xlsx
 !data/incoming/.gitkeep
 __pycache__/
 *.pyc
+.streamlit/secrets.toml

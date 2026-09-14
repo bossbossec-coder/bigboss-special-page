@@ -26,6 +26,9 @@ STORE_COLORS = [
 ]
 PRIMARY_COLOR = "#4E79A7"
 COMPARISON_COLOR = "#BAB0AC"
+ACCENT_COLOR = "#F28E2B"
+
+WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent / "data" / "incoming"
 
@@ -88,6 +91,47 @@ def format_delta(diff: float | None, pct: float | None) -> str | None:
 
 def store_color_map(stores: list[str]) -> dict[str, str]:
     return {store: STORE_COLORS[i % len(STORE_COLORS)] for i, store in enumerate(sorted(stores))}
+
+
+def render_target_date_badge(target_date: date) -> None:
+    """右上に「対象日」を目立つバッジとして表示する。"""
+    weekday = WEEKDAY_JP[target_date.weekday()]
+    st.markdown(
+        f"""
+        <div style="display:flex; justify-content:flex-end;">
+          <div style="text-align:right;">
+            <div style="font-size:0.75rem; color:#8a8a8a; margin-bottom:2px;">対象日</div>
+            <div style="position:relative; display:inline-block;
+                        padding:6px 16px 6px 22px; border-radius:6px;
+                        background:#fff; border:1px solid #e6e6e6;
+                        box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+              <div style="position:absolute; top:0; left:0; width:0; height:0;
+                          border-left:16px solid {ACCENT_COLOR};
+                          border-bottom:16px solid transparent;
+                          border-top-left-radius:6px;"></div>
+              <span style="font-size:1.5rem; font-weight:800; color:#1a1a1a;">
+                {target_date.month}.{target_date.day}
+              </span>
+              <span style="font-size:1.05rem; font-weight:600; color:#555;">
+                [{weekday}]
+              </span>
+            </div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_section_break() -> None:
+    """日別グループと月別グループの境目を、通常のdividerより太く目立たせる。"""
+    st.markdown(
+        f"""
+        <hr style="border:none; height:5px; margin:28px 0 24px 0; border-radius:3px;
+                   background:linear-gradient(90deg, {PRIMARY_COLOR}, {ACCENT_COLOR});">
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def get_secret(name: str) -> str | None:
@@ -208,7 +252,11 @@ target_year, target_month = available_months[month_idx]
 progress = dl.month_progress(filtered, target_year, target_month, as_of)
 yoy_today = dl.yoy_same_day(filtered, as_of)
 
-st.subheader(f"{target_year}年{target_month}月 サマリー（基準日: {as_of}）")
+header_title_col, header_date_col = st.columns([3, 1])
+with header_title_col:
+    st.subheader("売上サマリー")
+with header_date_col:
+    render_target_date_badge(as_of)
 
 col1, col2, col3, col4 = st.columns(4)
 col1.metric(
@@ -303,7 +351,7 @@ daily_store_display = pd.DataFrame(
 )
 st.dataframe(daily_store_display, use_container_width=True, hide_index=True, height=350)
 
-st.divider()
+render_section_break()
 
 st.markdown("#### 店舗別ランキング（当月累計・前年同期間比）")
 ranking = dl.store_ranking(filtered, target_year, target_month, as_of)
@@ -320,7 +368,7 @@ st.dataframe(ranking_display, use_container_width=True, hide_index=True)
 
 st.divider()
 
-st.markdown("#### 月別前年比（直近12ヶ月）")
+st.markdown("#### グループ月別前年比（直近12ヶ月）")
 monthly_yoy = dl.monthly_yoy_series(filtered, as_of, months=12)
 fig3 = go.Figure()
 fig3.add_bar(
@@ -379,6 +427,25 @@ ycol4.metric(
     format_yen_compact(year_yoy["last_year_full_total"]),
     help=f"参考: 前年1年間（1月〜12月）の実績合計 / 正確な金額: {format_yen(year_yoy['last_year_full_total'])}",
 )
+
+st.markdown("##### 記録")
+daily_rec = dl.daily_record(filtered)
+monthly_rec = dl.monthly_record(filtered)
+rcol1, rcol2 = st.columns(2)
+with rcol1:
+    st.markdown("**日商ギネス**")
+    if daily_rec:
+        st.metric("売上高", format_yen_compact(daily_rec["sales"]), help=format_yen(daily_rec["sales"]))
+        st.caption(f"達成日付: {daily_rec['date']} / 店舗名: {daily_rec['store']}")
+    else:
+        st.caption("データがありません")
+with rcol2:
+    st.markdown("**月商ギネス**")
+    if monthly_rec:
+        st.metric("売上高", format_yen_compact(monthly_rec["sales"]), help=format_yen(monthly_rec["sales"]))
+        st.caption(f"達成日付: {monthly_rec['year']}年{monthly_rec['month']}月 / 店舗名: {monthly_rec['store']}")
+    else:
+        st.caption("データがありません")
 
 st.divider()
 

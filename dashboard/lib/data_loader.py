@@ -360,3 +360,23 @@ def store_ranking(df: pd.DataFrame, year: int, month: int, as_of: date) -> pd.Da
         axis=1,
     )
     return merged.sort_values("mtd_sales", ascending=False)
+
+
+def daily_record(df: pd.DataFrame) -> dict | None:
+    """全期間の中で、1日の売上が最も高かった記録（日商ギネス）を返す。"""
+    if df.empty:
+        return None
+    row = df.loc[df["sales"].idxmax()]
+    return {"date": row["date"].date(), "store": row["store"], "sales": float(row["sales"])}
+
+
+def monthly_record(df: pd.DataFrame) -> dict | None:
+    """全期間の中で、店舗ごとの月間売上合計が最も高かった記録（月商ギネス）を返す。"""
+    if df.empty:
+        return None
+    tmp = df.copy()
+    tmp["year"] = tmp["date"].dt.year
+    tmp["month"] = tmp["date"].dt.month
+    grouped = tmp.groupby(["year", "month", "store"], as_index=False)["sales"].sum()
+    row = grouped.loc[grouped["sales"].idxmax()]
+    return {"year": int(row["year"]), "month": int(row["month"]), "store": row["store"], "sales": float(row["sales"])}

@@ -14,6 +14,7 @@ from pathlib import Path
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+import streamlit.components.v1 as components
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -29,6 +30,7 @@ PRIMARY_COLOR = "#4E79A7"
 COMPARISON_COLOR = "#BAB0AC"
 ACCENT_COLOR = "#F28E2B"
 KPI_BLUE = "rgb(6, 81, 201)"
+KPI_GREEN = "rgb(3, 138, 52)"
 
 WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]
 
@@ -102,8 +104,6 @@ st.markdown(
         /* スマホ向け: 店舗別・日別売上グラフの上に、店舗ごとの当日売上カードを表示 */
         .st-key-daily_store_cards_mobile { display: block !important; }
 
-        /* 最上部に戻るボタン（スマホのみ表示） */
-        .scroll-top-btn { display: flex !important; }
     }
     @media (min-width: 641px) {
         /* PC/タブレットでは、スマホ向けのコンパクト表・グラフ・グリッド・カードを隠す（PC側の見た目は変更しない） */
@@ -111,30 +111,82 @@ st.markdown(
         .st-key-daily_chart_mobile, .st-key-daily_store_chart_mobile,
         .st-key-ranking_chart_mobile, .st-key-monthly_chart_mobile { display: none !important; }
         .st-key-daily_store_cards_mobile { display: none !important; }
+        .st-key-scroll_top_btn_container { display: none !important; }
     }
-    .scroll-top-btn {
-        display: none;
-        position: fixed;
-        left: 16px;
-        bottom: 16px;
-        z-index: 9999;
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        border: none;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #4E79A7, #F28E2B);
-        color: #ffffff;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.28);
-        cursor: pointer;
+    @media (max-width: 640px) {
+        /* 最上部に戻るボタン（スマホのみ表示）。中身はcomponents.htmlのiframeなので、
+           コンテナごと画面左下に固定表示する。 */
+        .st-key-scroll_top_btn_container {
+            display: block !important;
+            position: fixed !important;
+            left: 16px !important;
+            bottom: 16px !important;
+            width: 60px !important;
+            height: 60px !important;
+            z-index: 9999 !important;
+        }
+        .st-key-scroll_top_btn_container iframe {
+            width: 60px !important;
+            height: 60px !important;
+            border: none !important;
+        }
     }
     </style>
-    <button class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'});" title="最上部へ戻る">▲</button>
     """,
     unsafe_allow_html=True,
 )
+
+# 最上部に戻るボタン（スマホのみ表示）。st.markdownのHTMLはonclick等のイベント属性が
+# 無効化されるため、components.htmlで独立したiframeとして描画し、その中でJSを実行する。
+# iframe自体はst.container(key=...)経由でCSSにより画面左下に固定表示させている。
+with st.container(key="scroll_top_btn_container"):
+    components.html(
+        """
+        <style>
+          html, body { margin:0; padding:0; background:transparent; overflow:hidden; }
+          .scroll-top-btn {
+            width:60px; height:60px; border-radius:50%; border:none;
+            display:flex; align-items:center; justify-content:center;
+            background:#3a3a3a; color:#ffffff; font-size:3rem; line-height:1;
+            box-shadow:0 4px 14px rgba(0,0,0,0.28); cursor:pointer;
+            opacity:1; transition:opacity 0.3s ease;
+          }
+          .scroll-top-btn.is-scrolling { opacity:0.25; }
+        </style>
+        <button class="scroll-top-btn" id="scrollTopBtn" title="最上部へ戻る">▲</button>
+        <script>
+          (function() {
+            function getScrollTargets() {
+              var doc = window.parent.document;
+              var targets = [];
+              ["stMain", "stAppViewContainer"].forEach(function(t) {
+                var el = doc.querySelector('[data-testid="' + t + '"]');
+                if (el) { targets.push(el); }
+              });
+              return targets;
+            }
+            var btn = document.getElementById("scrollTopBtn");
+            btn.addEventListener("click", function() {
+              getScrollTargets().forEach(function(el) {
+                el.scrollTo({top: 0, behavior: "smooth"});
+              });
+            });
+            var fadeTimer = null;
+            function onScroll() {
+              btn.classList.add("is-scrolling");
+              clearTimeout(fadeTimer);
+              fadeTimer = setTimeout(function() {
+                btn.classList.remove("is-scrolling");
+              }, 400);
+            }
+            getScrollTargets().forEach(function(el) {
+              el.addEventListener("scroll", onScroll, true);
+            });
+          })();
+        </script>
+        """,
+        height=60,
+    )
 
 
 def format_yen(value: float | None) -> str:
@@ -235,11 +287,21 @@ def render_kpi_grid(blocks: list[dict]) -> None:
 
 
 def render_daily_store_cards(df: pd.DataFrame) -> None:
-    """スマホ向け: 店舗ごとの当日売上を、売上サマリーのブロックのような
-    色付きカードで2列表示する（店舗名・売上（万単位・大きく表示）・前年比の3行）。"""
+    """スマホ向け: 店舗ごとの当日・当月累計売上を、売上サマリーのブロックのような
+    色付きカードで2列表示する。1段目=店舗名、2段目=当日/前年同日（万単位、数値のみ）、
+    3段目=前年同日比、4段目=当月累計/前年同期間累計（万単位、数値のみ、やや小さめ）、
+    5段目=当月累計前年比。"""
+    def _man(value: float | None) -> str:
+        return "—" if value is None or pd.isna(value) else f"{value / 10000:,.1f}"
+
     cards_html = ""
     for _, row in df.iterrows():
-        man_value = row["sales"] / 10000
+        today_man = _man(row["sales"])
+        last_year_man = _man(row["last_year_sales"])
+        mtd_man = _man(row["mtd_sales"])
+        last_year_mtd_man = _man(row["last_year_mtd_sales"])
+        daily_pct = format_pct(row["yoy_pct"])
+        mtd_pct = format_pct(row["mtd_yoy_pct"])
         cards_html += f"""
         <div style="background-color:{KPI_BLUE}; color:#ffffff; border-radius:10px;
                     padding:14px 10px; text-align:center; min-width:0;
@@ -248,10 +310,16 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             {row['store']}
           </div>
           <div style="font-size:1.6rem; font-weight:800; margin-top:4px; white-space:nowrap;">
-            ¥{man_value:,.1f}万
+            {today_man}/{last_year_man}
           </div>
-          <div style="font-size:0.8rem; opacity:0.9; margin-top:4px;">
-            前年比 {format_pct(row['yoy_pct'])}
+          <div style="font-size:1.2rem; font-weight:400; margin-top:4px; white-space:nowrap;">
+            {daily_pct}
+          </div>
+          <div style="font-size:1.3rem; font-weight:700; margin-top:8px; white-space:nowrap;">
+            {mtd_man}/{last_year_mtd_man}
+          </div>
+          <div style="font-size:1.2rem; font-weight:400; margin-top:4px; white-space:nowrap;">
+            {mtd_pct}
           </div>
         </div>
         """
@@ -662,7 +730,7 @@ render_kpi_grid([
     dict(
         label="前年同日比",
         value=format_pct(yoy_today["pct_change"]),
-        bg_color="rgb(3, 138, 52)",
+        bg_color=KPI_GREEN,
         caption="&nbsp;",
     ),
     dict(
@@ -728,15 +796,22 @@ st.divider()
 st.markdown("#### 店舗別・日別売上")
 st.caption(f"対象日: {as_of}")
 daily_store = reorder_by_store(dl.daily_store_snapshot(filtered, as_of), all_stores)
-daily_store_mtd_yoy = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")["yoy_pct"]
+daily_store_ranking = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")
+daily_store_mtd_yoy = daily_store_ranking["yoy_pct"]
 
 with st.container(key="daily_store_cards_mobile"):
-    render_daily_store_cards(daily_store)
+    daily_store_cards_df = daily_store.copy()
+    daily_store_cards_df["mtd_sales"] = daily_store_cards_df["store"].map(daily_store_ranking["mtd_sales"])
+    daily_store_cards_df["last_year_mtd_sales"] = daily_store_cards_df["store"].map(
+        daily_store_ranking["last_year_mtd_sales"]
+    )
+    daily_store_cards_df["mtd_yoy_pct"] = daily_store_cards_df["store"].map(daily_store_ranking["yoy_pct"])
+    render_daily_store_cards(daily_store_cards_df)
 
 fig_daily_store = go.Figure()
 fig_daily_store.add_bar(
     x=daily_store["store"], y=daily_store["sales"],
-    name="当日売上", marker_color=ACCENT_COLOR,
+    name="当日売上", marker_color=KPI_BLUE,
 )
 fig_daily_store.add_bar(
     x=daily_store["store"], y=daily_store["last_year_sales"],
@@ -821,7 +896,7 @@ monthly_yoy = dl.monthly_yoy_series(filtered, as_of, months=12)
 fig3 = go.Figure()
 fig3.add_bar(
     x=monthly_yoy["label"], y=monthly_yoy["this_year"],
-    name="当年", marker_color=PRIMARY_COLOR,
+    name="当年", marker_color=KPI_GREEN,
 )
 fig3.add_bar(
     x=monthly_yoy["label"], y=monthly_yoy["last_year"],

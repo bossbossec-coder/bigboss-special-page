@@ -191,6 +191,11 @@ def render_scroll_top_button() -> None:
         )
 
 
+def full_table_height(n_rows: int) -> int:
+    """上下スクロールが出ないよう、全行が収まる高さを計算する（st.dataframe用）。"""
+    return 35 * (n_rows + 1) + 3
+
+
 def format_yen(value: float | None) -> str:
     if value is None or pd.isna(value):
         return "—"
@@ -293,8 +298,10 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
     色付きカードで2列表示する。1段目=店舗名、2段目=当日/前年同日（万単位、数値のみ）、
     3段目=前年同日比、4段目=当月累計/前年同期間累計（万単位、数値のみ、やや小さめ）、
     5段目=当月累計前年比。"""
+    slash = '<span style="font-size:0.55em; opacity:0.85;">/</span>'
+
     def _man(value: float | None) -> str:
-        return "—" if value is None or pd.isna(value) else f"{value / 10000:,.1f}"
+        return "—" if value is None or pd.isna(value) else f"{value / 10000:,.0f}"
 
     cards_html = ""
     for _, row in df.iterrows():
@@ -311,16 +318,16 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
           <div style="font-size:0.8rem; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
             {row['store']}
           </div>
-          <div style="font-size:1.6rem; font-weight:800; margin-top:4px; white-space:nowrap;">
-            {today_man}/{last_year_man}
+          <div style="font-size:2.4rem; font-weight:800; margin-top:4px; white-space:nowrap;">
+            {today_man}{slash}{last_year_man}
           </div>
-          <div style="font-size:1.2rem; font-weight:400; margin-top:4px; white-space:nowrap;">
+          <div style="font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap;">
             {daily_pct}
           </div>
-          <div style="font-size:1.3rem; font-weight:700; margin-top:8px; white-space:nowrap;">
-            {mtd_man}/{last_year_mtd_man}
+          <div style="font-size:1.56rem; font-weight:700; margin-top:8px; white-space:nowrap;">
+            {mtd_man}{slash}{last_year_mtd_man}
           </div>
-          <div style="font-size:1.2rem; font-weight:400; margin-top:4px; white-space:nowrap;">
+          <div style="font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap;">
             {mtd_pct}
           </div>
         </div>
@@ -898,7 +905,12 @@ daily_store_display = pd.DataFrame(
     }
 )
 with st.container(key="daily_store_table_pc"):
-    st.dataframe(daily_store_display, use_container_width=True, hide_index=True, height=350)
+    st.dataframe(
+        daily_store_display,
+        use_container_width=True,
+        hide_index=True,
+        height=full_table_height(len(daily_store_display)),
+    )
 with st.container(key="daily_store_table_mobile"):
     render_compact_table(daily_store_display[["店舗", "当日売上", "前年同日比"]])
 
@@ -943,7 +955,12 @@ ranking_display = pd.DataFrame(
     }
 )
 with st.container(key="ranking_table_pc"):
-    st.dataframe(ranking_display, use_container_width=True, hide_index=True)
+    st.dataframe(
+        ranking_display,
+        use_container_width=True,
+        hide_index=True,
+        height=full_table_height(len(ranking_display)),
+    )
 with st.container(key="ranking_table_mobile"):
     render_compact_table(ranking_display, sticky_first_col=True)
 

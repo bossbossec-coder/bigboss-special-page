@@ -625,6 +625,17 @@ def render_pc_table(df: pd.DataFrame, low_yoy_mask: pd.Series, store_col: str = 
     )
 
 
+def render_calendar_section(embed_src: str) -> None:
+    """ダッシュボード下部にGoogleカレンダーの予定表を埋め込み表示する
+    （見た目はGoogle側のものをそのまま表示し、アプリ全体のデザインとは別枠）。"""
+    st.markdown("#### 予定表")
+    components.html(
+        f'<iframe src="{embed_src}" style="border:0; width:100%; height:600px;" '
+        f'frameborder="0" scrolling="no"></iframe>',
+        height=620,
+    )
+
+
 def get_secret(name: str) -> str | None:
     """st.secretsが未設定（ローカル実行など）でもエラーにならないよう安全に読む。"""
     try:
@@ -1167,3 +1178,8 @@ ecol3.metric(
         f"/ 前年同期間: {format_yen(external_progress['last_year_mtd_total'])}"
     ),
 )
+
+GOOGLE_CALENDAR_SRC = get_secret("google_calendar_src")
+if GOOGLE_CALENDAR_SRC:
+    st.divider()
+    render_calendar_section(GOOGLE_CALENDAR_SRC)

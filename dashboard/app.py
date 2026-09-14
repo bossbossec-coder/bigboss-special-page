@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import math
 import sys
 from datetime import date, timedelta
 from pathlib import Path
@@ -68,10 +69,12 @@ st.markdown(
         [data-testid="stMarkdownContainer"] h1, h1 { font-size: 1.6rem !important; }
         [data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4, h3, h4 { font-size: 1.05rem !important; }
 
-        /* 表示店舗・対象日バッジを横並びのまま縮小し、スマホ幅でも1行に収める */
-        .hdr-badges-row { flex-wrap: nowrap !important; gap: 8px !important; margin-bottom: 10px !important; }
+        /* 表示店舗・対象日バッジを横並びのまま縮小し、スマホ幅でも1行に収める（高さも揃える） */
+        .hdr-badges-row { flex-wrap: nowrap !important; gap: 8px !important; margin-bottom: 10px !important; align-items: stretch !important; }
+        .hdr-store-badge, .hdr-date-badge { display: flex !important; flex-direction: column !important; }
         .hdr-badge-label { font-size: 0.72rem !important; margin-bottom: 3px !important; }
-        .hdr-store-box { padding: 8px 12px !important; min-height: 48px !important; }
+        .hdr-store-box, .hdr-date-box { min-height: 52px !important; box-sizing: border-box !important; flex: 1 1 auto !important; }
+        .hdr-store-box { padding: 8px 12px !important; }
         .hdr-store-value { font-size: 1.05rem !important; }
         .hdr-date-box { padding: 8px 14px 8px 26px !important; gap: 5px !important; }
         .hdr-date-flag { border-left-width: 20px !important; border-bottom-width: 20px !important; }
@@ -79,8 +82,8 @@ st.markdown(
         .hdr-date-main { font-size: 1.6rem !important; }
         .hdr-date-weekday { font-size: 1.05rem !important; }
 
-        /* 「対象日・表示店舗を変更」ボタンをバッジに近づける（詰めすぎない程度に） */
-        .st-key-edit_button_row { margin-top: -16px !important; }
+        /* 「対象日・表示店舗を変更」ボタン: 上のバッジとの間は狭く、下のKPIブロックとの間は広く */
+        .st-key-edit_button_row { margin-top: -18px !important; margin-bottom: 18px !important; }
 
         /* スマホでは列数の多い表を、横スクロール不要なコンパクト表に差し替える */
         .st-key-daily_store_table_pc, .st-key-ranking_table_pc { display: none !important; }
@@ -95,14 +98,40 @@ st.markdown(
         /* 棒グラフはPC版を隠し、スマホ向け（軸タイトル無し・万円単位）を表示 */
         .st-key-daily_chart_pc, .st-key-daily_store_chart_pc,
         .st-key-ranking_chart_pc, .st-key-monthly_chart_pc { display: none !important; }
+
+        /* スマホ向け: 店舗別・日別売上グラフの上に、店舗ごとの当日売上カードを表示 */
+        .st-key-daily_store_cards_mobile { display: block !important; }
+
+        /* 最上部に戻るボタン（スマホのみ表示） */
+        .scroll-top-btn { display: flex !important; }
     }
     @media (min-width: 641px) {
-        /* PC/タブレットでは、スマホ向けのコンパクト表・グラフ・グリッドを隠す（PC側の見た目は変更しない） */
+        /* PC/タブレットでは、スマホ向けのコンパクト表・グラフ・グリッド・カードを隠す（PC側の見た目は変更しない） */
         .st-key-daily_store_table_mobile, .st-key-ranking_table_mobile { display: none !important; }
         .st-key-daily_chart_mobile, .st-key-daily_store_chart_mobile,
         .st-key-ranking_chart_mobile, .st-key-monthly_chart_mobile { display: none !important; }
+        .st-key-daily_store_cards_mobile { display: none !important; }
+    }
+    .scroll-top-btn {
+        display: none;
+        position: fixed;
+        left: 16px;
+        bottom: 16px;
+        z-index: 9999;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        border: none;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #4E79A7, #F28E2B);
+        color: #ffffff;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.28);
+        cursor: pointer;
     }
     </style>
+    <button class="scroll-top-btn" onclick="window.scrollTo({top:0, behavior:'smooth'});" title="最上部へ戻る">▲</button>
     """,
     unsafe_allow_html=True,
 )
@@ -205,6 +234,37 @@ def render_kpi_grid(blocks: list[dict]) -> None:
     )
 
 
+def render_daily_store_cards(df: pd.DataFrame) -> None:
+    """スマホ向け: 店舗ごとの当日売上を、売上サマリーのブロックのような
+    色付きカードで2列表示する（店舗名・売上（万単位・大きく表示）・前年比の3行）。"""
+    cards_html = ""
+    for _, row in df.iterrows():
+        man_value = row["sales"] / 10000
+        cards_html += f"""
+        <div style="background-color:{KPI_BLUE}; color:#ffffff; border-radius:10px;
+                    padding:14px 10px; text-align:center; min-width:0;
+                    display:flex; flex-direction:column; justify-content:center;">
+          <div style="font-size:0.8rem; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            {row['store']}
+          </div>
+          <div style="font-size:1.6rem; font-weight:800; margin-top:4px; white-space:nowrap;">
+            ¥{man_value:,.1f}万
+          </div>
+          <div style="font-size:0.8rem; opacity:0.9; margin-top:4px;">
+            前年比 {format_pct(row['yoy_pct'])}
+          </div>
+        </div>
+        """
+    st.markdown(
+        f"""
+        <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; margin-bottom:16px;">
+          {cards_html}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def store_display_label(selected: list[str], all_stores: list[str]) -> str:
     """サイドバーの店舗選択状況を、バッジ表示用の短い文字列にする。"""
     if not selected or len(selected) == len(all_stores):
@@ -285,20 +345,66 @@ def render_progress_bar(elapsed: int, total: int) -> None:
     )
 
 
+def _nice_tick_step(max_value: float, target_ticks: int = 5) -> float:
+    """データの最大値から、5個前後になるようなキリの良い目盛り間隔を決める。"""
+    if max_value <= 0:
+        return 1
+    rough_step = max_value / target_ticks
+    magnitude = 10 ** math.floor(math.log10(rough_step))
+    residual = rough_step / magnitude
+    if residual <= 1:
+        nice = 1
+    elif residual <= 2:
+        nice = 2
+    elif residual <= 5:
+        nice = 5
+    else:
+        nice = 10
+    return nice * magnitude
+
+
+def _format_man_unit(man_value: float) -> str:
+    """万単位の数値を日本語らしい表記にする（例: 10000→1億、5000→5千万、300→300万）。"""
+    if man_value == 0:
+        return "0"
+    if man_value % 10000 == 0:
+        return f"{man_value / 10000:,.0f}億"
+    if man_value % 1000 == 0:
+        return f"{man_value / 1000:,.0f}千万"
+    return f"{man_value:,.0f}万"
+
+
 def to_mobile_chart(fig: go.Figure) -> go.Figure:
-    """スマホ向けに、Y軸タイトルを消し、目盛りを万円単位にしたグラフの複製を作る
-    （PC版のグラフはそのまま、スマホ版だけ別に描画するための複製）。
+    """スマホ向けに、Y軸タイトルを消し、目盛りを万円単位（キリが良ければ千万単位）に
+    したグラフの複製を作る（PC版のグラフはそのまま、スマホ版だけ別に描画するための複製）。
     ホバー表示では、customdataに元の正確な金額を保持して表示する。"""
     fig_m = go.Figure(fig)
+    scaled_values: list[float] = []
     for trace in fig_m.data:
         y = getattr(trace, "y", None)
         if y is None:
             continue
         original = list(y)
         trace.customdata = original
-        trace.y = [None if v is None else v / 10000 for v in original]
+        scaled = [None if v is None else v / 10000 for v in original]
+        trace.y = scaled
         trace.hovertemplate = "%{x}<br>%{customdata:,.0f}円<extra></extra>"
-    fig_m.update_yaxes(title=None, ticksuffix="万")
+        scaled_values.extend(v for v in scaled if v is not None)
+
+    max_value = max(scaled_values) if scaled_values else 0
+    step = _nice_tick_step(max_value)
+    ticks = []
+    v = 0.0
+    while v <= max_value + step:
+        ticks.append(v)
+        v += step
+
+    fig_m.update_yaxes(
+        title=None,
+        tickmode="array",
+        tickvals=ticks,
+        ticktext=[_format_man_unit(t) for t in ticks],
+    )
     return fig_m
 
 
@@ -607,6 +713,9 @@ st.markdown("#### 店舗別・日別売上")
 st.caption(f"対象日: {as_of}")
 daily_store = reorder_by_store(dl.daily_store_snapshot(filtered, as_of), all_stores)
 daily_store_mtd_yoy = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")["yoy_pct"]
+
+with st.container(key="daily_store_cards_mobile"):
+    render_daily_store_cards(daily_store)
 
 fig_daily_store = go.Figure()
 fig_daily_store.add_bar(

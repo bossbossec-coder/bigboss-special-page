@@ -462,6 +462,22 @@ def get_secret(name: str) -> str | None:
         return None
 
 
+VIEWER_PASSWORD = get_secret("viewer_password")
+if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
+    st.title("売上ダッシュボード")
+    st.caption("閲覧にはパスワードが必要です。")
+    entered_viewer_password = st.text_input(
+        "パスワード", type="password", key="viewer_password_input"
+    )
+    if entered_viewer_password:
+        if entered_viewer_password == VIEWER_PASSWORD:
+            st.session_state["viewer_unlocked"] = True
+            st.rerun()
+        else:
+            st.error("パスワードが違います。")
+    st.stop()
+
+
 st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")
 

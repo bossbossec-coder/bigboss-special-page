@@ -67,6 +67,12 @@ st.markdown(
         div[data-testid="stMetricLabel"] { font-size: 0.8rem !important; }
         [data-testid="stMarkdownContainer"] h1, h1 { font-size: 1.6rem !important; }
         [data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4, h3, h4 { font-size: 1.05rem !important; }
+        /* スマホでは列数の多い表を、横スクロール不要なコンパクト表に差し替える */
+        .st-key-daily_store_table_pc, .st-key-ranking_table_pc { display: none !important; }
+    }
+    @media (min-width: 641px) {
+        /* PC/タブレットでは、スマホ向けのコンパクト表を隠す（PC側の見た目は変更しない） */
+        .st-key-daily_store_table_mobile, .st-key-ranking_table_mobile { display: none !important; }
     }
     </style>
     """,
@@ -246,6 +252,35 @@ def render_section_break() -> None:
         f"""
         <hr style="border:none; height:5px; margin:28px 0 24px 0; border-radius:3px;
                    background:linear-gradient(90deg, {PRIMARY_COLOR}, {ACCENT_COLOR});">
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_compact_table(df: pd.DataFrame) -> None:
+    """スマホ向けの、列数を絞ったコンパクトな表を描画する（横スクロール無しで収まるように）。
+    渡されたデータフレームの列（すでに整形済みの文字列）をそのまま使う。"""
+    header_cells = "".join(
+        f'<th style="text-align:left; padding:6px 8px; font-size:0.72rem; color:#8a8a8a; '
+        f'font-weight:600; border-bottom:1px solid #e6e6e6; white-space:nowrap;">{col}</th>'
+        for col in df.columns
+    )
+    rows_html = ""
+    for _, row in df.iterrows():
+        cells = "".join(
+            f'<td style="padding:7px 8px; font-size:0.85rem; color:#1a1a1a; '
+            f'border-bottom:1px solid #f0f0f0; white-space:nowrap;">{value}</td>'
+            for value in row
+        )
+        rows_html += f"<tr>{cells}</tr>"
+    st.markdown(
+        f"""
+        <div style="overflow-x:auto;">
+          <table style="width:100%; border-collapse:collapse;">
+            <thead><tr>{header_cells}</tr></thead>
+            <tbody>{rows_html}</tbody>
+          </table>
+        </div>
         """,
         unsafe_allow_html=True,
     )
@@ -537,7 +572,10 @@ daily_store_display = pd.DataFrame(
         "当月累計前年比": daily_store["store"].map(daily_store_mtd_yoy).map(format_pct),
     }
 )
-st.dataframe(daily_store_display, use_container_width=True, hide_index=True, height=350)
+with st.container(key="daily_store_table_pc"):
+    st.dataframe(daily_store_display, use_container_width=True, hide_index=True, height=350)
+with st.container(key="daily_store_table_mobile"):
+    render_compact_table(daily_store_display[["店舗", "当日売上", "前年同日比"]])
 
 render_section_break()
 
@@ -576,7 +614,10 @@ ranking_display = pd.DataFrame(
         "前年売上計": ranking["last_year_full_sales"].map(format_yen),
     }
 )
-st.dataframe(ranking_display, use_container_width=True, hide_index=True)
+with st.container(key="ranking_table_pc"):
+    st.dataframe(ranking_display, use_container_width=True, hide_index=True)
+with st.container(key="ranking_table_mobile"):
+    render_compact_table(ranking_display[["店舗", "当月累計売上", "前年比"]])
 
 st.divider()
 

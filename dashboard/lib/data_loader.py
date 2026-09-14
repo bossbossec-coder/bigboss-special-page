@@ -150,6 +150,23 @@ def month_slice(df: pd.DataFrame, year: int, month: int) -> pd.DataFrame:
     return df[mask]
 
 
+def _trailing_avg_growth_ratio(df: pd.DataFrame, year: int, month: int, lookback_months: int = 3) -> float | None:
+    """当月を除く直近数ヶ月分の「実績の前年同月比」の平均を返す。
+    月初のわずかな実績だけで着地予測がブレるのを防ぐための土台値として使う
+    （データが無い/前年データが無い月はスキップする）。"""
+    ratios = []
+    y, m = year, month
+    for _ in range(lookback_months):
+        m -= 1
+        if m == 0:
+            m, y = 12, y - 1
+        this_total = float(month_slice(df, y, m)["sales"].sum())
+        last_total = float(month_slice(df, y - 1, m)["sales"].sum())
+        if this_total > 0 and last_total > 0:
+            ratios.append(this_total / last_total)
+    return sum(ratios) / len(ratios) if ratios else None
+
+
 def month_progress(df: pd.DataFrame, year: int, month: int, as_of: date) -> dict:
     """当月の進捗（累計・平均・着地予測）を計算する。"""
     this_month = month_slice(df, year, month)
@@ -171,7 +188,16 @@ def month_progress(df: pd.DataFrame, year: int, month: int, as_of: date) -> dict
 
     forecast_yoy_adjusted = None
     if last_year_mtd_total > 0 and last_year_full_total > 0:
-        growth_ratio = mtd_total / last_year_mtd_total
+        current_growth_ratio = mtd_total / last_year_mtd_total
+        trend_growth_ratio = _trailing_avg_growth_ratio(df, year, month)
+        if trend_growth_ratio is not None:
+            # 月初は今月実績が少なくブレやすいため、直近3ヶ月の平均的な前年比と
+            # 混ぜ合わせる。日数が経つにつれて今月実績の比重を増やし、
+            # 月末には今月実績のみの伸び率に収束する。
+            weight = elapsed_days / total_days
+            growth_ratio = weight * current_growth_ratio + (1 - weight) * trend_growth_ratio
+        else:
+            growth_ratio = current_growth_ratio
         forecast_yoy_adjusted = last_year_full_total * growth_ratio
 
     mtd_yoy_pct = None

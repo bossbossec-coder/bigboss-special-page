@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import base64
 import math
 import sys
 from datetime import date, timedelta
@@ -136,57 +137,58 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 最上部に戻るボタン（スマホのみ表示）。st.markdownのHTMLはonclick等のイベント属性が
-# 無効化されるため、components.htmlで独立したiframeとして描画し、その中でJSを実行する。
-# iframe自体はst.container(key=...)経由でCSSにより画面左下に固定表示させている。
-with st.container(key="scroll_top_btn_container"):
-    components.html(
-        """
-        <style>
-          html, body { margin:0; padding:0; background:transparent; overflow:hidden; }
-          .scroll-top-btn {
-            width:60px; height:60px; border-radius:50%; border:none;
-            display:flex; align-items:center; justify-content:center;
-            background:#3a3a3a; color:#ffffff; font-size:3rem; line-height:1;
-            box-shadow:0 4px 14px rgba(0,0,0,0.28); cursor:pointer;
-            opacity:1; transition:opacity 0.3s ease;
-          }
-          .scroll-top-btn.is-scrolling { opacity:0.25; }
-        </style>
-        <button class="scroll-top-btn" id="scrollTopBtn" title="最上部へ戻る">▲</button>
-        <script>
-          (function() {
-            function getScrollTargets() {
-              var doc = window.parent.document;
-              var targets = [];
-              ["stMain", "stAppViewContainer"].forEach(function(t) {
-                var el = doc.querySelector('[data-testid="' + t + '"]');
-                if (el) { targets.push(el); }
-              });
-              return targets;
-            }
-            var btn = document.getElementById("scrollTopBtn");
-            btn.addEventListener("click", function() {
-              getScrollTargets().forEach(function(el) {
-                el.scrollTo({top: 0, behavior: "smooth"});
-              });
-            });
-            var fadeTimer = null;
-            function onScroll() {
-              btn.classList.add("is-scrolling");
-              clearTimeout(fadeTimer);
-              fadeTimer = setTimeout(function() {
-                btn.classList.remove("is-scrolling");
-              }, 400);
-            }
-            getScrollTargets().forEach(function(el) {
-              el.addEventListener("scroll", onScroll, true);
-            });
-          })();
-        </script>
-        """,
-        height=60,
-    )
+def render_scroll_top_button() -> None:
+    """最上部に戻るボタン（スマホのみ表示）。st.markdownのHTMLはonclick等のイベント属性が
+    無効化されるため、components.htmlで独立したiframeとして描画し、その中でJSを実行する。
+    iframe自体はst.container(key=...)経由でCSSにより画面左下に固定表示させている。"""
+    with st.container(key="scroll_top_btn_container"):
+        components.html(
+            """
+            <style>
+              html, body { margin:0; padding:0; background:transparent; overflow:hidden; }
+              .scroll-top-btn {
+                width:60px; height:60px; border-radius:50%; border:none;
+                display:flex; align-items:center; justify-content:center;
+                background:#3a3a3a; color:#ffffff; font-size:3rem; line-height:1;
+                box-shadow:0 4px 14px rgba(0,0,0,0.28); cursor:pointer;
+                opacity:1; transition:opacity 0.3s ease;
+              }
+              .scroll-top-btn.is-scrolling { opacity:0.25; }
+            </style>
+            <button class="scroll-top-btn" id="scrollTopBtn" title="最上部へ戻る">▲</button>
+            <script>
+              (function() {
+                function getScrollTargets() {
+                  var doc = window.parent.document;
+                  var targets = [];
+                  ["stMain", "stAppViewContainer"].forEach(function(t) {
+                    var el = doc.querySelector('[data-testid="' + t + '"]');
+                    if (el) { targets.push(el); }
+                  });
+                  return targets;
+                }
+                var btn = document.getElementById("scrollTopBtn");
+                btn.addEventListener("click", function() {
+                  getScrollTargets().forEach(function(el) {
+                    el.scrollTo({top: 0, behavior: "smooth"});
+                  });
+                });
+                var fadeTimer = null;
+                function onScroll() {
+                  btn.classList.add("is-scrolling");
+                  clearTimeout(fadeTimer);
+                  fadeTimer = setTimeout(function() {
+                    btn.classList.remove("is-scrolling");
+                  }, 400);
+                }
+                getScrollTargets().forEach(function(el) {
+                  el.addEventListener("scroll", onScroll, true);
+                });
+              })();
+            </script>
+            """,
+            height=60,
+        )
 
 
 def format_yen(value: float | None) -> str:
@@ -532,19 +534,75 @@ def get_secret(name: str) -> str | None:
 
 VIEWER_PASSWORD = get_secret("viewer_password")
 if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
-    st.title("売上ダッシュボード")
-    st.caption("閲覧にはパスワードが必要です。")
-    entered_viewer_password = st.text_input(
-        "パスワード", type="password", key="viewer_password_input"
+    logo_path = Path(__file__).resolve().parent / "assets" / "bigboss_logo.png"
+    logo_b64 = base64.b64encode(logo_path.read_bytes()).decode() if logo_path.exists() else ""
+
+    st.markdown(
+        """
+        <style>
+        [data-testid="stAppViewContainer"] {
+            background: radial-gradient(circle at 50% 0%, #0a3d78 0%, #001b3a 60%, #000a1a 100%);
+        }
+        [data-testid="stHeader"] { background: transparent; }
+        [data-testid="stToolbar"] { visibility: hidden; }
+        [data-testid="stSidebarCollapsedControl"] { display: none; }
+        .st-key-password_gate_card {
+            max-width: 420px;
+            margin: 7vh auto 0 auto;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f1dc 100%);
+            border-radius: 22px;
+            padding: 8px 32px 32px 32px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.5), 0 0 0 3px #d4af37;
+            text-align: center;
+        }
+        .password-gate-logo { width: 190px; max-width: 70%; margin-top: 6px; }
+        .password-gate-title {
+            font-size: 1.6rem; font-weight: 800; color: #0a3d78; margin-top: 4px;
+            letter-spacing: 0.02em;
+        }
+        .password-gate-sub {
+            font-size: 0.92rem; color: #777; margin-top: 6px; margin-bottom: 22px;
+        }
+        .st-key-password_gate_card div[data-testid="stTextInput"] input {
+            border-radius: 10px !important; border: 2px solid #d4af37 !important;
+            padding: 10px 14px !important; font-size: 1rem !important;
+            text-align: center;
+        }
+        .st-key-password_gate_card div[data-testid="stTextInput"] input:focus {
+            border-color: #0a3d78 !important;
+            box-shadow: 0 0 0 3px rgba(10,61,120,0.15) !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
     )
-    if entered_viewer_password:
-        if entered_viewer_password == VIEWER_PASSWORD:
-            st.session_state["viewer_unlocked"] = True
-            st.rerun()
-        else:
-            st.error("パスワードが違います。")
+
+    with st.container(key="password_gate_card"):
+        st.markdown(
+            f"""
+            <img class="password-gate-logo" src="data:image/png;base64,{logo_b64}">
+            <div class="password-gate-title">売上ダッシュボード</div>
+            <div class="password-gate-sub">閲覧にはパスワードが必要です</div>
+            """,
+            unsafe_allow_html=True,
+        )
+        entered_viewer_password = st.text_input(
+            "パスワード",
+            type="password",
+            key="viewer_password_input",
+            label_visibility="collapsed",
+            placeholder="パスワードを入力",
+        )
+        if entered_viewer_password:
+            if entered_viewer_password == VIEWER_PASSWORD:
+                st.session_state["viewer_unlocked"] = True
+                st.rerun()
+            else:
+                st.error("パスワードが違います。")
     st.stop()
 
+
+render_scroll_top_button()
 
 st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")

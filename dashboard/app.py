@@ -519,14 +519,19 @@ def _rescale_chart_to_man(fig: go.Figure) -> tuple[go.Figure, list[float]]:
 
 def to_mobile_chart(fig: go.Figure) -> go.Figure:
     """スマホ向けに、Y軸タイトルを消し、目盛りを万円単位（キリが良ければ千万単位）に
-    したグラフの複製を作る（PC版のグラフはそのまま、スマホ版だけ別に描画するための複製）。"""
+    したグラフの複製を作る（PC版のグラフはそのまま、スマホ版だけ別に描画するための複製）。
+    指でスライドした際に意図せずズーム・パンして表示が変わってしまわないよう、
+    ドラッグ操作は無効化している（ツールバーを隠しているため元に戻す手段が無いため）。"""
     fig_m, ticks = _rescale_chart_to_man(fig)
+    fig_m.update_xaxes(fixedrange=True)
     fig_m.update_yaxes(
         title=None,
         tickmode="array",
         tickvals=ticks,
         ticktext=[_format_man_unit(t) for t in ticks],
+        fixedrange=True,
     )
+    fig_m.update_layout(dragmode=False)
     return fig_m
 
 

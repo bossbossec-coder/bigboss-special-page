@@ -9,7 +9,7 @@ from __future__ import annotations
 import base64
 import math
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -644,7 +644,16 @@ def get_secret(name: str) -> str | None:
         return None
 
 
+VIEWER_SESSION_TIMEOUT = timedelta(hours=12)
+
 VIEWER_PASSWORD = get_secret("viewer_password")
+
+if st.session_state.get("viewer_unlocked"):
+    login_time = st.session_state.get("viewer_login_time")
+    if login_time is None or datetime.now() - login_time > VIEWER_SESSION_TIMEOUT:
+        st.session_state["viewer_unlocked"] = False
+        st.session_state.pop("viewer_login_time", None)
+
 if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
     logo_path = Path(__file__).resolve().parent / "assets" / "bigboss_logo.png"
     logo_b64 = base64.b64encode(logo_path.read_bytes()).decode() if logo_path.exists() else ""
@@ -653,36 +662,60 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
         """
         <style>
         [data-testid="stAppViewContainer"] {
-            background: radial-gradient(circle at 50% 0%, #0a3d78 0%, #001b3a 60%, #000a1a 100%);
+            background: radial-gradient(circle at 50% 0%, #2f8dff 0%, #0d5fdb 45%, #052a6e 100%);
         }
         [data-testid="stHeader"] { background: transparent; }
         [data-testid="stToolbar"] { visibility: hidden; }
         [data-testid="stSidebarCollapsedControl"] { display: none; }
         .st-key-password_gate_card {
-            max-width: 420px;
-            margin: 7vh auto 0 auto;
-            background: linear-gradient(180deg, #ffffff 0%, #f8f1dc 100%);
+            max-width: 480px;
+            margin: 6vh auto 0 auto;
+            background: linear-gradient(180deg, #ffffff 0%, #e8f1ff 100%);
             border-radius: 22px;
             padding: 8px 32px 32px 32px;
             box-shadow: 0 25px 70px rgba(0,0,0,0.5), 0 0 0 3px #d4af37;
             text-align: center;
         }
-        .password-gate-logo { width: 190px; max-width: 70%; margin-top: 6px; }
+        .password-gate-logo { width: 380px; max-width: 92%; margin-top: 6px; }
         .password-gate-title {
-            font-size: 1.6rem; font-weight: 800; color: #0a3d78; margin-top: 4px;
-            letter-spacing: 0.02em;
+            font-size: 1.6rem; font-weight: 800; color: #0d47a1; margin-top: 4px;
+            letter-spacing: 0.02em; text-align: center;
         }
         .password-gate-sub {
-            font-size: 0.92rem; color: #777; margin-top: 6px; margin-bottom: 22px;
+            font-size: 0.92rem; color: #777; margin-top: 6px; margin-bottom: 18px;
+            text-align: center;
         }
+        .password-gate-notice {
+            text-align: left; background: rgba(13,71,161,0.07);
+            border: 1px solid rgba(13,71,161,0.28); border-radius: 12px;
+            padding: 16px 18px; margin: 0 0 22px 0;
+            font-size: 0.76rem; line-height: 1.7; color: #123a66;
+        }
+        .password-gate-notice-title { font-weight: 800; font-size: 0.84rem; color: #0d47a1; margin-bottom: 8px; }
+        .password-gate-notice ul { margin: 0; padding-left: 1.1em; }
+        .password-gate-notice li { margin-bottom: 6px; }
+        .password-gate-notice li:last-child { margin-bottom: 0; }
         .st-key-password_gate_card div[data-testid="stTextInput"] input {
             border-radius: 10px !important; border: 2px solid #d4af37 !important;
             padding: 10px 14px !important; font-size: 1rem !important;
-            text-align: center;
+            text-align: center; background: #0c1c3d !important; color: #ffffff !important;
+        }
+        .st-key-password_gate_card div[data-testid="stTextInput"] input::placeholder {
+            color: #93a9d6 !important;
         }
         .st-key-password_gate_card div[data-testid="stTextInput"] input:focus {
-            border-color: #0a3d78 !important;
-            box-shadow: 0 0 0 3px rgba(10,61,120,0.15) !important;
+            border-color: #2f8dff !important;
+            box-shadow: 0 0 0 3px rgba(47,141,255,0.28) !important;
+        }
+        .st-key-password_gate_card div[data-testid="stFormSubmitButton"] button {
+            background: linear-gradient(90deg, #0d47a1, #1565c0) !important;
+            color: #ffffff !important; border: none !important; font-weight: 700 !important;
+            border-radius: 10px !important; padding: 10px 0 !important; margin-top: 12px !important;
+            font-size: 1rem !important;
+        }
+        .st-key-password_gate_card div[data-testid="stFormSubmitButton"] button:hover {
+            filter: brightness(1.1);
+            color: #ffffff !important;
         }
         </style>
         """,
@@ -695,19 +728,31 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
             <img class="password-gate-logo" src="data:image/png;base64,{logo_b64}">
             <div class="password-gate-title">売上ダッシュボード</div>
             <div class="password-gate-sub">閲覧にはパスワードが必要です</div>
+            <div class="password-gate-notice">
+              <div class="password-gate-notice-title">パスワードの取り扱いについて</div>
+              <ul>
+                <li>本パスワードは毎月月初に更新されます。新しいパスワードは、その都度メールにてご案内いたします。</li>
+                <li>日々の売上をご確認いただくことは、経営感覚を養い、店舗運営の質を高める大切な習慣です。毎日のご確認が、店舗と皆様ご自身の成長につながります。</li>
+                <li>本ページで扱う情報は、当社を代表する役職者・店長の皆様にのみ共有しているものです。重要な情報である事をご理解のうえ、責任を持って閲覧・管理をお願いいたします。</li>
+                <li>セキュリティのため、ログインから12時間が経過すると自動的にログアウトされます。再度ご覧になる際は、お手数ですがパスワードの再入力をお願いいたします。</li>
+              </ul>
+            </div>
             """,
             unsafe_allow_html=True,
         )
-        entered_viewer_password = st.text_input(
-            "パスワード",
-            type="password",
-            key="viewer_password_input",
-            label_visibility="collapsed",
-            placeholder="パスワードを入力",
-        )
-        if entered_viewer_password:
+        with st.form(key="password_gate_form", clear_on_submit=False):
+            entered_viewer_password = st.text_input(
+                "パスワード",
+                type="password",
+                key="viewer_password_input",
+                label_visibility="collapsed",
+                placeholder="パスワードを入力",
+            )
+            submitted = st.form_submit_button("ログイン", use_container_width=True)
+        if submitted:
             if entered_viewer_password == VIEWER_PASSWORD:
                 st.session_state["viewer_unlocked"] = True
+                st.session_state["viewer_login_time"] = datetime.now()
                 st.rerun()
             else:
                 st.error("パスワードが違います。")

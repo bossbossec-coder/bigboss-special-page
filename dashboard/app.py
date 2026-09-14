@@ -294,10 +294,71 @@ def render_kpi_grid(blocks: list[dict]) -> None:
 
 
 def render_daily_store_cards(df: pd.DataFrame) -> None:
-    """スマホ向け: 店舗ごとの当日・当月累計売上を、売上サマリーのブロックのような
-    色付きカードで2列表示する。1段目=店舗名、2段目=当日/前年同日（万単位、数値のみ）、
-    3段目=前年同日比、4段目=当月累計/前年同期間累計（万単位、数値のみ、やや小さめ）、
-    5段目=当月累計前年比。"""
+    """スマホ向け: 店舗ごとの売上を、日別（青）/月別（オレンジ）を切り替えられる
+    カードで2列表示する。上部の「日」「月」ボタン（実体はst.button）を押すと
+    全カードが連動して切り替わる。切り替え時は軽いアニメーションを付けている。
+    （st.markdownのHTMLに埋め込んだラジオボタン等はStreamlit側でクリックの
+    既定動作が働かず操作できないため、実際の切り替えはst.buttonで行っている）"""
+    if "ds_card_view" not in st.session_state:
+        st.session_state["ds_card_view"] = "daily"
+    is_daily = st.session_state["ds_card_view"] == "daily"
+
+    with st.container(key="ds_toggle_row"):
+        toggle_col1, toggle_col2 = st.columns(2)
+        with toggle_col1:
+            if st.button("日", key="ds_toggle_daily_btn", use_container_width=True):
+                st.session_state["ds_card_view"] = "daily"
+                st.rerun()
+        with toggle_col2:
+            if st.button("月", key="ds_toggle_monthly_btn", use_container_width=True):
+                st.session_state["ds_card_view"] = "monthly"
+                st.rerun()
+
+    st.markdown(
+        f"""
+        <style>
+          .st-key-ds_toggle_row div[data-testid="stHorizontalBlock"] {{
+            flex-wrap:nowrap !important; gap:10px !important;
+          }}
+          .st-key-ds_toggle_row div[data-testid="stColumn"] {{
+            flex:1 1 0 !important; width:auto !important; min-width:0 !important;
+          }}
+          .st-key-ds_toggle_daily_btn button, .st-key-ds_toggle_monthly_btn button {{
+            color:#ffffff !important; border:none !important; font-weight:700 !important;
+            opacity:0.45; transition:opacity 0.2s ease, transform 0.2s ease;
+          }}
+          .st-key-ds_toggle_daily_btn button {{ background:{KPI_BLUE} !important; }}
+          .st-key-ds_toggle_monthly_btn button {{ background:{ACCENT_COLOR} !important; }}
+          .st-key-ds_toggle_daily_btn button:hover, .st-key-ds_toggle_monthly_btn button:hover {{
+            color:#ffffff !important;
+          }}
+          .st-key-ds_toggle_{'daily' if is_daily else 'monthly'}_btn button {{
+            opacity:1; transform:scale(1.03);
+          }}
+          @keyframes ds-card-in {{
+            from {{ transform:rotateY(90deg); opacity:0; }}
+            to {{ transform:rotateY(0deg); opacity:1; }}
+          }}
+          .ds-cards-grid {{
+            display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px;
+            margin-top:10px; margin-bottom:16px;
+          }}
+          .ds-card {{
+            background:{KPI_BLUE if is_daily else ACCENT_COLOR}; color:#ffffff; border-radius:10px;
+            padding:14px 10px; text-align:center; min-width:0;
+            display:flex; flex-direction:column; justify-content:center;
+            animation: ds-card-in 0.35s ease;
+          }}
+          .ds-store-name {{
+            font-size:0.8rem; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+          }}
+          .ds-value {{ font-size:2.4rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
+          .ds-pct {{ font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap; }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     slash = '<span style="font-size:0.55em; opacity:0.85;">/</span>'
 
     def _man(value: float | None) -> str:
@@ -305,41 +366,22 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
 
     cards_html = ""
     for _, row in df.iterrows():
-        today_man = _man(row["sales"])
-        last_year_man = _man(row["last_year_sales"])
-        mtd_man = _man(row["mtd_sales"])
-        last_year_mtd_man = _man(row["last_year_mtd_sales"])
-        daily_pct = format_pct(row["yoy_pct"])
-        mtd_pct = format_pct(row["mtd_yoy_pct"])
-        cards_html += f"""
-        <div style="background-color:{KPI_BLUE}; color:#ffffff; border-radius:10px;
-                    padding:14px 10px; text-align:center; min-width:0;
-                    display:flex; flex-direction:column; justify-content:center;">
-          <div style="font-size:0.8rem; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-            {row['store']}
-          </div>
-          <div style="font-size:2.4rem; font-weight:800; margin-top:4px; white-space:nowrap;">
-            {today_man}{slash}{last_year_man}
-          </div>
-          <div style="font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap;">
-            {daily_pct}
-          </div>
-          <div style="font-size:1.56rem; font-weight:700; margin-top:8px; white-space:nowrap;">
-            {mtd_man}{slash}{last_year_mtd_man}
-          </div>
-          <div style="font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap;">
-            {mtd_pct}
-          </div>
-        </div>
-        """
-    st.markdown(
-        f"""
-        <div style="display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; margin-bottom:16px;">
-          {cards_html}
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        if is_daily:
+            main_value = f"{_man(row['sales'])}{slash}{_man(row['last_year_sales'])}"
+            pct_value = format_pct(row["yoy_pct"])
+        else:
+            main_value = f"{_man(row['mtd_sales'])}{slash}{_man(row['last_year_mtd_sales'])}"
+            pct_value = format_pct(row["mtd_yoy_pct"])
+        # 1行にまとめて書く（複数行にすると、間の空白行がMarkdown側に「HTMLブロックの
+        # 終わり」と誤認識され、以降がコードブロック扱いになってしまうため）。
+        cards_html += (
+            '<div class="ds-card">'
+            f'<div class="ds-store-name">{row["store"]}</div>'
+            f'<div class="ds-value">{main_value}</div>'
+            f'<div class="ds-pct">{pct_value}</div>'
+            "</div>"
+        )
+    st.markdown(f'<div class="ds-cards-grid">{cards_html}</div>', unsafe_allow_html=True)
 
 
 def store_display_label(selected: list[str], all_stores: list[str]) -> str:

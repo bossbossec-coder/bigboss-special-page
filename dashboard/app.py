@@ -27,10 +27,32 @@ STORE_COLORS = [
 PRIMARY_COLOR = "#4E79A7"
 COMPARISON_COLOR = "#BAB0AC"
 ACCENT_COLOR = "#F28E2B"
+KPI_BLUE = "rgb(6, 81, 201)"
 
 WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]
 
+# 店舗一覧・グラフ・テーブルで使う表示順（指定が無い店舗は末尾にアルファベット順で追加）。
+STORE_DISPLAY_ORDER = [
+    "本店", "矢切店", "楽天", "Yahoo", "ドリクラ", "amazon",
+    "auPAY1", "winecom", "auPAY2", "dショッピング", "LINEギフト",
+    "ストーリーセゾン", "Qoo10",
+]
+
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent / "data" / "incoming"
+
+
+def order_stores(stores: list[str]) -> list[str]:
+    """STORE_DISPLAY_ORDERの並び順にする（未登録の店舗名は末尾にアルファベット順で追加）。"""
+    stores_set = set(stores)
+    ordered = [s for s in STORE_DISPLAY_ORDER if s in stores_set]
+    extra = sorted(stores_set - set(STORE_DISPLAY_ORDER))
+    return ordered + extra
+
+
+def reorder_by_store(df: pd.DataFrame, store_order: list[str], store_col: str = "store") -> pd.DataFrame:
+    """データフレームの行をstore_orderの並び順に揃える（存在する店舗のみ）。"""
+    present_order = [s for s in store_order if s in set(df[store_col])]
+    return df.set_index(store_col).loc[present_order].reset_index()
 
 st.set_page_config(page_title="売上ダッシュボード", layout="wide")
 
@@ -352,7 +374,7 @@ if records.empty:
 
 records, external_records = dl.split_external_sales(records)
 
-all_stores = sorted(records["store"].unique().tolist())
+all_stores = order_stores(records["store"].unique().tolist())
 with st.sidebar:
     selected_stores = st.multiselect(
         "店舗（未選択なら全店舗）",
@@ -412,7 +434,7 @@ with col1:
     render_kpi_block(
         "本日の売上合計",
         format_yen_compact(yoy_today["today_total"]),
-        "rgb(6, 81, 201)",
+        KPI_BLUE,
         symbol=symbol_for_ratio(yoy_today["pct_change"]),
         caption=f"前年差 {format_delta(today_diff, None) or '—'}",
         tooltip=format_yen(yoy_today["today_total"]),
@@ -422,6 +444,7 @@ with col2:
         "前年同日比",
         format_pct(yoy_today["pct_change"]),
         "rgb(3, 138, 52)",
+        caption="&nbsp;",
     )
 with col3:
     render_kpi_block(
@@ -452,7 +475,7 @@ with left:
     fig = go.Figure()
     fig.add_bar(
         x=series["day"], y=series["this_year"],
-        name=f"{target_year}年{target_month}月", marker_color=PRIMARY_COLOR,
+        name=f"{target_year}年{target_month}月", marker_color=KPI_BLUE,
     )
     fig.add_bar(
         x=series["day"], y=series["last_year"],
@@ -483,7 +506,7 @@ st.divider()
 
 st.markdown("#### 店舗別・日別売上")
 st.caption(f"対象日: {as_of}")
-daily_store = dl.daily_store_snapshot(filtered, as_of)
+daily_store = reorder_by_store(dl.daily_store_snapshot(filtered, as_of), all_stores)
 daily_store_mtd_yoy = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")["yoy_pct"]
 
 fig_daily_store = go.Figure()
@@ -518,8 +541,8 @@ st.dataframe(daily_store_display, use_container_width=True, hide_index=True, hei
 
 render_section_break()
 
-st.markdown("#### 店舗別ランキング（当月）")
-ranking = dl.store_ranking(filtered, target_year, target_month, as_of)
+st.markdown("#### 店舗別・月別売上")
+ranking = reorder_by_store(dl.store_ranking(filtered, target_year, target_month, as_of), all_stores)
 
 fig_ranking = go.Figure()
 fig_ranking.add_bar(
@@ -529,6 +552,10 @@ fig_ranking.add_bar(
 fig_ranking.add_bar(
     x=ranking["store"], y=ranking["last_year_mtd_sales"],
     name="前年同期間売上", marker_color=COMPARISON_COLOR,
+)
+fig_ranking.add_scatter(
+    x=ranking["store"], y=ranking["last_year_full_sales"],
+    name="前年売上計", mode="lines+markers", line=dict(color=PRIMARY_COLOR),
 )
 fig_ranking.update_layout(
     barmode="group",

@@ -102,17 +102,19 @@ st.markdown(
         .st-key-daily_chart_pc, .st-key-daily_store_chart_pc,
         .st-key-ranking_chart_pc, .st-key-monthly_chart_pc { display: none !important; }
 
-        /* スマホ向け: 店舗別・日別売上グラフの上に、店舗ごとの当日売上カードを表示 */
-        .st-key-daily_store_cards_mobile { display: block !important; }
+        /* 店舗別売上カード（日/月切り替え）はスマホでは2列 */
+        .ds-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 
     }
     @media (min-width: 641px) {
-        /* PC/タブレットでは、スマホ向けのコンパクト表・グラフ・グリッド・カードを隠す（PC側の見た目は変更しない） */
+        /* PC/タブレットでは、スマホ向けのコンパクト表・グラフ・グリッドを隠す（PC側の見た目は変更しない） */
         .st-key-daily_store_table_mobile, .st-key-ranking_table_mobile { display: none !important; }
         .st-key-daily_chart_mobile, .st-key-daily_store_chart_mobile,
         .st-key-ranking_chart_mobile, .st-key-monthly_chart_mobile { display: none !important; }
-        .st-key-daily_store_cards_mobile { display: none !important; }
         .st-key-scroll_top_btn_container { display: none !important; }
+
+        /* PCの表見出しは中央揃え */
+        .st-key-daily_store_heading h4, .st-key-ranking_heading h4 { text-align: center !important; }
     }
     @media (max-width: 640px) {
         /* 最上部に戻るボタン（スマホのみ表示）。中身はcomponents.htmlのiframeなので、
@@ -189,11 +191,6 @@ def render_scroll_top_button() -> None:
             """,
             height=60,
         )
-
-
-def full_table_height(n_rows: int) -> int:
-    """上下スクロールが出ないよう、全行が収まる高さを計算する（st.dataframe用）。"""
-    return 35 * (n_rows + 1) + 3
 
 
 def format_yen(value: float | None) -> str:
@@ -294,8 +291,8 @@ def render_kpi_grid(blocks: list[dict]) -> None:
 
 
 def render_daily_store_cards(df: pd.DataFrame) -> None:
-    """スマホ向け: 店舗ごとの売上を、日別（青）/月別（オレンジ）を切り替えられる
-    カードで2列表示する。上部の「日」「月」ボタン（実体はst.button）を押すと
+    """店舗ごとの売上を、日別（青）/月別（オレンジ）を切り替えられるカードで表示する
+    （PCでは4列、スマホでは2列）。上部の「日」「月」ボタン（実体はst.button）を押すと
     全カードが連動して切り替わる。切り替え時は軽いアニメーションを付けている。
     （st.markdownのHTMLに埋め込んだラジオボタン等はStreamlit側でクリックの
     既定動作が働かず操作できないため、実際の切り替えはst.buttonで行っている）"""
@@ -340,7 +337,7 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             to {{ transform:rotateY(0deg); opacity:1; }}
           }}
           .ds-cards-grid {{
-            display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px;
+            display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px;
             margin-top:10px; margin-bottom:16px;
           }}
           .ds-card {{
@@ -493,13 +490,13 @@ def _format_man_unit(man_value: float) -> str:
     return f"{man_value:,.0f}万"
 
 
-def to_mobile_chart(fig: go.Figure) -> go.Figure:
-    """スマホ向けに、Y軸タイトルを消し、目盛りを万円単位（キリが良ければ千万単位）に
-    したグラフの複製を作る（PC版のグラフはそのまま、スマホ版だけ別に描画するための複製）。
-    ホバー表示では、customdataに元の正確な金額を保持して表示する。"""
-    fig_m = go.Figure(fig)
+def _rescale_chart_to_man(fig: go.Figure) -> tuple[go.Figure, list[float]]:
+    """グラフの複製を作り、全トレースのY値を万円単位に変換する（元の正確な金額は
+    customdataに保持し、ホバー表示に使う）。戻り値は複製したFigureと、
+    キリの良い目盛り位置（万単位）のリスト。"""
+    fig_scaled = go.Figure(fig)
     scaled_values: list[float] = []
-    for trace in fig_m.data:
+    for trace in fig_scaled.data:
         y = getattr(trace, "y", None)
         if y is None:
             continue
@@ -517,7 +514,13 @@ def to_mobile_chart(fig: go.Figure) -> go.Figure:
     while v <= max_value + step:
         ticks.append(v)
         v += step
+    return fig_scaled, ticks
 
+
+def to_mobile_chart(fig: go.Figure) -> go.Figure:
+    """スマホ向けに、Y軸タイトルを消し、目盛りを万円単位（キリが良ければ千万単位）に
+    したグラフの複製を作る（PC版のグラフはそのまま、スマホ版だけ別に描画するための複製）。"""
+    fig_m, ticks = _rescale_chart_to_man(fig)
     fig_m.update_yaxes(
         title=None,
         tickmode="array",
@@ -525,6 +528,21 @@ def to_mobile_chart(fig: go.Figure) -> go.Figure:
         ticktext=[_format_man_unit(t) for t in ticks],
     )
     return fig_m
+
+
+def apply_pc_chart_style(fig: go.Figure, height_multiplier: float = 1.5) -> go.Figure:
+    """PC向けに、目盛りをスマホ版と同じ万円単位表記にしつつ軸タイトルは残し、
+    グラフ高さを拡大した複製を作る。"""
+    fig_p, ticks = _rescale_chart_to_man(fig)
+    fig_p.update_yaxes(
+        title="売上金額（万円）",
+        tickmode="array",
+        tickvals=ticks,
+        ticktext=[_format_man_unit(t) for t in ticks],
+    )
+    if fig_p.layout.height:
+        fig_p.update_layout(height=fig_p.layout.height * height_multiplier)
+    return fig_p
 
 
 def render_section_break() -> None:
@@ -560,6 +578,40 @@ def render_compact_table(df: pd.DataFrame, sticky_first_col: bool = False) -> No
             for i, value in enumerate(row)
         )
         rows_html += f"<tr>{cells}</tr>"
+    st.markdown(
+        f"""
+        <div style="overflow-x:auto; background:#ffffff;">
+          <table style="width:100%; border-collapse:collapse; background:#ffffff;">
+            <thead><tr>{header_cells}</tr></thead>
+            <tbody>{rows_html}</tbody>
+          </table>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_pc_table(df: pd.DataFrame, low_yoy_mask: pd.Series, store_col: str = "店舗") -> None:
+    """PC向けの表を描画する。店舗列は中央揃え、その他の数値列は右揃えにし、
+    前年比が99.9%以下の店舗は行全体を薄い赤で強調する（低調な店舗を一目で分かるように）。
+    （st.dataframe/st.tableはセルごとのtext-align指定を無視して列の型で自動判定してしまう
+    ため、render_compact_table同様に生のHTMLテーブルとして描画している）"""
+    header_cells = "".join(
+        f'<th style="padding:10px 14px; font-size:0.85rem; color:#8a8a8a; font-weight:600; '
+        f'border-bottom:2px solid #e0e0e0; white-space:nowrap; '
+        f'text-align:{"center" if col == store_col else "right"};">{col}</th>'
+        for col in df.columns
+    )
+    rows_html = ""
+    for idx, row in df.iterrows():
+        row_bg = "background-color:#fdecea;" if low_yoy_mask.get(idx, False) else ""
+        cells = "".join(
+            f'<td style="padding:10px 14px; font-size:0.95rem; color:#1a1a1a; '
+            f'border-bottom:1px solid #f0f0f0; white-space:nowrap; '
+            f'text-align:{"center" if col == store_col else "right"};">{value}</td>'
+            for col, value in row.items()
+        )
+        rows_html += f'<tr style="{row_bg}">{cells}</tr>'
     st.markdown(
         f"""
         <div style="overflow-x:auto; background:#ffffff;">
@@ -883,7 +935,7 @@ with left:
         height=380,
     )
     with st.container(key="daily_chart_pc"):
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(apply_pc_chart_style(fig), use_container_width=True, config={"displayModeBar": False})
     with st.container(key="daily_chart_mobile"):
         st.plotly_chart(to_mobile_chart(fig), use_container_width=True, config={"displayModeBar": False})
 
@@ -900,13 +952,14 @@ with right:
 
 st.divider()
 
-st.markdown("#### 店舗別・日別売上")
+with st.container(key="daily_store_heading"):
+    st.markdown("#### 店舗別・日別売上")
 st.caption(f"対象日: {as_of}")
 daily_store = reorder_by_store(dl.daily_store_snapshot(filtered, as_of), all_stores)
 daily_store_ranking = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")
 daily_store_mtd_yoy = daily_store_ranking["yoy_pct"]
 
-with st.container(key="daily_store_cards_mobile"):
+with st.container(key="daily_store_cards"):
     daily_store_cards_df = daily_store.copy()
     daily_store_cards_df["mtd_sales"] = daily_store_cards_df["store"].map(daily_store_ranking["mtd_sales"])
     daily_store_cards_df["last_year_mtd_sales"] = daily_store_cards_df["store"].map(
@@ -933,7 +986,7 @@ fig_daily_store.update_layout(
     height=340,
 )
 with st.container(key="daily_store_chart_pc"):
-    st.plotly_chart(fig_daily_store, use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(apply_pc_chart_style(fig_daily_store), use_container_width=True, config={"displayModeBar": False})
 with st.container(key="daily_store_chart_mobile"):
     st.plotly_chart(to_mobile_chart(fig_daily_store), use_container_width=True, config={"displayModeBar": False})
 
@@ -947,18 +1000,14 @@ daily_store_display = pd.DataFrame(
     }
 )
 with st.container(key="daily_store_table_pc"):
-    st.dataframe(
-        daily_store_display,
-        use_container_width=True,
-        hide_index=True,
-        height=full_table_height(len(daily_store_display)),
-    )
+    render_pc_table(daily_store_display, daily_store["yoy_pct"] <= 99.9)
 with st.container(key="daily_store_table_mobile"):
     render_compact_table(daily_store_display[["店舗", "当日売上", "前年同日比"]])
 
 render_section_break()
 
-st.markdown("#### 店舗別・月別売上")
+with st.container(key="ranking_heading"):
+    st.markdown("#### 店舗別・月別売上")
 ranking = reorder_by_store(dl.store_ranking(filtered, target_year, target_month, as_of), all_stores)
 
 fig_ranking = go.Figure()
@@ -983,7 +1032,7 @@ fig_ranking.update_layout(
     height=340,
 )
 with st.container(key="ranking_chart_pc"):
-    st.plotly_chart(fig_ranking, use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(apply_pc_chart_style(fig_ranking), use_container_width=True, config={"displayModeBar": False})
 with st.container(key="ranking_chart_mobile"):
     st.plotly_chart(to_mobile_chart(fig_ranking), use_container_width=True, config={"displayModeBar": False})
 
@@ -997,12 +1046,7 @@ ranking_display = pd.DataFrame(
     }
 )
 with st.container(key="ranking_table_pc"):
-    st.dataframe(
-        ranking_display,
-        use_container_width=True,
-        hide_index=True,
-        height=full_table_height(len(ranking_display)),
-    )
+    render_pc_table(ranking_display, ranking["yoy_pct"] <= 99.9)
 with st.container(key="ranking_table_mobile"):
     render_compact_table(ranking_display, sticky_first_col=True)
 
@@ -1028,7 +1072,7 @@ fig3.update_layout(
     height=380,
 )
 with st.container(key="monthly_chart_pc"):
-    st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar": False})
+    st.plotly_chart(apply_pc_chart_style(fig3), use_container_width=True, config={"displayModeBar": False})
 with st.container(key="monthly_chart_mobile"):
     st.plotly_chart(to_mobile_chart(fig3), use_container_width=True, config={"displayModeBar": False})
 

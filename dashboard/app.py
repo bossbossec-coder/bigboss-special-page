@@ -358,16 +358,6 @@ monthly_display = pd.DataFrame(
 )
 st.dataframe(monthly_display, use_container_width=True, hide_index=True)
 
-st.markdown("#### 全期間 日別売上推移")
-daily = dl.daily_totals(filtered)
-fig2 = go.Figure()
-fig2.add_scatter(x=daily["date"], y=daily["sales"], mode="lines", line=dict(color=PRIMARY_COLOR, width=2))
-fig2.update_layout(
-    xaxis_title="日付", yaxis_title="売上金額（円）",
-    margin=dict(l=10, r=10, t=10, b=10), height=300,
-)
-st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar": False})
-
 st.divider()
 
 st.markdown("#### 年間前年比（暦年合計・1月〜基準日）")

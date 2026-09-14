@@ -146,14 +146,18 @@ def render_target_date_badge(target_date: date) -> None:
         <div style="display:flex; justify-content:flex-end; margin-bottom:28px;">
           <div style="text-align:right;">
             <div style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">対象日</div>
-            <div style="position:relative; display:inline-block;
-                        padding:12px 32px 12px 44px; border-radius:10px;
+            <div style="position:relative; display:inline-flex; align-items:center; gap:10px;
+                        padding:12px 32px 12px 48px; border-radius:10px;
                         background:#fff; border:1px solid #e6e6e6;
                         box-shadow:0 2px 6px rgba(0,0,0,0.10);">
               <div style="position:absolute; top:0; left:0; width:0; height:0;
                           border-left:32px solid {ACCENT_COLOR};
                           border-bottom:32px solid transparent;
                           border-top-left-radius:10px;"></div>
+              <span style="writing-mode:vertical-rl; font-size:1.4rem; font-weight:800;
+                           color:{ACCENT_COLOR}; letter-spacing:1px;">
+                {target_date.year}
+              </span>
               <span style="font-size:3rem; font-weight:800; color:#1a1a1a;">
                 {target_date.month}.{target_date.day}
               </span>
@@ -381,7 +385,7 @@ with right:
 
 st.divider()
 
-st.markdown("#### 店舗別・日別売上（前年同日比込み）")
+st.markdown("#### 店舗別・日別売上")
 st.caption(f"対象日: {as_of}")
 daily_store = dl.daily_store_snapshot(filtered, as_of)
 daily_store_mtd_yoy = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")["yoy_pct"]
@@ -398,7 +402,7 @@ st.dataframe(daily_store_display, use_container_width=True, hide_index=True, hei
 
 render_section_break()
 
-st.markdown("#### 店舗別ランキング（当月累計・前年同期間比）")
+st.markdown("#### 店舗別ランキング（当月）")
 ranking = dl.store_ranking(filtered, target_year, target_month, as_of)
 ranking_display = pd.DataFrame(
     {
@@ -453,7 +457,7 @@ st.dataframe(monthly_display, use_container_width=True, hide_index=True)
 
 st.divider()
 
-st.markdown("#### 年間前年比（暦年合計・1月〜基準日）")
+st.markdown("#### 年間前年比")
 year_yoy = dl.calendar_year_yoy(filtered, as_of)
 ycol1, ycol2, ycol3, ycol4 = st.columns(4)
 ycol1.metric(

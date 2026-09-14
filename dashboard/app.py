@@ -7,7 +7,7 @@
 from __future__ import annotations
 
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 import pandas as pd
@@ -117,7 +117,7 @@ def render_kpi_block(
     """色分けされたブロック形式でKPIを1つ表示する。"""
     symbol_html = f'<span style="margin-right:8px;">{symbol}</span>' if symbol else ""
     caption_html = (
-        f'<div style="font-size:0.85rem; opacity:0.9; margin-top:10px;">{caption}</div>'
+        f'<div style="font-size:calc(0.85rem + 2px); opacity:0.9; margin-top:10px;">{caption}</div>'
         if caption
         else ""
     )
@@ -138,12 +138,34 @@ def render_kpi_block(
     )
 
 
-def render_target_date_badge(target_date: date) -> None:
-    """右上に「対象日」を目立つバッジとして表示する。"""
+def store_display_label(selected: list[str], all_stores: list[str]) -> str:
+    """サイドバーの店舗選択状況を、バッジ表示用の短い文字列にする。"""
+    if not selected or len(selected) == len(all_stores):
+        return "全店舗"
+    if len(selected) <= 2:
+        return "・".join(selected)
+    return f"{selected[0]} 他{len(selected) - 1}店"
+
+
+def render_header_badges(store_label: str, target_date: date) -> None:
+    """右上に「表示店舗」「対象日」の2つのバッジを、幅に応じて並べて表示する。
+    2つを1つのflexコンテナにまとめることで、列幅の制約による表示崩れを避けている。"""
     weekday = WEEKDAY_JP[target_date.weekday()]
     st.markdown(
         f"""
-        <div style="display:flex; justify-content:flex-end; margin-bottom:28px;">
+        <div style="display:flex; justify-content:flex-end; align-items:flex-start;
+                    gap:16px; flex-wrap:wrap; margin-bottom:28px;">
+          <div style="text-align:right;">
+            <div style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">表示店舗</div>
+            <div style="display:inline-flex; align-items:center; justify-content:center;
+                        padding:12px 22px; border-radius:10px; min-height:64px;
+                        background:#fff; border:1px solid #e6e6e6;
+                        box-shadow:0 2px 6px rgba(0,0,0,0.10);">
+              <span style="font-size:1.5rem; font-weight:800; color:#1a1a1a; white-space:nowrap;">
+                {store_label}
+              </span>
+            </div>
+          </div>
           <div style="text-align:right;">
             <div style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">対象日</div>
             <div style="position:relative; display:inline-flex; align-items:center; gap:10px;
@@ -165,6 +187,30 @@ def render_target_date_badge(target_date: date) -> None:
                 [{weekday}]
               </span>
             </div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_progress_bar(elapsed: int, total: int) -> None:
+    """月の経過日数をグラデーションのプログレスバーで表示する。"""
+    pct = (elapsed / total * 100) if total else 0
+    st.markdown(
+        f"""
+        <div style="margin:4px 0 20px 0;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
+            <span style="font-size:1.7rem; font-weight:800; color:#1a1a1a;">
+              {elapsed}<span style="font-size:1rem; font-weight:600; color:#8a8a8a;"> / {total}日経過</span>
+            </span>
+            <span style="font-size:1.3rem; font-weight:700; color:{ACCENT_COLOR};">{pct:.0f}%</span>
+          </div>
+          <div style="width:100%; height:14px; border-radius:7px; background:#eef0f3;
+                      overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.08);">
+            <div style="width:{pct:.1f}%; height:100%; border-radius:7px;
+                        background:linear-gradient(90deg, {PRIMARY_COLOR}, {ACCENT_COLOR});
+                        box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
           </div>
         </div>
         """,
@@ -194,13 +240,37 @@ def get_secret(name: str) -> str | None:
 st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")
 
+if "as_of" not in st.session_state:
+    st.session_state["as_of"] = date.today() - timedelta(days=1)
+if "selected_stores" not in st.session_state:
+    st.session_state["selected_stores"] = []
+
+
+def _sync_as_of_from_sidebar() -> None:
+    st.session_state["as_of_popover"] = st.session_state["as_of"]
+
+
+def _sync_as_of_from_popover() -> None:
+    st.session_state["as_of"] = st.session_state["as_of_popover"]
+
+
+def _sync_stores_from_sidebar() -> None:
+    st.session_state["stores_popover"] = st.session_state["selected_stores"]
+
+
+def _sync_stores_from_popover() -> None:
+    st.session_state["selected_stores"] = st.session_state["stores_popover"]
+
+
 with st.sidebar:
     st.header("設定")
     data_dir_input = st.text_input("Excelフォルダ", value=str(DEFAULT_DATA_DIR))
     if st.button("再読み込み", use_container_width=True):
         st.cache_data.clear()
 
-    as_of = st.date_input("基準日（本日扱いにする日付）", value=date.today())
+    as_of = st.date_input(
+        "基準日（本日扱いにする日付）", key="as_of", on_change=_sync_as_of_from_sidebar
+    )
 
 data_dir = Path(data_dir_input)
 
@@ -284,7 +354,12 @@ records, external_records = dl.split_external_sales(records)
 
 all_stores = sorted(records["store"].unique().tolist())
 with st.sidebar:
-    selected_stores = st.multiselect("店舗（未選択なら全店舗）", all_stores, default=[])
+    selected_stores = st.multiselect(
+        "店舗（未選択なら全店舗）",
+        all_stores,
+        key="selected_stores",
+        on_change=_sync_stores_from_sidebar,
+    )
 
 filtered = dl.filter_stores(records, selected_stores)
 colors = store_color_map(all_stores)
@@ -301,14 +376,36 @@ target_year, target_month = available_months[month_idx]
 progress = dl.month_progress(filtered, target_year, target_month, as_of)
 yoy_today = dl.yoy_same_day(filtered, as_of)
 
-header_title_col, header_date_col = st.columns([2, 1])
+header_title_col, header_badges_col = st.columns([1, 2])
 with header_title_col:
     st.subheader("売上サマリー")
-with header_date_col:
-    render_target_date_badge(as_of)
+with header_badges_col:
+    render_header_badges(store_display_label(selected_stores, all_stores), as_of)
+
+_, edit_spacer_col, edit_button_col = st.columns([2, 1, 1])
+with edit_button_col:
+    with st.popover("🔧 対象日・表示店舗を変更", use_container_width=True):
+        if "as_of_popover" not in st.session_state:
+            st.session_state["as_of_popover"] = st.session_state["as_of"]
+        if "stores_popover" not in st.session_state:
+            st.session_state["stores_popover"] = st.session_state["selected_stores"]
+        st.date_input(
+            "基準日（本日扱いにする日付）", key="as_of_popover", on_change=_sync_as_of_from_popover
+        )
+        st.multiselect(
+            "店舗（未選択なら全店舗）",
+            all_stores,
+            key="stores_popover",
+            on_change=_sync_stores_from_popover,
+        )
 
 forecast = progress["forecast_yoy_adjusted"] or progress["forecast_run_rate"]
 forecast_note = "前年同月比ベース" if progress["forecast_yoy_adjusted"] else "当月ペース（単純日次平均）ベース"
+
+last_year_total = yoy_today["last_year_total"]
+today_diff = (
+    yoy_today["today_total"] - last_year_total if last_year_total is not None else None
+)
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
@@ -317,7 +414,7 @@ with col1:
         format_yen_compact(yoy_today["today_total"]),
         "rgb(6, 81, 201)",
         symbol=symbol_for_ratio(yoy_today["pct_change"]),
-        caption=f"前年同日比 {format_pct(yoy_today['pct_change'])}",
+        caption=f"前年差 {format_delta(today_diff, None) or '—'}",
         tooltip=format_yen(yoy_today["today_total"]),
     )
 with col2:
@@ -325,7 +422,6 @@ with col2:
         "前年同日比",
         format_pct(yoy_today["pct_change"]),
         "rgb(3, 138, 52)",
-        caption=f"前年同日: {format_yen(yoy_today['last_year_total'])}",
     )
 with col3:
     render_kpi_block(
@@ -376,7 +472,7 @@ with right:
     st.markdown("#### 月進捗")
     total_days = progress["total_days"]
     elapsed = progress["elapsed_days"]
-    st.progress(elapsed / total_days if total_days else 0, text=f"{elapsed} / {total_days} 日経過")
+    render_progress_bar(elapsed, total_days)
     st.write(f"当月累計: **{format_yen(progress['mtd_total'])}**")
     st.write(f"1日あたり平均: {format_yen(progress['avg_daily'])}")
     if progress["last_year_full_total"]:
@@ -389,6 +485,26 @@ st.markdown("#### 店舗別・日別売上")
 st.caption(f"対象日: {as_of}")
 daily_store = dl.daily_store_snapshot(filtered, as_of)
 daily_store_mtd_yoy = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")["yoy_pct"]
+
+fig_daily_store = go.Figure()
+fig_daily_store.add_bar(
+    x=daily_store["store"], y=daily_store["sales"],
+    name="当日売上", marker_color=ACCENT_COLOR,
+)
+fig_daily_store.add_bar(
+    x=daily_store["store"], y=daily_store["last_year_sales"],
+    name="前年同日売上", marker_color=COMPARISON_COLOR,
+)
+fig_daily_store.update_layout(
+    barmode="group",
+    xaxis_title="店舗",
+    yaxis_title="売上金額（円）",
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    margin=dict(l=10, r=10, t=30, b=10),
+    height=340,
+)
+st.plotly_chart(fig_daily_store, use_container_width=True, config={"displayModeBar": False})
+
 daily_store_display = pd.DataFrame(
     {
         "店舗": daily_store["store"],
@@ -404,6 +520,26 @@ render_section_break()
 
 st.markdown("#### 店舗別ランキング（当月）")
 ranking = dl.store_ranking(filtered, target_year, target_month, as_of)
+
+fig_ranking = go.Figure()
+fig_ranking.add_bar(
+    x=ranking["store"], y=ranking["mtd_sales"],
+    name="当月累計売上", marker_color=ACCENT_COLOR,
+)
+fig_ranking.add_bar(
+    x=ranking["store"], y=ranking["last_year_mtd_sales"],
+    name="前年同期間売上", marker_color=COMPARISON_COLOR,
+)
+fig_ranking.update_layout(
+    barmode="group",
+    xaxis_title="店舗",
+    yaxis_title="売上金額（円）",
+    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+    margin=dict(l=10, r=10, t=30, b=10),
+    height=340,
+)
+st.plotly_chart(fig_ranking, use_container_width=True, config={"displayModeBar": False})
+
 ranking_display = pd.DataFrame(
     {
         "店舗": ranking["store"],

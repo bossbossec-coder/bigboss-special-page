@@ -93,6 +93,50 @@ def store_color_map(stores: list[str]) -> dict[str, str]:
     return {store: STORE_COLORS[i % len(STORE_COLORS)] for i, store in enumerate(sorted(stores))}
 
 
+def symbol_for_ratio(pct: float | None) -> str:
+    """対比％を4段階の記号にする（◎150%以上・〇149~100%・▽99~90%・×89%以下）。"""
+    if pct is None or pd.isna(pct):
+        return ""
+    if pct >= 150:
+        return "◎"
+    if pct >= 100:
+        return "〇"
+    if pct >= 90:
+        return "▽"
+    return "×"
+
+
+def render_kpi_block(
+    label: str,
+    value: str,
+    bg_color: str,
+    symbol: str = "",
+    caption: str | None = None,
+    tooltip: str | None = None,
+) -> None:
+    """色分けされたブロック形式でKPIを1つ表示する。"""
+    symbol_html = f'<span style="margin-right:8px;">{symbol}</span>' if symbol else ""
+    caption_html = (
+        f'<div style="font-size:0.8rem; opacity:0.9; margin-top:8px;">{caption}</div>'
+        if caption
+        else ""
+    )
+    title_attr = f' title="{tooltip}"' if tooltip else ""
+    st.markdown(
+        f"""
+        <div{title_attr} style="background-color:{bg_color}; color:#ffffff; border-radius:10px;
+                    padding:16px 14px; text-align:center; min-height:112px;">
+          <div style="font-size:0.85rem; opacity:0.9;">{label}</div>
+          <div style="font-size:1.6rem; font-weight:800; margin-top:6px; white-space:nowrap;">
+            {symbol_html}{value}
+          </div>
+          {caption_html}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def render_target_date_badge(target_date: date) -> None:
     """右上に「対象日」を目立つバッジとして表示する。"""
     weekday = WEEKDAY_JP[target_date.weekday()]
@@ -258,44 +302,44 @@ with header_title_col:
 with header_date_col:
     render_target_date_badge(as_of)
 
-col1, col2, col3, col4 = st.columns(4)
-col1.metric(
-    "本日の売上合計",
-    format_yen_compact(yoy_today["today_total"]),
-    help=format_yen(yoy_today["today_total"]),
-)
-col2.metric(
-    "前年同日比",
-    format_pct(yoy_today["pct_change"]),
-    help=f"前年同日（{yoy_today['last_year_date']}）: {format_yen(yoy_today['last_year_total'])}",
-)
-mtd_diff = (
-    progress["mtd_total"] - progress["last_year_mtd_total"]
-    if progress["last_year_mtd_total"] is not None
-    else None
-)
-col3.metric(
-    f"当月累計（{progress['elapsed_days']}/{progress['total_days']}日）",
-    format_yen_compact(progress["mtd_total"]),
-    delta=format_delta(mtd_diff, progress["mtd_yoy_pct"]),
-    help=f"正確な金額: {format_yen(progress['mtd_total'])} / 前年同期間: {format_yen(progress['last_year_mtd_total'])}",
-)
 forecast = progress["forecast_yoy_adjusted"] or progress["forecast_run_rate"]
 forecast_note = "前年同月比ベース" if progress["forecast_yoy_adjusted"] else "当月ペース（単純日次平均）ベース"
-forecast_diff = (
-    forecast - progress["last_year_full_total"]
-    if progress["last_year_full_total"] is not None
-    else None
-)
-col4.metric(
-    "月末着地予測",
-    format_yen_compact(forecast),
-    delta=format_delta(forecast_diff, progress["forecast_yoy_pct"]),
-    help=(
-        f"{forecast_note} / 正確な金額: {format_yen(forecast)} "
-        f"/ 前年実績（フル月）: {format_yen(progress['last_year_full_total'])}"
-    ),
-)
+
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    render_kpi_block(
+        "本日の売上合計",
+        format_yen_compact(yoy_today["today_total"]),
+        "rgb(6, 81, 201)",
+        symbol=symbol_for_ratio(yoy_today["pct_change"]),
+        caption=f"前年同日比 {format_pct(yoy_today['pct_change'])}",
+        tooltip=format_yen(yoy_today["today_total"]),
+    )
+with col2:
+    render_kpi_block(
+        "前年同日比",
+        format_pct(yoy_today["pct_change"]),
+        "rgb(3, 138, 52)",
+        caption=f"前年同日: {format_yen(yoy_today['last_year_total'])}",
+    )
+with col3:
+    render_kpi_block(
+        f"当月累計（{progress['elapsed_days']}/{progress['total_days']}日）",
+        format_yen_compact(progress["mtd_total"]),
+        "rgb(196, 8, 24)",
+        symbol=symbol_for_ratio(progress["mtd_yoy_pct"]),
+        caption=f"前年比 {format_pct(progress['mtd_yoy_pct'])}",
+        tooltip=format_yen(progress["mtd_total"]),
+    )
+with col4:
+    render_kpi_block(
+        "月末着地予測",
+        format_yen_compact(forecast),
+        "rgb(48, 47, 47)",
+        symbol=symbol_for_ratio(progress["forecast_yoy_pct"]),
+        caption=f"前年比 {format_pct(progress['forecast_yoy_pct'])}",
+        tooltip=f"{forecast_note} / {format_yen(forecast)}",
+    )
 
 st.divider()
 

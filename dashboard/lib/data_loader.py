@@ -370,13 +370,13 @@ def daily_record(df: pd.DataFrame) -> dict | None:
     return {"date": row["date"].date(), "store": row["store"], "sales": float(row["sales"])}
 
 
-def monthly_record(df: pd.DataFrame) -> dict | None:
-    """全期間の中で、店舗ごとの月間売上合計が最も高かった記録（月商ギネス）を返す。"""
+def monthly_group_record(df: pd.DataFrame) -> dict | None:
+    """全期間の中で、全店舗合計の月間売上が最も高かった記録（月商ギネス）を返す。"""
     if df.empty:
         return None
     tmp = df.copy()
     tmp["year"] = tmp["date"].dt.year
     tmp["month"] = tmp["date"].dt.month
-    grouped = tmp.groupby(["year", "month", "store"], as_index=False)["sales"].sum()
+    grouped = tmp.groupby(["year", "month"], as_index=False)["sales"].sum()
     row = grouped.loc[grouped["sales"].idxmax()]
-    return {"year": int(row["year"]), "month": int(row["month"]), "store": row["store"], "sales": float(row["sales"])}
+    return {"year": int(row["year"]), "month": int(row["month"]), "sales": float(row["sales"])}

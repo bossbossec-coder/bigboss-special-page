@@ -117,7 +117,7 @@ def render_kpi_block(
     """色分けされたブロック形式でKPIを1つ表示する。"""
     symbol_html = f'<span style="margin-right:8px;">{symbol}</span>' if symbol else ""
     caption_html = (
-        f'<div style="font-size:0.8rem; opacity:0.9; margin-top:8px;">{caption}</div>'
+        f'<div style="font-size:0.85rem; opacity:0.9; margin-top:10px;">{caption}</div>'
         if caption
         else ""
     )
@@ -125,9 +125,10 @@ def render_kpi_block(
     st.markdown(
         f"""
         <div{title_attr} style="background-color:{bg_color}; color:#ffffff; border-radius:10px;
-                    padding:16px 14px; text-align:center; min-height:112px;">
-          <div style="font-size:0.85rem; opacity:0.9;">{label}</div>
-          <div style="font-size:1.6rem; font-weight:800; margin-top:6px; white-space:nowrap;">
+                    padding:22px 14px; text-align:center; min-height:168px;
+                    display:flex; flex-direction:column; justify-content:center;">
+          <div style="font-size:0.9rem; opacity:0.9;">{label}</div>
+          <div style="font-size:2.4rem; font-weight:800; margin-top:10px; white-space:nowrap;">
             {symbol_html}{value}
           </div>
           {caption_html}
@@ -142,21 +143,21 @@ def render_target_date_badge(target_date: date) -> None:
     weekday = WEEKDAY_JP[target_date.weekday()]
     st.markdown(
         f"""
-        <div style="display:flex; justify-content:flex-end;">
+        <div style="display:flex; justify-content:flex-end; margin-bottom:28px;">
           <div style="text-align:right;">
-            <div style="font-size:0.75rem; color:#8a8a8a; margin-bottom:2px;">対象日</div>
+            <div style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">対象日</div>
             <div style="position:relative; display:inline-block;
-                        padding:6px 16px 6px 22px; border-radius:6px;
+                        padding:12px 32px 12px 44px; border-radius:10px;
                         background:#fff; border:1px solid #e6e6e6;
-                        box-shadow:0 1px 3px rgba(0,0,0,0.08);">
+                        box-shadow:0 2px 6px rgba(0,0,0,0.10);">
               <div style="position:absolute; top:0; left:0; width:0; height:0;
-                          border-left:16px solid {ACCENT_COLOR};
-                          border-bottom:16px solid transparent;
-                          border-top-left-radius:6px;"></div>
-              <span style="font-size:1.5rem; font-weight:800; color:#1a1a1a;">
+                          border-left:32px solid {ACCENT_COLOR};
+                          border-bottom:32px solid transparent;
+                          border-top-left-radius:10px;"></div>
+              <span style="font-size:3rem; font-weight:800; color:#1a1a1a;">
                 {target_date.month}.{target_date.day}
               </span>
-              <span style="font-size:1.05rem; font-weight:600; color:#555;">
+              <span style="font-size:2.1rem; font-weight:600; color:#555;">
                 [{weekday}]
               </span>
             </div>
@@ -296,7 +297,7 @@ target_year, target_month = available_months[month_idx]
 progress = dl.month_progress(filtered, target_year, target_month, as_of)
 yoy_today = dl.yoy_same_day(filtered, as_of)
 
-header_title_col, header_date_col = st.columns([3, 1])
+header_title_col, header_date_col = st.columns([2, 1])
 with header_title_col:
     st.subheader("売上サマリー")
 with header_date_col:
@@ -472,9 +473,11 @@ ycol4.metric(
     help=f"参考: 前年1年間（1月〜12月）の実績合計 / 正確な金額: {format_yen(year_yoy['last_year_full_total'])}",
 )
 
-st.markdown("##### 記録")
+st.divider()
+
+st.markdown("#### 記録")
 daily_rec = dl.daily_record(filtered)
-monthly_rec = dl.monthly_record(filtered)
+monthly_rec = dl.monthly_group_record(filtered)
 rcol1, rcol2 = st.columns(2)
 with rcol1:
     st.markdown("**日商ギネス**")
@@ -484,10 +487,10 @@ with rcol1:
     else:
         st.caption("データがありません")
 with rcol2:
-    st.markdown("**月商ギネス**")
+    st.markdown("**月商ギネス**（グループ全体・外販除く）")
     if monthly_rec:
         st.metric("売上高", format_yen_compact(monthly_rec["sales"]), help=format_yen(monthly_rec["sales"]))
-        st.caption(f"達成日付: {monthly_rec['year']}年{monthly_rec['month']}月 / 店舗名: {monthly_rec['store']}")
+        st.caption(f"達成日付: {monthly_rec['year']}年{monthly_rec['month']}月 / 対象: 全店舗合計")
     else:
         st.caption("データがありません")
 

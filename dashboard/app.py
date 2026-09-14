@@ -67,12 +67,40 @@ st.markdown(
         div[data-testid="stMetricLabel"] { font-size: 0.8rem !important; }
         [data-testid="stMarkdownContainer"] h1, h1 { font-size: 1.6rem !important; }
         [data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4, h3, h4 { font-size: 1.05rem !important; }
+
+        /* 表示店舗・対象日バッジを横並びのまま縮小し、スマホ幅でも1行に収める */
+        .hdr-badges-row { flex-wrap: nowrap !important; gap: 8px !important; margin-bottom: 10px !important; }
+        .hdr-badge-label { font-size: 0.72rem !important; margin-bottom: 3px !important; }
+        .hdr-store-box { padding: 8px 12px !important; min-height: 48px !important; }
+        .hdr-store-value { font-size: 1.05rem !important; }
+        .hdr-date-box { padding: 8px 14px 8px 26px !important; gap: 5px !important; }
+        .hdr-date-flag { border-left-width: 20px !important; border-bottom-width: 20px !important; }
+        .hdr-date-year { font-size: 0.8rem !important; }
+        .hdr-date-main { font-size: 1.6rem !important; }
+        .hdr-date-weekday { font-size: 1.05rem !important; }
+
+        /* 「対象日・表示店舗を変更」ボタンをバッジに近づける（詰めすぎない程度に） */
+        .st-key-edit_button_row { margin-top: -16px !important; }
+
         /* スマホでは列数の多い表を、横スクロール不要なコンパクト表に差し替える */
         .st-key-daily_store_table_pc, .st-key-ranking_table_pc { display: none !important; }
+
+        /* KPIブロックを4列1行ではなく2列2行に（minmax(0,...)で右列がはみ出さないようにする） */
+        .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+        .kpi-block { padding: 16px 10px !important; min-height: 120px !important; }
+        .kpi-label { font-size: 0.78rem !important; }
+        .kpi-value { font-size: 1.6rem !important; }
+        .kpi-caption { font-size: 0.78rem !important; }
+
+        /* 棒グラフはPC版を隠し、スマホ向け（軸タイトル無し・万円単位）を表示 */
+        .st-key-daily_chart_pc, .st-key-daily_store_chart_pc,
+        .st-key-ranking_chart_pc, .st-key-monthly_chart_pc { display: none !important; }
     }
     @media (min-width: 641px) {
-        /* PC/タブレットでは、スマホ向けのコンパクト表を隠す（PC側の見た目は変更しない） */
+        /* PC/タブレットでは、スマホ向けのコンパクト表・グラフ・グリッドを隠す（PC側の見た目は変更しない） */
         .st-key-daily_store_table_mobile, .st-key-ranking_table_mobile { display: none !important; }
+        .st-key-daily_chart_mobile, .st-key-daily_store_chart_mobile,
+        .st-key-ranking_chart_mobile, .st-key-monthly_chart_mobile { display: none !important; }
     }
     </style>
     """,
@@ -134,32 +162,43 @@ def symbol_for_ratio(pct: float | None) -> str:
     return "×"
 
 
-def render_kpi_block(
+def _kpi_block_html(
     label: str,
     value: str,
     bg_color: str,
     symbol: str = "",
     caption: str | None = None,
     tooltip: str | None = None,
-) -> None:
-    """色分けされたブロック形式でKPIを1つ表示する。"""
+) -> str:
+    """色分けされたKPIブロック1個分のHTMLを組み立てる。"""
     symbol_html = f'<span style="margin-right:8px;">{symbol}</span>' if symbol else ""
     caption_html = (
-        f'<div style="font-size:calc(0.85rem + 2px); opacity:0.9; margin-top:10px;">{caption}</div>'
+        f'<div class="kpi-caption" style="font-size:calc(0.85rem + 2px); opacity:0.9; margin-top:10px;">{caption}</div>'
         if caption
         else ""
     )
     title_attr = f' title="{tooltip}"' if tooltip else ""
-    st.markdown(
-        f"""
-        <div{title_attr} style="background-color:{bg_color}; color:#ffffff; border-radius:10px;
+    return f"""
+        <div class="kpi-block"{title_attr} style="background-color:{bg_color}; color:#ffffff; border-radius:10px;
                     padding:22px 14px; text-align:center; min-height:168px;
-                    display:flex; flex-direction:column; justify-content:center;">
-          <div style="font-size:0.9rem; opacity:0.9;">{label}</div>
-          <div style="font-size:2.4rem; font-weight:800; margin-top:10px; white-space:nowrap;">
+                    display:flex; flex-direction:column; justify-content:center; min-width:0;">
+          <div class="kpi-label" style="font-size:0.9rem; opacity:0.9;">{label}</div>
+          <div class="kpi-value" style="font-size:2.4rem; font-weight:800; margin-top:10px; white-space:nowrap;">
             {symbol_html}{value}
           </div>
           {caption_html}
+        </div>
+        """
+
+
+def render_kpi_grid(blocks: list[dict]) -> None:
+    """4つのKPIブロックをCSSグリッドで並べる。PCでは4列、スマホ（640px以下）では
+    「kpi-grid」クラスへのメディアクエリにより自動的に2列×2行に切り替わる。"""
+    items_html = "".join(_kpi_block_html(**block) for block in blocks)
+    st.markdown(
+        f"""
+        <div class="kpi-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
+          {items_html}
         </div>
         """,
         unsafe_allow_html=True,
@@ -181,37 +220,37 @@ def render_header_badges(store_label: str, target_date: date) -> None:
     weekday = WEEKDAY_JP[target_date.weekday()]
     st.markdown(
         f"""
-        <div style="display:flex; justify-content:flex-end; align-items:flex-start;
+        <div class="hdr-badges-row" style="display:flex; justify-content:flex-end; align-items:flex-start;
                     gap:16px; flex-wrap:wrap; margin-bottom:28px;">
-          <div style="text-align:right;">
-            <div style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">表示店舗</div>
-            <div style="display:inline-flex; align-items:center; justify-content:center;
+          <div class="hdr-store-badge" style="text-align:right;">
+            <div class="hdr-badge-label" style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">表示店舗</div>
+            <div class="hdr-store-box" style="display:inline-flex; align-items:center; justify-content:center;
                         padding:12px 22px; border-radius:10px; min-height:64px;
                         background:#fff; border:1px solid #e6e6e6;
                         box-shadow:0 2px 6px rgba(0,0,0,0.10);">
-              <span style="font-size:1.5rem; font-weight:800; color:#1a1a1a; white-space:nowrap;">
+              <span class="hdr-store-value" style="font-size:1.5rem; font-weight:800; color:#1a1a1a; white-space:nowrap;">
                 {store_label}
               </span>
             </div>
           </div>
-          <div style="text-align:right;">
-            <div style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">対象日</div>
-            <div style="position:relative; display:inline-flex; align-items:center; gap:10px;
+          <div class="hdr-date-badge" style="text-align:right;">
+            <div class="hdr-badge-label" style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">対象日</div>
+            <div class="hdr-date-box" style="position:relative; display:inline-flex; align-items:center; gap:10px;
                         padding:12px 32px 12px 48px; border-radius:10px;
                         background:#fff; border:1px solid #e6e6e6;
                         box-shadow:0 2px 6px rgba(0,0,0,0.10);">
-              <div style="position:absolute; top:0; left:0; width:0; height:0;
+              <div class="hdr-date-flag" style="position:absolute; top:0; left:0; width:0; height:0;
                           border-left:32px solid {ACCENT_COLOR};
                           border-bottom:32px solid transparent;
                           border-top-left-radius:10px;"></div>
-              <span style="writing-mode:vertical-rl; font-size:1.4rem; font-weight:800;
+              <span class="hdr-date-year" style="writing-mode:vertical-rl; font-size:1.4rem; font-weight:800;
                            color:{ACCENT_COLOR}; letter-spacing:1px;">
                 {target_date.year}
               </span>
-              <span style="font-size:3rem; font-weight:800; color:#1a1a1a;">
+              <span class="hdr-date-main" style="font-size:3rem; font-weight:800; color:#1a1a1a;">
                 {target_date.month}.{target_date.day}
               </span>
-              <span style="font-size:2.1rem; font-weight:600; color:#555;">
+              <span class="hdr-date-weekday" style="font-size:2.1rem; font-weight:600; color:#555;">
                 [{weekday}]
               </span>
             </div>
@@ -246,6 +285,23 @@ def render_progress_bar(elapsed: int, total: int) -> None:
     )
 
 
+def to_mobile_chart(fig: go.Figure) -> go.Figure:
+    """スマホ向けに、Y軸タイトルを消し、目盛りを万円単位にしたグラフの複製を作る
+    （PC版のグラフはそのまま、スマホ版だけ別に描画するための複製）。
+    ホバー表示では、customdataに元の正確な金額を保持して表示する。"""
+    fig_m = go.Figure(fig)
+    for trace in fig_m.data:
+        y = getattr(trace, "y", None)
+        if y is None:
+            continue
+        original = list(y)
+        trace.customdata = original
+        trace.y = [None if v is None else v / 10000 for v in original]
+        trace.hovertemplate = "%{x}<br>%{customdata:,.0f}円<extra></extra>"
+    fig_m.update_yaxes(title=None, ticksuffix="万")
+    return fig_m
+
+
 def render_section_break() -> None:
     """日別グループと月別グループの境目を、通常のdividerより太く目立たせる。"""
     st.markdown(
@@ -257,20 +313,26 @@ def render_section_break() -> None:
     )
 
 
-def render_compact_table(df: pd.DataFrame) -> None:
-    """スマホ向けの、列数を絞ったコンパクトな表を描画する（横スクロール無しで収まるように）。
-    渡されたデータフレームの列（すでに整形済みの文字列）をそのまま使う。"""
+def render_compact_table(df: pd.DataFrame, sticky_first_col: bool = False) -> None:
+    """スマホ向けの、コンパクトな表を描画する。列数を絞れば横スクロール無しで収まる。
+    sticky_first_col=Trueの場合は全列を表示しつつ、1列目（店舗名など）を
+    左側に固定したまま残りの列だけを横スクロールできるようにする。"""
+    first_col_style = (
+        "position:sticky; left:0; background:#fff; z-index:1;" if sticky_first_col else ""
+    )
     header_cells = "".join(
         f'<th style="text-align:left; padding:6px 8px; font-size:0.72rem; color:#8a8a8a; '
-        f'font-weight:600; border-bottom:1px solid #e6e6e6; white-space:nowrap;">{col}</th>'
-        for col in df.columns
+        f'font-weight:600; border-bottom:1px solid #e6e6e6; white-space:nowrap;'
+        f'{first_col_style if i == 0 else ""}">{col}</th>'
+        for i, col in enumerate(df.columns)
     )
     rows_html = ""
     for _, row in df.iterrows():
         cells = "".join(
             f'<td style="padding:7px 8px; font-size:0.85rem; color:#1a1a1a; '
-            f'border-bottom:1px solid #f0f0f0; white-space:nowrap;">{value}</td>'
-            for value in row
+            f'border-bottom:1px solid #f0f0f0; white-space:nowrap;'
+            f'{first_col_style if i == 0 else ""}">{value}</td>'
+            for i, value in enumerate(row)
         )
         rows_html += f"<tr>{cells}</tr>"
     st.markdown(
@@ -439,7 +501,9 @@ with header_title_col:
 with header_badges_col:
     render_header_badges(store_display_label(selected_stores, all_stores), as_of)
 
-_, edit_spacer_col, edit_button_col = st.columns([2, 1, 1])
+edit_row = st.container(key="edit_button_row")
+with edit_row:
+    _, edit_spacer_col, edit_button_col = st.columns([2, 1, 1])
 with edit_button_col:
     with st.popover("🔧 対象日・表示店舗を変更", use_container_width=True):
         if "as_of_popover" not in st.session_state:
@@ -464,41 +528,38 @@ today_diff = (
     yoy_today["today_total"] - last_year_total if last_year_total is not None else None
 )
 
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    render_kpi_block(
-        "本日の売上合計",
-        format_yen_compact(yoy_today["today_total"]),
-        KPI_BLUE,
+render_kpi_grid([
+    dict(
+        label="本日の売上合計",
+        value=format_yen_compact(yoy_today["today_total"]),
+        bg_color=KPI_BLUE,
         symbol=symbol_for_ratio(yoy_today["pct_change"]),
         caption=f"前年差 {format_delta(today_diff, None) or '—'}",
         tooltip=format_yen(yoy_today["today_total"]),
-    )
-with col2:
-    render_kpi_block(
-        "前年同日比",
-        format_pct(yoy_today["pct_change"]),
-        "rgb(3, 138, 52)",
+    ),
+    dict(
+        label="前年同日比",
+        value=format_pct(yoy_today["pct_change"]),
+        bg_color="rgb(3, 138, 52)",
         caption="&nbsp;",
-    )
-with col3:
-    render_kpi_block(
-        f"当月累計（{progress['elapsed_days']}/{progress['total_days']}日）",
-        format_yen_compact(progress["mtd_total"]),
-        "rgb(196, 8, 24)",
+    ),
+    dict(
+        label=f"当月累計（{progress['elapsed_days']}/{progress['total_days']}日）",
+        value=format_yen_compact(progress["mtd_total"]),
+        bg_color="rgb(196, 8, 24)",
         symbol=symbol_for_ratio(progress["mtd_yoy_pct"]),
         caption=f"前年比 {format_pct(progress['mtd_yoy_pct'])}",
         tooltip=format_yen(progress["mtd_total"]),
-    )
-with col4:
-    render_kpi_block(
-        "月末着地予測",
-        format_yen_compact(forecast),
-        "rgb(48, 47, 47)",
+    ),
+    dict(
+        label="月末着地予測",
+        value=format_yen_compact(forecast),
+        bg_color="rgb(48, 47, 47)",
         symbol=symbol_for_ratio(progress["forecast_yoy_pct"]),
         caption=f"前年比 {format_pct(progress['forecast_yoy_pct'])}",
         tooltip=f"{forecast_note} / {format_yen(forecast)}",
-    )
+    ),
+])
 
 st.divider()
 
@@ -524,7 +585,10 @@ with left:
         margin=dict(l=10, r=10, t=30, b=10),
         height=380,
     )
-    st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    with st.container(key="daily_chart_pc"):
+        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    with st.container(key="daily_chart_mobile"):
+        st.plotly_chart(to_mobile_chart(fig), use_container_width=True, config={"displayModeBar": False})
 
 with right:
     st.markdown("#### 月進捗")
@@ -561,7 +625,10 @@ fig_daily_store.update_layout(
     margin=dict(l=10, r=10, t=30, b=10),
     height=340,
 )
-st.plotly_chart(fig_daily_store, use_container_width=True, config={"displayModeBar": False})
+with st.container(key="daily_store_chart_pc"):
+    st.plotly_chart(fig_daily_store, use_container_width=True, config={"displayModeBar": False})
+with st.container(key="daily_store_chart_mobile"):
+    st.plotly_chart(to_mobile_chart(fig_daily_store), use_container_width=True, config={"displayModeBar": False})
 
 daily_store_display = pd.DataFrame(
     {
@@ -603,7 +670,10 @@ fig_ranking.update_layout(
     margin=dict(l=10, r=10, t=30, b=10),
     height=340,
 )
-st.plotly_chart(fig_ranking, use_container_width=True, config={"displayModeBar": False})
+with st.container(key="ranking_chart_pc"):
+    st.plotly_chart(fig_ranking, use_container_width=True, config={"displayModeBar": False})
+with st.container(key="ranking_chart_mobile"):
+    st.plotly_chart(to_mobile_chart(fig_ranking), use_container_width=True, config={"displayModeBar": False})
 
 ranking_display = pd.DataFrame(
     {
@@ -617,7 +687,7 @@ ranking_display = pd.DataFrame(
 with st.container(key="ranking_table_pc"):
     st.dataframe(ranking_display, use_container_width=True, hide_index=True)
 with st.container(key="ranking_table_mobile"):
-    render_compact_table(ranking_display[["店舗", "当月累計売上", "前年比"]])
+    render_compact_table(ranking_display, sticky_first_col=True)
 
 st.divider()
 
@@ -640,7 +710,10 @@ fig3.update_layout(
     margin=dict(l=10, r=10, t=30, b=10),
     height=380,
 )
-st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar": False})
+with st.container(key="monthly_chart_pc"):
+    st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar": False})
+with st.container(key="monthly_chart_mobile"):
+    st.plotly_chart(to_mobile_chart(fig3), use_container_width=True, config={"displayModeBar": False})
 
 partial_label = monthly_yoy.loc[monthly_yoy["is_partial"], "label"]
 if not partial_label.empty:

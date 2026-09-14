@@ -320,6 +320,15 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
           .st-key-ds_toggle_row div[data-testid="stColumn"] {{
             flex:1 1 0 !important; width:auto !important; min-width:0 !important;
           }}
+          @media (min-width: 641px) {{
+            /* PCのみ: 日/月ボタンを右寄せにし、売上サマリーの対象日バッジ程度の大きさに縮小する */
+            .st-key-ds_toggle_row div[data-testid="stHorizontalBlock"] {{
+              max-width: 285px !important; margin-left: auto !important; margin-right: 0 !important;
+            }}
+            .st-key-ds_toggle_daily_btn button, .st-key-ds_toggle_monthly_btn button {{
+              min-height: 64px !important;
+            }}
+          }}
           .st-key-ds_toggle_daily_btn button, .st-key-ds_toggle_monthly_btn button {{
             color:#ffffff !important; border:none !important; font-weight:700 !important;
             opacity:0.45; transition:opacity 0.2s ease, transform 0.2s ease;
@@ -351,6 +360,12 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
           }}
           .ds-value {{ font-size:2.4rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
           .ds-pct {{ font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap; }}
+          @media (min-width: 641px) {{
+            /* PCのみ: カード間のスペースを2倍に、対比の文字を1.5倍に、100%以上は黄色にする */
+            .ds-cards-grid {{ gap: 20px !important; }}
+            .ds-pct {{ font-size: 1.8rem !important; }}
+            .ds-pct-good {{ color: #ffd400 !important; }}
+          }}
         </style>
         """,
         unsafe_allow_html=True,
@@ -365,17 +380,19 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
     for _, row in df.iterrows():
         if is_daily:
             main_value = f"{_man(row['sales'])}{slash}{_man(row['last_year_sales'])}"
-            pct_value = format_pct(row["yoy_pct"])
+            pct_num = row["yoy_pct"]
         else:
             main_value = f"{_man(row['mtd_sales'])}{slash}{_man(row['last_year_mtd_sales'])}"
-            pct_value = format_pct(row["mtd_yoy_pct"])
+            pct_num = row["mtd_yoy_pct"]
+        pct_value = format_pct(pct_num)
+        pct_class = "ds-pct ds-pct-good" if pd.notna(pct_num) and pct_num >= 100 else "ds-pct"
         # 1行にまとめて書く（複数行にすると、間の空白行がMarkdown側に「HTMLブロックの
         # 終わり」と誤認識され、以降がコードブロック扱いになってしまうため）。
         cards_html += (
             '<div class="ds-card">'
             f'<div class="ds-store-name">{row["store"]}</div>'
             f'<div class="ds-value">{main_value}</div>'
-            f'<div class="ds-pct">{pct_value}</div>'
+            f'<div class="{pct_class}">{pct_value}</div>'
             "</div>"
         )
     st.markdown(f'<div class="ds-cards-grid">{cards_html}</div>', unsafe_allow_html=True)
@@ -700,6 +717,14 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
         .password-gate-notice ul { margin: 0; padding-left: 1.1em; }
         .password-gate-notice li { margin-bottom: 6px; }
         .password-gate-notice li:last-child { margin-bottom: 0; }
+        @media (min-width: 641px) {
+            /* PCのみ: 案内文の枠が縦長にならないよう、カードを広げて注意事項を2列で表示する */
+            .st-key-password_gate_card { max-width: 760px; }
+            .password-gate-notice ul {
+                display: grid; grid-template-columns: 1fr 1fr; gap: 2px 28px;
+            }
+            .password-gate-notice li { margin-bottom: 10px; }
+        }
         .st-key-password_gate_card div[data-testid="stTextInput"] input {
             border-radius: 10px !important; border: 2px solid #d4af37 !important;
             padding: 10px 14px !important; font-size: 1rem !important;

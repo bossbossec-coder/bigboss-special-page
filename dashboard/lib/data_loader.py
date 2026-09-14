@@ -176,12 +176,12 @@ def month_progress(df: pd.DataFrame, year: int, month: int, as_of: date) -> dict
 
     mtd_yoy_pct = None
     if last_year_mtd_total > 0:
-        mtd_yoy_pct = (mtd_total - last_year_mtd_total) / last_year_mtd_total * 100
+        mtd_yoy_pct = mtd_total / last_year_mtd_total * 100
 
     forecast = forecast_yoy_adjusted or forecast_run_rate
     forecast_yoy_pct = None
     if last_year_full_total > 0:
-        forecast_yoy_pct = (forecast - last_year_full_total) / last_year_full_total * 100
+        forecast_yoy_pct = forecast / last_year_full_total * 100
 
     return {
         "year": year,
@@ -211,7 +211,7 @@ def yoy_same_day(df: pd.DataFrame, target_date: date) -> dict:
 
     pct_change = None
     if last_year_total > 0:
-        pct_change = (today_total - last_year_total) / last_year_total * 100
+        pct_change = today_total / last_year_total * 100
 
     return {
         "target_date": target_date,
@@ -267,7 +267,7 @@ def monthly_yoy_series(df: pd.DataFrame, as_of: date, months: int = 12) -> pd.Da
 
         yoy_pct = None
         if last_total:
-            yoy_pct = (this_total - last_total) / last_total * 100
+            yoy_pct = this_total / last_total * 100
 
         rows.append(
             {
@@ -302,7 +302,7 @@ def calendar_year_yoy(df: pd.DataFrame, as_of: date) -> dict:
 
     yoy_pct = None
     if last_year_ytd:
-        yoy_pct = (this_year_ytd - last_year_ytd) / last_year_ytd * 100
+        yoy_pct = this_year_ytd / last_year_ytd * 100
 
     return {
         "year": year,
@@ -329,9 +329,7 @@ def daily_store_snapshot(df: pd.DataFrame, target_date: date) -> pd.DataFrame:
 
     merged = pd.merge(today_df, last_year_df, on="store", how="outer").fillna(0)
     merged["yoy_pct"] = merged.apply(
-        lambda r: ((r["sales"] - r["last_year_sales"]) / r["last_year_sales"] * 100)
-        if r["last_year_sales"] > 0
-        else None,
+        lambda r: (r["sales"] / r["last_year_sales"] * 100) if r["last_year_sales"] > 0 else None,
         axis=1,
     )
     return merged.sort_values("store")
@@ -350,12 +348,15 @@ def store_ranking(df: pd.DataFrame, year: int, month: int, as_of: date) -> pd.Da
     last_totals = last_year_mtd.groupby("store", as_index=False)["sales"].sum().rename(
         columns={"sales": "last_year_mtd_sales"}
     )
+    # 参考値: 前年同月のフル月合計（経過日数で絞らない、店舗ごとの前年売上計）
+    last_year_full_totals = last_year_month.groupby("store", as_index=False)["sales"].sum().rename(
+        columns={"sales": "last_year_full_sales"}
+    )
 
-    merged = pd.merge(this_totals, last_totals, on="store", how="outer").fillna(0)
+    merged = pd.merge(this_totals, last_totals, on="store", how="outer")
+    merged = pd.merge(merged, last_year_full_totals, on="store", how="outer").fillna(0)
     merged["yoy_pct"] = merged.apply(
-        lambda r: ((r["mtd_sales"] - r["last_year_mtd_sales"]) / r["last_year_mtd_sales"] * 100)
-        if r["last_year_mtd_sales"] > 0
-        else None,
+        lambda r: (r["mtd_sales"] / r["last_year_mtd_sales"] * 100) if r["last_year_mtd_sales"] > 0 else None,
         axis=1,
     )
     return merged.sort_values("mtd_sales", ascending=False)

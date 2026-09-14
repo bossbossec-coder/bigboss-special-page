@@ -69,10 +69,10 @@ def format_yen_compact(value: float | None) -> str:
 
 
 def format_pct(value: float | None) -> str:
+    """前年に対する対比％を表示する（100%が前年と同水準、95%なら前年比95%）。"""
     if value is None or pd.isna(value):
         return "—"
-    sign = "+" if value >= 0 else ""
-    return f"{sign}{value:.1f}%"
+    return f"{value:.1f}%"
 
 
 def format_delta(diff: float | None, pct: float | None) -> str | None:
@@ -254,7 +254,7 @@ st.divider()
 left, right = st.columns([2, 1])
 
 with left:
-    st.markdown("#### 日別売上（今年 vs 前年同月）")
+    st.markdown("#### グループ日別売上（今年 vs 前年同月）")
     series = dl.yoy_daily_series(filtered, target_year, target_month)
     fig = go.Figure()
     fig.add_bar(
@@ -313,6 +313,7 @@ ranking_display = pd.DataFrame(
         "当月累計売上": ranking["mtd_sales"].map(format_yen),
         "前年同期間売上": ranking["last_year_mtd_sales"].map(format_yen),
         "前年比": ranking["yoy_pct"].map(format_pct),
+        "前年売上計": ranking["last_year_full_sales"].map(format_yen),
     }
 )
 st.dataframe(ranking_display, use_container_width=True, hide_index=True)
@@ -346,12 +347,13 @@ if not partial_label.empty:
         f"※ {partial_label.iloc[0]}は基準日（{as_of}）までの実績同士（当年・前年とも月初から同じ日数分）で比較しています。"
     )
 
+monthly_yoy_desc = monthly_yoy.sort_values(["year", "month"], ascending=False)
 monthly_display = pd.DataFrame(
     {
-        "月": monthly_yoy["label"],
-        "当年売上": monthly_yoy["this_year"].map(format_yen),
-        "前年同月売上": monthly_yoy["last_year"].map(format_yen),
-        "前年比": monthly_yoy["yoy_pct"].map(format_pct),
+        "月": monthly_yoy_desc["label"],
+        "当年売上": monthly_yoy_desc["this_year"].map(format_yen),
+        "前年同月売上": monthly_yoy_desc["last_year"].map(format_yen),
+        "前年比": monthly_yoy_desc["yoy_pct"].map(format_pct),
     }
 )
 st.dataframe(monthly_display, use_container_width=True, hide_index=True)

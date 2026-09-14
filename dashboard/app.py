@@ -520,8 +520,8 @@ def render_compact_table(df: pd.DataFrame, sticky_first_col: bool = False) -> No
         rows_html += f"<tr>{cells}</tr>"
     st.markdown(
         f"""
-        <div style="overflow-x:auto;">
-          <table style="width:100%; border-collapse:collapse;">
+        <div style="overflow-x:auto; background:#ffffff;">
+          <table style="width:100%; border-collapse:collapse; background:#ffffff;">
             <thead><tr>{header_cells}</tr></thead>
             <tbody>{rows_html}</tbody>
           </table>

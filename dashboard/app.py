@@ -73,21 +73,26 @@ def render_home_screen_icon_tags() -> None:
     """スマホでホーム画面に追加した際、アイコンがBIGBOSSロゴになるようにする。
     Streamlitはページの<head>を直接編集する手段が無いため、components.htmlの
     iframe内スクリプトから親ページ（window.parent.document）のheadに
-    apple-touch-icon等のタグを追加している（既に追加済みなら何もしない）。"""
+    apple-touch-icon等のタグを追加している（既に追加済みなら何もしない）。
+    iOSの「ホーム画面に追加」はdata:URIのアイコンを認識しないことがあるため、
+    server.enableStaticServing（.streamlit/config.toml）で公開した
+    static/bigboss_logo.png への実URLを使う。"""
     components.html(
         f"""
         <script>
           (function() {{
             var head = window.parent.document.querySelector('head');
             if (head.querySelector('link[rel="apple-touch-icon"]')) {{ return; }}
+            var logoUrl = window.parent.location.origin + '/app/static/bigboss_logo.png';
+
             var appleIcon = document.createElement('link');
             appleIcon.rel = 'apple-touch-icon';
-            appleIcon.href = 'data:image/png;base64,{LOGO_B64}';
+            appleIcon.href = logoUrl;
             head.appendChild(appleIcon);
 
             var icon = document.createElement('link');
             icon.rel = 'icon';
-            icon.href = 'data:image/png;base64,{LOGO_B64}';
+            icon.href = logoUrl;
             head.appendChild(icon);
 
             var capable = document.createElement('meta');

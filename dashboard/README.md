@@ -326,6 +326,14 @@ Streamlitはページの`<head>`を直接編集する手段が無いため、
 `window.parent.document.head`に`apple-touch-icon`等のタグを追加しています
 （`render_scroll_top_button()`と同じ「iframeから親ページを操作する」手法）。
 
+iOSの「ホーム画面に追加」機能は、アイコンが`data:`形式（画像データを直接
+埋め込む方式）だと認識してくれないことがあるため、`apple-touch-icon`だけは
+実際にダウンロードできる画像URLを指定する必要があります。そのため
+`.streamlit/config.toml`で`server.enableStaticServing = true`を有効にし、
+`dashboard/static/bigboss_logo.png`を`/app/static/bigboss_logo.png`という
+実URLとして公開し、それを`apple-touch-icon`のURLとして使っています
+（ロゴ画像を差し替える場合は`assets/`と`static/`の両方を更新してください）。
+
 ## 今後の拡張候補
 
 これはローカルで動く第一プロトタイプから始まっています。運用に合わせて

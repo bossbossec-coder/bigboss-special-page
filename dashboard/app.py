@@ -358,12 +358,13 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
           .ds-store-name {{
             font-size:0.8rem; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
           }}
-          .ds-value {{ font-size:2.4rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
+          .ds-value {{ font-size:1.5rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
           .ds-pct {{ font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap; }}
           @media (min-width: 641px) {{
-            /* PCのみ: カード間のスペースを2倍に、対比の文字を1.5倍に、100%以上は黄色にする */
+            /* PCのみ: カード間のスペースを2倍に、対比の文字を1.5倍→さらに90%に、100%以上は黄色にする */
             .ds-cards-grid {{ gap: 20px !important; }}
-            .ds-pct {{ font-size: 1.8rem !important; }}
+            .ds-value {{ font-size: 2.4rem !important; }}
+            .ds-pct {{ font-size: 1.62rem !important; }}
             .ds-pct-good {{ color: #ffff00 !important; }}
           }}
         </style>
@@ -717,15 +718,18 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
             .st-key-password_gate_card {
                 max-width: 920px;
                 margin: 0 auto;
-                display: grid;
-                grid-template-columns: minmax(240px, 300px) 1fr;
-                column-gap: 40px;
+                display: flex !important;
+                flex-direction: row !important;
                 align-items: center;
+                column-gap: 40px;
                 padding: 36px 44px;
             }
-            .st-key-password_gate_card > div:nth-child(1) { grid-column: 1; grid-row: 1 / span 2; }
-            .st-key-password_gate_card > div:nth-child(2) { grid-column: 2; grid-row: 1; }
-            .st-key-password_gate_card > div:nth-child(3) { grid-column: 2; grid-row: 2; }
+            .st-key-password_gate_card > div:has(.st-key-password_gate_logo) {
+                flex: 0 0 300px !important; width: 300px !important;
+            }
+            .st-key-password_gate_card > div:has(.st-key-password_gate_content) {
+                flex: 1 1 auto !important; width: auto !important; min-width: 0 !important;
+            }
             .password-gate-logo { width: 100%; max-width: 100%; margin-top: 0; }
         }
         .password-gate-title {
@@ -781,42 +785,44 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
     )
 
     with st.container(key="password_gate_card"):
-        st.markdown(
-            f'<img class="password-gate-logo" src="data:image/png;base64,{logo_b64}">',
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            """
-            <div class="password-gate-title">売上ダッシュボード</div>
-            <div class="password-gate-sub">閲覧にはパスワードが必要です</div>
-            <div class="password-gate-notice">
-              <div class="password-gate-notice-title">パスワードの取り扱いについて</div>
-              <ul>
-                <li>本パスワードは毎月月初に更新されます。新しいパスワードは、その都度メールにてご案内いたします。</li>
-                <li>日々の売上をご確認いただくことは、経営感覚を養い、店舗運営の質を高める大切な習慣です。毎日のご確認が、店舗と皆様ご自身の成長につながります。</li>
-                <li>本ページで扱う情報は、当社を代表する役職者・店長の皆様にのみ共有しているものです。重要な情報である事をご理解のうえ、責任を持って閲覧・管理をお願いいたします。</li>
-                <li>セキュリティのため、ログインから12時間が経過すると自動的にログアウトされます。再度ご覧になる際は、お手数ですがパスワードの再入力をお願いいたします。</li>
-              </ul>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-        with st.form(key="password_gate_form", clear_on_submit=False):
-            entered_viewer_password = st.text_input(
-                "パスワード",
-                type="password",
-                key="viewer_password_input",
-                label_visibility="collapsed",
-                placeholder="パスワードを入力",
+        with st.container(key="password_gate_logo"):
+            st.markdown(
+                f'<img class="password-gate-logo" src="data:image/png;base64,{logo_b64}">',
+                unsafe_allow_html=True,
             )
-            submitted = st.form_submit_button("ログイン", use_container_width=True)
-        if submitted:
-            if entered_viewer_password == VIEWER_PASSWORD:
-                st.session_state["viewer_unlocked"] = True
-                st.session_state["viewer_login_time"] = datetime.now()
-                st.rerun()
-            else:
-                st.error("パスワードが違います。")
+        with st.container(key="password_gate_content"):
+            st.markdown(
+                """
+                <div class="password-gate-title">売上ダッシュボード</div>
+                <div class="password-gate-sub">閲覧にはパスワードが必要です</div>
+                <div class="password-gate-notice">
+                  <div class="password-gate-notice-title">パスワードの取り扱いについて</div>
+                  <ul>
+                    <li>本パスワードは毎月月初に更新されます。新しいパスワードは、その都度メールにてご案内いたします。</li>
+                    <li>日々の売上をご確認いただくことは、経営感覚を養い、店舗運営の質を高める大切な習慣です。毎日のご確認が、店舗と皆様ご自身の成長につながります。</li>
+                    <li>本ページで扱う情報は、当社を代表する役職者・店長の皆様にのみ共有しているものです。重要な情報である事をご理解のうえ、責任を持って閲覧・管理をお願いいたします。</li>
+                    <li>セキュリティのため、ログインから12時間が経過すると自動的にログアウトされます。再度ご覧になる際は、お手数ですがパスワードの再入力をお願いいたします。</li>
+                  </ul>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+            with st.form(key="password_gate_form", clear_on_submit=False):
+                entered_viewer_password = st.text_input(
+                    "パスワード",
+                    type="password",
+                    key="viewer_password_input",
+                    label_visibility="collapsed",
+                    placeholder="パスワードを入力",
+                )
+                submitted = st.form_submit_button("ログイン", use_container_width=True)
+            if submitted:
+                if entered_viewer_password == VIEWER_PASSWORD:
+                    st.session_state["viewer_unlocked"] = True
+                    st.session_state["viewer_login_time"] = datetime.now()
+                    st.rerun()
+                else:
+                    st.error("パスワードが違います。")
     st.stop()
 
 
@@ -1070,7 +1076,7 @@ with right:
 st.divider()
 
 with st.container(key="daily_store_heading"):
-    st.markdown("#### 店舗別・日別売上")
+    st.markdown("#### 店舗別・日別売上（単位/万）")
 st.caption(f"対象日: {as_of}")
 daily_store = reorder_by_store(dl.daily_store_snapshot(filtered, as_of), all_stores)
 daily_store_ranking = dl.store_ranking(filtered, target_year, target_month, as_of).set_index("store")

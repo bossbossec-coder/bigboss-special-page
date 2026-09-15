@@ -345,15 +345,20 @@ def render_kpi_grid(blocks: list[dict]) -> None:
 
 def render_daily_store_cards(df: pd.DataFrame) -> None:
     """店舗ごとの売上を、日別（青）/月別（オレンジ）を切り替えられるカードで表示する
-    （PCでは4列、スマホでは2列）。上部の「日」「月」ボタンを押すか、カード自体を
-    クリック・タップしても、全カードが連動して切り替わる。切り替え時は軽い
-    アニメーションを付けている。
+    （PCでは4列、スマホでは2列）。カードは1枚ずつ独立してタップで切り替えられる
+    （タップしたカードだけが日別⇔月別に切り替わり、他のカードは変わらない）。
+    上部の「日」「月」ボタンは、全カードをまとめて日別／月別に揃えたいときに使う。
+    切り替え時は軽いアニメーションを付けている。
     （st.markdownのHTMLに埋め込んだラジオボタン等はStreamlit側でクリックの
     既定動作が働かず操作できないため、実際の切り替えはst.buttonで行っている。
-    カードタップでの切り替えも、カードの見た目の上に透明なst.buttonを
+    カードタップでの切り替えも、カード1枚ごとに見た目の上へ透明なst.buttonを
     重ねて実現している）"""
+    stores = df["store"].tolist()
     if "ds_card_view" not in st.session_state:
         st.session_state["ds_card_view"] = "daily"
+    if "ds_card_view_per_store" not in st.session_state:
+        st.session_state["ds_card_view_per_store"] = {}
+    per_store_view = st.session_state["ds_card_view_per_store"]
     is_daily = st.session_state["ds_card_view"] == "daily"
 
     with st.container(key="ds_toggle_row"):
@@ -361,10 +366,14 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
         with toggle_col1:
             if st.button("日", key="ds_toggle_daily_btn", use_container_width=True):
                 st.session_state["ds_card_view"] = "daily"
+                for store in stores:
+                    per_store_view[store] = "daily"
                 st.rerun()
         with toggle_col2:
             if st.button("月", key="ds_toggle_monthly_btn", use_container_width=True):
                 st.session_state["ds_card_view"] = "monthly"
+                for store in stores:
+                    per_store_view[store] = "monthly"
                 st.rerun()
 
     st.markdown(
@@ -401,38 +410,46 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             from {{ transform:rotateY(90deg); opacity:0; }}
             to {{ transform:rotateY(0deg); opacity:1; }}
           }}
-          .ds-cards-grid {{
+          .ds-cards-grid, .st-key-ds_cards_tap_overlay {{
             display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px;
-            margin-top:10px; margin-bottom:16px;
           }}
+          .ds-cards-grid {{ margin-top:10px; margin-bottom:16px; }}
           .ds-card {{
-            background:{KPI_BLUE if is_daily else ACCENT_COLOR}; color:#ffffff; border-radius:10px;
+            color:#ffffff; border-radius:10px;
             padding:14px 10px; text-align:center; min-width:0;
             display:flex; flex-direction:column; justify-content:center;
             animation: ds-card-in 0.35s ease;
           }}
+          .ds-card-daily {{ background:{KPI_BLUE}; }}
+          .ds-card-monthly {{ background:{ACCENT_COLOR}; }}
           .ds-store-name {{
             font-size:0.8rem; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
           }}
           .ds-value {{ font-size:1.5rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
           .ds-pct {{ font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap; }}
+          @media (max-width: 640px) {{
+            .st-key-ds_cards_tap_overlay {{ grid-template-columns:repeat(2, minmax(0, 1fr)) !important; }}
+          }}
           @media (min-width: 641px) {{
             /* PCのみ: カード間のスペースを2倍に、対比の文字は1.62remからさらに80%に、100%以上は黄色にする */
-            .ds-cards-grid {{ gap: 20px !important; }}
+            .ds-cards-grid, .st-key-ds_cards_tap_overlay {{ gap: 20px !important; }}
             .ds-value {{ font-size: 2.4rem !important; }}
             .ds-pct {{ font-size: 1.296rem !important; }}
             .ds-pct-good {{ color: #ffff00 !important; }}
           }}
           .st-key-ds_cards_tap_wrapper {{ position: relative; }}
-          .st-key-ds_cards_tap_wrapper div[data-testid="stElementContainer"]:has(div[data-testid="stButton"]) {{
+          .st-key-ds_cards_tap_wrapper > div:has(.st-key-ds_cards_tap_overlay) {{
             position: absolute !important; inset: 0 !important; margin: 0 !important;
             width: 100% !important; height: 100% !important;
           }}
-          .st-key-ds_cards_tap_wrapper div[data-testid="stButton"] {{
-            position: absolute !important; inset: 0 !important;
+          .st-key-ds_cards_tap_overlay {{ width: 100%; height: 100%; }}
+          .st-key-ds_cards_tap_overlay div[data-testid="stElementContainer"] {{
+            width: 100% !important; height: 100% !important; margin: 0 !important;
+          }}
+          .st-key-ds_cards_tap_overlay div[data-testid="stButton"] {{
             width: 100% !important; height: 100% !important;
           }}
-          .st-key-ds_cards_tap_wrapper div[data-testid="stButton"] button {{
+          .st-key-ds_cards_tap_overlay div[data-testid="stButton"] button {{
             width: 100% !important; height: 100% !important; opacity: 0; cursor: pointer;
             border: none !important; background: transparent !important; padding: 0 !important;
           }}
@@ -448,7 +465,8 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
 
     cards_html = ""
     for _, row in df.iterrows():
-        if is_daily:
+        store_is_daily = per_store_view.get(row["store"], "daily") == "daily"
+        if store_is_daily:
             main_value = f"{_man(row['sales'])}{slash}{_man(row['last_year_sales'])}"
             pct_num = row["yoy_pct"]
         else:
@@ -456,10 +474,11 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             pct_num = row["mtd_yoy_pct"]
         pct_value = format_pct(pct_num)
         pct_class = "ds-pct ds-pct-good" if pd.notna(pct_num) and pct_num >= 100 else "ds-pct"
+        card_class = "ds-card ds-card-daily" if store_is_daily else "ds-card ds-card-monthly"
         # 1行にまとめて書く（複数行にすると、間の空白行がMarkdown側に「HTMLブロックの
         # 終わり」と誤認識され、以降がコードブロック扱いになってしまうため）。
         cards_html += (
-            '<div class="ds-card">'
+            f'<div class="{card_class}">'
             f'<div class="ds-store-name">{row["store"]}</div>'
             f'<div class="ds-value">{main_value}</div>'
             f'<div class="{pct_class}">{pct_value}</div>'
@@ -467,9 +486,12 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
         )
     with st.container(key="ds_cards_tap_wrapper"):
         st.markdown(f'<div class="ds-cards-grid">{cards_html}</div>', unsafe_allow_html=True)
-        if st.button("日別/月別を切り替え", key="ds_cards_tap_btn"):
-            st.session_state["ds_card_view"] = "monthly" if is_daily else "daily"
-            st.rerun()
+        with st.container(key="ds_cards_tap_overlay"):
+            for i, store in enumerate(stores):
+                if st.button(f"{store}を切り替え", key=f"ds_card_tap_{i}"):
+                    current = per_store_view.get(store, "daily")
+                    per_store_view[store] = "monthly" if current == "daily" else "daily"
+                    st.rerun()
 
 
 def store_display_label(selected: list[str], all_stores: list[str]) -> str:
@@ -1025,9 +1047,24 @@ available_months = sorted(
     {(d.year, d.month) for d in records["date"]},
     reverse=True,
 )
+# 売上テンプレートに来月以降の分の行が既に入っている場合に備え、デフォルト選択は
+# データ上の最新月ではなく「今日時点で迎えている月のうち一番新しいもの」にする。
+today_ym = (date.today().year, date.today().month)
+past_or_current_months = [m for m in available_months if m <= today_ym]
+default_month = past_or_current_months[0] if past_or_current_months else (
+    available_months[0] if available_months else None
+)
+default_month_idx = (
+    available_months.index(default_month) if default_month in available_months else 0
+)
 with st.sidebar:
     month_labels = [f"{y}年{m}月" for y, m in available_months]
-    month_idx = st.selectbox("対象月", range(len(available_months)), format_func=lambda i: month_labels[i])
+    month_idx = st.selectbox(
+        "対象月",
+        range(len(available_months)),
+        index=default_month_idx,
+        format_func=lambda i: month_labels[i],
+    )
 target_year, target_month = available_months[month_idx]
 
 progress = dl.month_progress(filtered, target_year, target_month, as_of)

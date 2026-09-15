@@ -364,7 +364,7 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             /* PCのみ: カード間のスペースを2倍に、対比の文字を1.5倍に、100%以上は黄色にする */
             .ds-cards-grid {{ gap: 20px !important; }}
             .ds-pct {{ font-size: 1.8rem !important; }}
-            .ds-pct-good {{ color: #ffd400 !important; }}
+            .ds-pct-good {{ color: #ffff00 !important; }}
           }}
         </style>
         """,
@@ -376,6 +376,13 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
     def _man(value: float | None) -> str:
         return "—" if value is None or pd.isna(value) else f"{value / 10000:,.0f}"
 
+    def _pct_html(value: float | None) -> str:
+        """小数点以下（.以下）だけ半分の文字サイズにした対比表示を組み立てる。"""
+        if value is None or pd.isna(value):
+            return "—"
+        integer_part, _, decimal_part = f"{value:.1f}".partition(".")
+        return f'{integer_part}<span style="font-size:0.5em;">.{decimal_part}</span>%'
+
     cards_html = ""
     for _, row in df.iterrows():
         if is_daily:
@@ -384,7 +391,7 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
         else:
             main_value = f"{_man(row['mtd_sales'])}{slash}{_man(row['last_year_mtd_sales'])}"
             pct_num = row["mtd_yoy_pct"]
-        pct_value = format_pct(pct_num)
+        pct_value = _pct_html(pct_num)
         pct_class = "ds-pct ds-pct-good" if pd.notna(pct_num) and pct_num >= 100 else "ds-pct"
         # 1行にまとめて書く（複数行にすると、間の空白行がMarkdown側に「HTMLブロックの
         # 終わり」と誤認識され、以降がコードブロック扱いになってしまうため）。
@@ -699,6 +706,28 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
             text-align: center;
         }
         .password-gate-logo { width: 380px; max-width: 92%; margin-top: 6px; }
+        @media (min-width: 641px) {
+            /* PCのみ: スクロール無しで収まるよう、ロゴを左・案内文とログイン欄を右に
+               並べる横長レイアウトにする（ロゴは右側の内容と縦位置を揃えて中央に来る） */
+            .block-container {
+                display: flex !important; flex-direction: column !important;
+                justify-content: center !important; min-height: 96vh !important;
+                padding-top: 2rem !important; padding-bottom: 2rem !important;
+            }
+            .st-key-password_gate_card {
+                max-width: 920px;
+                margin: 0 auto;
+                display: grid;
+                grid-template-columns: minmax(240px, 300px) 1fr;
+                column-gap: 40px;
+                align-items: center;
+                padding: 36px 44px;
+            }
+            .st-key-password_gate_card > div:nth-child(1) { grid-column: 1; grid-row: 1 / span 2; }
+            .st-key-password_gate_card > div:nth-child(2) { grid-column: 2; grid-row: 1; }
+            .st-key-password_gate_card > div:nth-child(3) { grid-column: 2; grid-row: 2; }
+            .password-gate-logo { width: 100%; max-width: 100%; margin-top: 0; }
+        }
         .password-gate-title {
             font-size: 1.6rem; font-weight: 800; color: #0d47a1; margin-top: 4px;
             letter-spacing: 0.02em; text-align: center;
@@ -718,12 +747,11 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
         .password-gate-notice li { margin-bottom: 6px; }
         .password-gate-notice li:last-child { margin-bottom: 0; }
         @media (min-width: 641px) {
-            /* PCのみ: 案内文の枠が縦長にならないよう、カードを広げて注意事項を2列で表示する */
-            .st-key-password_gate_card { max-width: 760px; }
+            /* PCのみ: 案内文の枠が縦長にならないよう、注意事項を2列で表示する */
             .password-gate-notice ul {
-                display: grid; grid-template-columns: 1fr 1fr; gap: 2px 28px;
+                display: grid; grid-template-columns: 1fr 1fr; gap: 2px 22px;
             }
-            .password-gate-notice li { margin-bottom: 10px; }
+            .password-gate-notice li { margin-bottom: 8px; font-size: 0.72rem; }
         }
         .st-key-password_gate_card div[data-testid="stTextInput"] input {
             border-radius: 10px !important; border: 2px solid #d4af37 !important;
@@ -754,8 +782,11 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
 
     with st.container(key="password_gate_card"):
         st.markdown(
-            f"""
-            <img class="password-gate-logo" src="data:image/png;base64,{logo_b64}">
+            f'<img class="password-gate-logo" src="data:image/png;base64,{logo_b64}">',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            """
             <div class="password-gate-title">売上ダッシュボード</div>
             <div class="password-gate-sub">閲覧にはパスワードが必要です</div>
             <div class="password-gate-notice">

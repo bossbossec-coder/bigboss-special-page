@@ -767,9 +767,9 @@ def render_calendar_section(embed_src: str) -> None:
     （見た目はGoogle側のものをそのまま表示し、アプリ全体のデザインとは別枠）。"""
     st.markdown("#### 予定表")
     components.html(
-        f'<iframe src="{embed_src}" style="border:0; width:100%; height:600px;" '
+        f'<iframe src="{embed_src}" style="border:0; width:100%; height:1000px;" '
         f'frameborder="0" scrolling="no"></iframe>',
-        height=620,
+        height=1020,
     )
 
 

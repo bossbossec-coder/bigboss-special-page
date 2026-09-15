@@ -628,7 +628,13 @@ def _rescale_chart_to_man(fig: go.Figure) -> tuple[go.Figure, list[float]]:
         ticks.append(v)
         v += step
 
-    fig_scaled.update_layout(hoverlabel=dict(font=dict(size=18)))
+    fig_scaled.update_layout(
+        hoverlabel=dict(
+            bgcolor="rgba(13, 27, 56, 0.94)",
+            bordercolor=ACCENT_COLOR,
+            font=dict(size=17, color="#ffffff", family="Arial, sans-serif"),
+        )
+    )
     return fig_scaled, ticks
 
 
@@ -743,6 +749,52 @@ def render_pc_table(df: pd.DataFrame, low_yoy_mask: pd.Series, store_col: str = 
         """,
         unsafe_allow_html=True,
     )
+
+
+def render_record_podium(records: list[dict], value_fn, caption_fn) -> None:
+    """記録（日商・月商ギネスなど）の上位3件を、1位を大きく王冠付きで表示する
+    （2位・3位はメダル絵文字で、1位より小さく表示する）。"""
+    if not records:
+        st.caption("データがありません")
+        return
+    st.markdown(
+        """
+        <style>
+          .record-podium { display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+          .record-rank {
+            display:flex; align-items:center; gap:12px; border-radius:10px;
+            padding:10px 14px; background:#f7f7f9;
+          }
+          .record-rank-1 {
+            background:linear-gradient(90deg, #fff8e1, #ffffff);
+            border:1px solid #f0d585; padding:16px 18px;
+          }
+          .record-medal { font-size:1.5rem; flex-shrink:0; }
+          .record-rank-1 .record-medal { font-size:2.3rem; }
+          .record-main { min-width:0; }
+          .record-value { font-weight:800; color:#1a1a1a; white-space:nowrap; }
+          .record-rank-1 .record-value { font-size:1.7rem; }
+          .record-rank-2 .record-value, .record-rank-3 .record-value { font-size:1.05rem; }
+          .record-caption {
+            font-size:0.72rem; color:#888; margin-top:2px;
+            overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+          }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+    medals = ["👑", "🥈", "🥉"]
+    rows_html = ""
+    for i, rec in enumerate(records[:3]):
+        rows_html += (
+            f'<div class="record-rank record-rank-{i + 1}">'
+            f'<div class="record-medal">{medals[i]}</div>'
+            '<div class="record-main">'
+            f'<div class="record-value">{value_fn(rec)}</div>'
+            f'<div class="record-caption">{caption_fn(rec)}</div>'
+            "</div></div>"
+        )
+    st.markdown(f'<div class="record-podium">{rows_html}</div>', unsafe_allow_html=True)
 
 
 def render_calendar_section(embed_src: str) -> None:
@@ -1247,7 +1299,7 @@ fig_ranking.add_bar(
 )
 fig_ranking.add_scatter(
     x=ranking["store"], y=ranking["last_year_full_sales"],
-    name="前年売上計", mode="lines+markers", line=dict(color=PRIMARY_COLOR),
+    name="前年売上計", mode="lines+markers", line=dict(color=KPI_GREEN),
 )
 fig_ranking.update_layout(
     barmode="group",
@@ -1278,8 +1330,56 @@ with st.container(key="ranking_table_mobile"):
 
 st.divider()
 
-st.markdown("#### グループ月別前年比（直近12ヶ月）")
-monthly_yoy = dl.monthly_yoy_series(filtered, as_of, months=12)
+if "monthly_yoy_offset" not in st.session_state:
+    st.session_state["monthly_yoy_offset"] = 0
+monthly_yoy_offset = st.session_state["monthly_yoy_offset"]
+
+monthly_head_col, monthly_nav_col = st.columns([3, 1])
+with monthly_head_col:
+    st.markdown("#### グループ月別前年比（12ヶ月表示）")
+with monthly_nav_col:
+    with st.container(key="monthly_nav_row"):
+        monthly_prev_col, monthly_next_col = st.columns(2)
+        with monthly_prev_col:
+            if st.button("◀", key="monthly_nav_prev_btn", use_container_width=True):
+                st.session_state["monthly_yoy_offset"] = monthly_yoy_offset + 12
+                st.rerun()
+        with monthly_next_col:
+            if st.button(
+                "▶",
+                key="monthly_nav_next_btn",
+                use_container_width=True,
+                disabled=(monthly_yoy_offset <= 0),
+            ):
+                st.session_state["monthly_yoy_offset"] = max(0, monthly_yoy_offset - 12)
+                st.rerun()
+    st.markdown(
+        """
+        <style>
+          .st-key-monthly_nav_row div[data-testid="stHorizontalBlock"] {
+            flex-wrap:nowrap !important; gap:8px !important; justify-content:flex-end !important;
+          }
+          .st-key-monthly_nav_row div[data-testid="stColumn"] {
+            flex:0 0 auto !important; width:auto !important; min-width:0 !important;
+          }
+          .st-key-monthly_nav_prev_btn button, .st-key-monthly_nav_next_btn button {
+            width:40px !important; height:40px !important; border-radius:50% !important;
+            padding:0 !important; font-size:1.1rem !important; line-height:1 !important;
+            background:#eef0f3 !important; color:#333 !important; border:none !important;
+            transition:background 0.15s ease !important;
+          }
+          .st-key-monthly_nav_prev_btn button:hover, .st-key-monthly_nav_next_btn button:hover {
+            background:#c9ccd1 !important; color:#333 !important;
+          }
+          .st-key-monthly_nav_prev_btn button:disabled, .st-key-monthly_nav_next_btn button:disabled {
+            opacity:0.35 !important; cursor:not-allowed !important;
+          }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+monthly_yoy = dl.monthly_yoy_series(filtered, as_of, months=12, end_offset=monthly_yoy_offset)
 fig3 = go.Figure()
 fig3.add_bar(
     x=monthly_yoy["label"], y=monthly_yoy["this_year"],
@@ -1308,16 +1408,24 @@ if not partial_label.empty:
         f"※ {partial_label.iloc[0]}は基準日（{as_of}）までの実績同士（当年・前年とも月初から同じ日数分）で比較しています。"
     )
 
-monthly_yoy_desc = monthly_yoy.sort_values(["year", "month"], ascending=False)
+st.caption("下の表は、データがある期間をすべて表示しています（グラフの表示期間とは連動しません）。")
+total_months_with_data = len({(d.year, d.month) for d in filtered["date"]})
+monthly_yoy_full = dl.monthly_yoy_series(filtered, as_of, months=max(total_months_with_data, 1))
+monthly_yoy_full_desc = monthly_yoy_full.sort_values(["year", "month"], ascending=False)
 monthly_display = pd.DataFrame(
     {
-        "月": monthly_yoy_desc["label"],
-        "当年売上": monthly_yoy_desc["this_year"].map(format_yen),
-        "前年同月売上": monthly_yoy_desc["last_year"].map(format_yen),
-        "前年比": monthly_yoy_desc["yoy_pct"].map(format_pct),
+        "月": monthly_yoy_full_desc["label"],
+        "当年売上": monthly_yoy_full_desc["this_year"].map(format_yen),
+        "前年同月売上": monthly_yoy_full_desc["last_year"].map(format_yen),
+        "前年比": monthly_yoy_full_desc["yoy_pct"].map(format_pct),
     }
 )
-st.dataframe(monthly_display, use_container_width=True, hide_index=True)
+st.dataframe(
+    monthly_display,
+    use_container_width=True,
+    hide_index=True,
+    height=35 * (len(monthly_display) + 1) + 3,
+)
 
 st.divider()
 
@@ -1344,23 +1452,23 @@ ycol4.metric(
 st.divider()
 
 st.markdown("#### 記録")
-daily_rec = dl.daily_record(filtered)
-monthly_rec = dl.monthly_group_record(filtered)
+daily_recs = dl.daily_record(filtered, top_n=3)
+monthly_recs = dl.monthly_group_record(filtered, top_n=3)
 rcol1, rcol2 = st.columns(2)
 with rcol1:
     st.markdown("**日商ギネス**")
-    if daily_rec:
-        st.metric("売上高", format_yen_compact(daily_rec["sales"]), help=format_yen(daily_rec["sales"]))
-        st.caption(f"達成日付: {daily_rec['date']} / 店舗名: {daily_rec['store']}")
-    else:
-        st.caption("データがありません")
+    render_record_podium(
+        daily_recs,
+        value_fn=lambda r: format_yen_compact(r["sales"]),
+        caption_fn=lambda r: f"{r['date']} / {r['store']}",
+    )
 with rcol2:
     st.markdown("**月商ギネス**（グループ全体・外販除く）")
-    if monthly_rec:
-        st.metric("売上高", format_yen_compact(monthly_rec["sales"]), help=format_yen(monthly_rec["sales"]))
-        st.caption(f"達成日付: {monthly_rec['year']}年{monthly_rec['month']}月 / 対象: 全店舗合計")
-    else:
-        st.caption("データがありません")
+    render_record_podium(
+        monthly_recs,
+        value_fn=lambda r: format_yen_compact(r["sales"]),
+        caption_fn=lambda r: f"{r['year']}年{r['month']}月 / 全店舗合計",
+    )
 
 st.divider()
 

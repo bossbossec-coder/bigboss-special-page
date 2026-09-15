@@ -265,14 +265,18 @@ def yoy_daily_series(df: pd.DataFrame, year: int, month: int) -> pd.DataFrame:
     return merged
 
 
-def monthly_yoy_series(df: pd.DataFrame, as_of: date, months: int = 12) -> pd.DataFrame:
+def monthly_yoy_series(
+    df: pd.DataFrame, as_of: date, months: int = 12, end_offset: int = 0
+) -> pd.DataFrame:
     """基準日から遡ったNヶ月分（デフォルト12ヶ月）の月別実績を、前年同月と比較する。
 
     直近の月（基準日を含む月）が営業途中の場合は、今年・前年とも
     「月初から基準日と同じ日数分」で揃えて比較する（それ以外の月はフル月同士で比較）。
+    end_offsetを指定すると、表示期間の終端を基準日の月からさらにその月数だけ
+    過去にずらす（グラフの「もっと過去を見る」ボタン用）。
     """
     rows = []
-    base_index = as_of.year * 12 + (as_of.month - 1)
+    base_index = as_of.year * 12 + (as_of.month - 1) - end_offset
     for offset in range(months - 1, -1, -1):
         idx = base_index - offset
         year, month0 = divmod(idx, 12)
@@ -388,21 +392,27 @@ def store_ranking(df: pd.DataFrame, year: int, month: int, as_of: date) -> pd.Da
     return merged.sort_values("mtd_sales", ascending=False)
 
 
-def daily_record(df: pd.DataFrame) -> dict | None:
-    """全期間の中で、1日の売上が最も高かった記録（日商ギネス）を返す。"""
+def daily_record(df: pd.DataFrame, top_n: int = 1) -> list[dict]:
+    """全期間の中で、1日の売上が高かった記録（日商ギネス）を、多い順にtop_n件返す。"""
     if df.empty:
-        return None
-    row = df.loc[df["sales"].idxmax()]
-    return {"date": row["date"].date(), "store": row["store"], "sales": float(row["sales"])}
+        return []
+    top = df.nlargest(top_n, "sales")
+    return [
+        {"date": row["date"].date(), "store": row["store"], "sales": float(row["sales"])}
+        for _, row in top.iterrows()
+    ]
 
 
-def monthly_group_record(df: pd.DataFrame) -> dict | None:
-    """全期間の中で、全店舗合計の月間売上が最も高かった記録（月商ギネス）を返す。"""
+def monthly_group_record(df: pd.DataFrame, top_n: int = 1) -> list[dict]:
+    """全期間の中で、全店舗合計の月間売上が高かった記録（月商ギネス）を、多い順にtop_n件返す。"""
     if df.empty:
-        return None
+        return []
     tmp = df.copy()
     tmp["year"] = tmp["date"].dt.year
     tmp["month"] = tmp["date"].dt.month
     grouped = tmp.groupby(["year", "month"], as_index=False)["sales"].sum()
-    row = grouped.loc[grouped["sales"].idxmax()]
-    return {"year": int(row["year"]), "month": int(row["month"]), "sales": float(row["sales"])}
+    top = grouped.nlargest(top_n, "sales")
+    return [
+        {"year": int(row["year"]), "month": int(row["month"]), "sales": float(row["sales"])}
+        for _, row in top.iterrows()
+    ]

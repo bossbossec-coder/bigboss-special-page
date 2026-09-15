@@ -313,6 +313,54 @@ def monthly_yoy_series(
     return pd.DataFrame(rows)
 
 
+def yearly_yoy_series(
+    df: pd.DataFrame, as_of: date, years: int = 12, end_offset: int = 0
+) -> pd.DataFrame:
+    """基準日から遡ったN年分（デフォルト12年）の年別実績を、前年（暦年）と比較する。
+
+    今年（基準日を含む年）が年度途中の場合は、今年・前年とも
+    「年始から基準日と同じ日数分」で揃えて比較する（それ以外の年はフル年同士で比較）。
+    end_offsetを指定すると、表示期間の終端を基準日の年からさらにその年数だけ
+    過去にずらす（グラフの「もっと過去を見る」ボタン用）。
+    """
+    rows = []
+    base_year = as_of.year - end_offset
+    day_of_year_limit_for_as_of = as_of.timetuple().tm_yday
+    for offset in range(years - 1, -1, -1):
+        year = base_year - offset
+        is_partial = year == as_of.year
+        day_limit = day_of_year_limit_for_as_of if is_partial else 366
+
+        this_year_all = df[df["date"].dt.year == year]
+        this_total = float(
+            this_year_all[this_year_all["date"].dt.dayofyear <= day_limit]["sales"].sum()
+        )
+
+        last_year_all = df[df["date"].dt.year == year - 1]
+        has_last_year = not last_year_all.empty
+        last_total = (
+            float(last_year_all[last_year_all["date"].dt.dayofyear <= day_limit]["sales"].sum())
+            if has_last_year
+            else None
+        )
+
+        yoy_pct = None
+        if last_total:
+            yoy_pct = this_total / last_total * 100
+
+        rows.append(
+            {
+                "year": year,
+                "label": f"{year}年",
+                "this_year": this_total,
+                "last_year": last_total,
+                "yoy_pct": yoy_pct,
+                "is_partial": is_partial,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def calendar_year_yoy(df: pd.DataFrame, as_of: date) -> dict:
     """暦年（1月〜12月）の累計売上を前年同期間と比較する。"""
     year = as_of.year

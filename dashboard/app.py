@@ -1297,23 +1297,87 @@ st.divider()
 
 if "monthly_yoy_offset" not in st.session_state:
     st.session_state["monthly_yoy_offset"] = 0
+if "monthly_yoy_mode" not in st.session_state:
+    st.session_state["monthly_yoy_mode"] = "month"
 monthly_yoy_offset = st.session_state["monthly_yoy_offset"]
+monthly_yoy_mode = st.session_state["monthly_yoy_mode"]
+monthly_yoy_is_month = monthly_yoy_mode == "month"
 
-st.markdown("#### グループ月別前年比（12ヶ月表示）")
+st.markdown(f"#### グループ{'月別' if monthly_yoy_is_month else '年別'}前年比（12{'ヶ月' if monthly_yoy_is_month else '年'}表示）")
 
-monthly_yoy = dl.monthly_yoy_series(filtered, as_of, months=12, end_offset=monthly_yoy_offset)
+with st.container(key="monthly_mode_toggle_row"):
+    monthly_mode_col1, monthly_mode_col2 = st.columns(2)
+    with monthly_mode_col1:
+        if st.button("月", key="monthly_mode_month_btn", use_container_width=True):
+            st.session_state["monthly_yoy_mode"] = "month"
+            st.session_state["monthly_yoy_offset"] = 0
+            st.rerun()
+    with monthly_mode_col2:
+        if st.button("年", key="monthly_mode_year_btn", use_container_width=True):
+            st.session_state["monthly_yoy_mode"] = "year"
+            st.session_state["monthly_yoy_offset"] = 0
+            st.rerun()
+st.markdown(
+    f"""
+    <style>
+      .st-key-monthly_mode_toggle_row div[data-testid="stHorizontalBlock"] {{
+        flex-wrap:nowrap !important; gap:10px !important;
+      }}
+      .st-key-monthly_mode_toggle_row div[data-testid="stColumn"] {{
+        flex:1 1 0 !important; width:auto !important; min-width:0 !important;
+      }}
+      @media (min-width: 641px) {{
+        .st-key-monthly_mode_toggle_row div[data-testid="stHorizontalBlock"] {{
+          max-width: 285px !important; margin-left: auto !important; margin-right: 0 !important;
+        }}
+        .st-key-monthly_mode_month_btn button, .st-key-monthly_mode_year_btn button {{
+          min-height: 64px !important;
+        }}
+      }}
+      .st-key-monthly_mode_month_btn button, .st-key-monthly_mode_year_btn button {{
+        color:#ffffff !important; border:none !important; font-weight:700 !important;
+        opacity:0.45; transition:opacity 0.2s ease, transform 0.2s ease;
+      }}
+      .st-key-monthly_mode_month_btn button {{ background:{KPI_GREEN} !important; }}
+      .st-key-monthly_mode_year_btn button {{ background:{KPI_BLUE} !important; }}
+      .st-key-monthly_mode_month_btn button:hover, .st-key-monthly_mode_year_btn button:hover {{
+        color:#ffffff !important;
+      }}
+      .st-key-monthly_mode_{'month' if monthly_yoy_is_month else 'year'}_btn button {{
+        opacity:1; transform:scale(1.03);
+      }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+if monthly_yoy_is_month:
+    monthly_yoy = dl.monthly_yoy_series(filtered, as_of, months=12, end_offset=monthly_yoy_offset)
+else:
+    monthly_yoy = dl.yearly_yoy_series(filtered, as_of, years=12, end_offset=monthly_yoy_offset)
+
 fig3 = go.Figure()
-fig3.add_bar(
-    x=monthly_yoy["label"], y=monthly_yoy["this_year"],
-    name="当年", marker_color=KPI_GREEN,
-)
-fig3.add_bar(
-    x=monthly_yoy["label"], y=monthly_yoy["last_year"],
-    name="前年同月", marker_color=COMPARISON_COLOR,
-)
+if monthly_yoy_is_month:
+    fig3.add_bar(
+        x=monthly_yoy["label"], y=monthly_yoy["this_year"],
+        name="当年", marker_color=KPI_GREEN,
+    )
+    fig3.add_bar(
+        x=monthly_yoy["label"], y=monthly_yoy["last_year"],
+        name="前年同月", marker_color=COMPARISON_COLOR,
+    )
+else:
+    fig3.add_bar(
+        x=monthly_yoy["label"], y=monthly_yoy["this_year"],
+        name="年間売上",
+        marker_color=[
+            KPI_BLUE if is_partial else COMPARISON_COLOR
+            for is_partial in monthly_yoy["is_partial"]
+        ],
+    )
 fig3.update_layout(
     barmode="group",
-    xaxis_title="月",
+    xaxis_title="月" if monthly_yoy_is_month else "年",
     yaxis_title="売上金額（円）",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     margin=dict(l=10, r=10, t=30, b=10),
@@ -1367,25 +1431,47 @@ with st.container(key="monthly_chart_mobile"):
 
 partial_label = monthly_yoy.loc[monthly_yoy["is_partial"], "label"]
 if not partial_label.empty:
-    st.caption(
-        f"※ {partial_label.iloc[0]}は基準日（{as_of}）までの実績同士（当年・前年とも月初から同じ日数分）で比較しています。"
-    )
+    if monthly_yoy_is_month:
+        st.caption(
+            f"※ {partial_label.iloc[0]}は基準日（{as_of}）までの実績同士（当年・前年とも月初から同じ日数分）で比較しています。"
+        )
+    else:
+        st.caption(
+            f"※ {partial_label.iloc[0]}は基準日（{as_of}）までの実績同士（当年・前年とも年始から同じ日数分）で比較しています。"
+        )
 
-st.caption(
-    "下の表は、データがある期間をすべて含みます（グラフの表示期間とは連動しません）。"
-    "13ヶ月以上ある場合は、表内をスクロールしてご覧ください。"
-)
-total_months_with_data = len({(d.year, d.month) for d in filtered["date"]})
-monthly_yoy_full = dl.monthly_yoy_series(filtered, as_of, months=max(total_months_with_data, 1))
-monthly_yoy_full_desc = monthly_yoy_full.sort_values(["year", "month"], ascending=False)
-monthly_display = pd.DataFrame(
-    {
-        "月": monthly_yoy_full_desc["label"],
-        "当年売上": monthly_yoy_full_desc["this_year"].map(format_yen),
-        "前年同月売上": monthly_yoy_full_desc["last_year"].map(format_yen),
-        "前年比": monthly_yoy_full_desc["yoy_pct"].map(format_pct),
-    }
-)
+if monthly_yoy_is_month:
+    st.caption(
+        "下の表は、データがある期間をすべて含みます（グラフの表示期間とは連動しません）。"
+        "13ヶ月以上ある場合は、表内をスクロールしてご覧ください。"
+    )
+    total_months_with_data = len({(d.year, d.month) for d in filtered["date"]})
+    monthly_yoy_full = dl.monthly_yoy_series(filtered, as_of, months=max(total_months_with_data, 1))
+    monthly_yoy_full_desc = monthly_yoy_full.sort_values(["year", "month"], ascending=False)
+    monthly_display = pd.DataFrame(
+        {
+            "月": monthly_yoy_full_desc["label"],
+            "当年売上": monthly_yoy_full_desc["this_year"].map(format_yen),
+            "前年同月売上": monthly_yoy_full_desc["last_year"].map(format_yen),
+            "前年比": monthly_yoy_full_desc["yoy_pct"].map(format_pct),
+        }
+    )
+else:
+    st.caption(
+        "下の表は、データがある期間をすべて含みます（グラフの表示期間とは連動しません）。"
+        "13年以上ある場合は、表内をスクロールしてご覧ください。"
+    )
+    total_years_with_data = len({d.year for d in filtered["date"]})
+    monthly_yoy_full = dl.yearly_yoy_series(filtered, as_of, years=max(total_years_with_data, 1))
+    monthly_yoy_full_desc = monthly_yoy_full.sort_values(["year"], ascending=False)
+    monthly_display = pd.DataFrame(
+        {
+            "年": monthly_yoy_full_desc["label"],
+            "当年売上": monthly_yoy_full_desc["this_year"].map(format_yen),
+            "前年売上": monthly_yoy_full_desc["last_year"].map(format_yen),
+            "前年比": monthly_yoy_full_desc["yoy_pct"].map(format_pct),
+        }
+    )
 monthly_table_visible_rows = min(len(monthly_display), 12)
 st.dataframe(
     monthly_display,

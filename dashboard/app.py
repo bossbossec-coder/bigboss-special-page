@@ -586,7 +586,7 @@ def _rescale_chart_to_man(fig: go.Figure) -> tuple[go.Figure, list[float]]:
         ticks.append(v)
         v += step
 
-    fig_scaled.update_layout(hoverlabel=dict(font=dict(size=26)))
+    fig_scaled.update_layout(hoverlabel=dict(font=dict(size=18)))
     return fig_scaled, ticks
 
 

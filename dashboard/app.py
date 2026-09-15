@@ -24,6 +24,7 @@ from lib import beverage_news as bn  # noqa: E402
 from lib import data_loader as dl  # noqa: E402
 from lib import day_facts  # noqa: E402
 from lib import github_sync as gh  # noqa: E402
+from lib import local_news as ln  # noqa: E402
 
 # 店舗識別用の固定カラー順（10店舗分）。店舗が増えたら末尾に追加する。
 STORE_COLORS = [
@@ -812,6 +813,50 @@ def render_beverage_news_section() -> None:
             flex-wrap: wrap !important; gap: 16px 24px !important;
           }
           .st-key-beverage_news_row div[data-testid="stColumn"] {
+            flex: 1 1 45% !important; min-width: 240px !important;
+          }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+@st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
+def _cached_local_news() -> dict[str, list[dict] | None]:
+    """松戸市・鎌ケ谷市の情報を6時間キャッシュする（表示のたびに毎回
+    外部サイトへ取得しに行かないようにするため）。"""
+    return ln.fetch_local_news()
+
+
+def render_local_news_section() -> None:
+    """松戸市・鎌ケ谷市の「お知らせ・新着情報」と地域ニュースを一覧表示する。
+    取得に失敗した情報源は「取得できません」と表示し、他の情報源の表示や
+    ダッシュボード全体には影響しないようにする。"""
+    st.markdown("#### 地域情報（松戸市・鎌ケ谷市）")
+    st.caption("各情報源の更新情報をもとに自動表示しています（新しい順・最大5件、6時間おきに更新）。")
+
+    with st.container(key="local_news_row"):
+        news_by_source = _cached_local_news()
+        source_cols = st.columns(4)
+        for col, source_label in zip(source_cols, ln.LOCAL_NEWS_SOURCES):
+            with col:
+                st.markdown(f"**{source_label}**")
+                items = news_by_source.get(source_label)
+                if items is None:
+                    st.caption("現在情報を取得できません")
+                elif not items:
+                    st.caption("情報が見つかりませんでした")
+                else:
+                    for item in items:
+                        date_prefix = f"{item['date']}　" if item["date"] else ""
+                        st.markdown(f"- {date_prefix}[{item['title']}]({item['link']})")
+    st.markdown(
+        """
+        <style>
+          .st-key-local_news_row div[data-testid="stHorizontalBlock"] {
+            flex-wrap: wrap !important; gap: 16px 24px !important;
+          }
+          .st-key-local_news_row div[data-testid="stColumn"] {
             flex: 1 1 45% !important; min-width: 240px !important;
           }
         </style>
@@ -1615,3 +1660,6 @@ if GOOGLE_CALENDAR_SRC:
 
 st.divider()
 render_beverage_news_section()
+
+st.divider()
+render_local_news_section()

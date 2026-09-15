@@ -345,10 +345,13 @@ def render_kpi_grid(blocks: list[dict]) -> None:
 
 def render_daily_store_cards(df: pd.DataFrame) -> None:
     """店舗ごとの売上を、日別（青）/月別（オレンジ）を切り替えられるカードで表示する
-    （PCでは4列、スマホでは2列）。上部の「日」「月」ボタン（実体はst.button）を押すと
-    全カードが連動して切り替わる。切り替え時は軽いアニメーションを付けている。
+    （PCでは4列、スマホでは2列）。上部の「日」「月」ボタンを押すか、カード自体を
+    クリック・タップしても、全カードが連動して切り替わる。切り替え時は軽い
+    アニメーションを付けている。
     （st.markdownのHTMLに埋め込んだラジオボタン等はStreamlit側でクリックの
-    既定動作が働かず操作できないため、実際の切り替えはst.buttonで行っている）"""
+    既定動作が働かず操作できないため、実際の切り替えはst.buttonで行っている。
+    カードタップでの切り替えも、カードの見た目の上に透明なst.buttonを
+    重ねて実現している）"""
     if "ds_card_view" not in st.session_state:
         st.session_state["ds_card_view"] = "daily"
     is_daily = st.session_state["ds_card_view"] == "daily"
@@ -420,6 +423,19 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             .ds-pct {{ font-size: 1.296rem !important; }}
             .ds-pct-good {{ color: #ffff00 !important; }}
           }}
+          .st-key-ds_cards_tap_wrapper {{ position: relative; }}
+          .st-key-ds_cards_tap_wrapper div[data-testid="stElementContainer"]:has(div[data-testid="stButton"]) {{
+            position: absolute !important; inset: 0 !important; margin: 0 !important;
+            width: 100% !important; height: 100% !important;
+          }}
+          .st-key-ds_cards_tap_wrapper div[data-testid="stButton"] {{
+            position: absolute !important; inset: 0 !important;
+            width: 100% !important; height: 100% !important;
+          }}
+          .st-key-ds_cards_tap_wrapper div[data-testid="stButton"] button {{
+            width: 100% !important; height: 100% !important; opacity: 0; cursor: pointer;
+            border: none !important; background: transparent !important; padding: 0 !important;
+          }}
         </style>
         """,
         unsafe_allow_html=True,
@@ -449,7 +465,11 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             f'<div class="{pct_class}">{pct_value}</div>'
             "</div>"
         )
-    st.markdown(f'<div class="ds-cards-grid">{cards_html}</div>', unsafe_allow_html=True)
+    with st.container(key="ds_cards_tap_wrapper"):
+        st.markdown(f'<div class="ds-cards-grid">{cards_html}</div>', unsafe_allow_html=True)
+        if st.button("日別/月別を切り替え", key="ds_cards_tap_btn"):
+            st.session_state["ds_card_view"] = "monthly" if is_daily else "daily"
+            st.rerun()
 
 
 def store_display_label(selected: list[str], all_stores: list[str]) -> str:

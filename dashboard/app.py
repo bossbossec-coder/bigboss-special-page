@@ -24,6 +24,7 @@ from lib import beverage_news as bn  # noqa: E402
 from lib import data_loader as dl  # noqa: E402
 from lib import day_facts  # noqa: E402
 from lib import github_sync as gh  # noqa: E402
+from lib import liquor_retail_news as lr  # noqa: E402
 from lib import local_news as ln  # noqa: E402
 
 # 店舗識別用の固定カラー順（10店舗分）。店舗が増えたら末尾に追加する。
@@ -865,6 +866,50 @@ def render_local_news_section() -> None:
     )
 
 
+@st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
+def _cached_liquor_retail_news() -> dict[str, list[dict] | None]:
+    """酒販店小売業ニュースを6時間キャッシュする（表示のたびに毎回
+    外部サイトへ取得しに行かないようにするため）。"""
+    return lr.fetch_liquor_retail_news()
+
+
+def render_liquor_retail_news_section() -> None:
+    """酒販店小売業に関するニュース（業界団体・業界紙）を一覧表示する。
+    取得に失敗した情報源は「取得できません」と表示し、他の情報源の表示や
+    ダッシュボード全体には影響しないようにする。"""
+    st.markdown("#### 酒販店小売業ニュース")
+    st.caption("各情報源の更新情報をもとに自動表示しています（新しい順・最大5件、6時間おきに更新）。")
+
+    with st.container(key="liquor_retail_news_row"):
+        news_by_source = _cached_liquor_retail_news()
+        source_cols = st.columns(2)
+        for col, source_label in zip(source_cols, lr.LIQUOR_RETAIL_NEWS_SOURCES):
+            with col:
+                st.markdown(f"**{source_label}**")
+                items = news_by_source.get(source_label)
+                if items is None:
+                    st.caption("現在情報を取得できません")
+                elif not items:
+                    st.caption("情報が見つかりませんでした")
+                else:
+                    for item in items:
+                        date_prefix = f"{item['date']}　" if item["date"] else ""
+                        st.markdown(f"- {date_prefix}[{item['title']}]({item['link']})")
+    st.markdown(
+        """
+        <style>
+          .st-key-liquor_retail_news_row div[data-testid="stHorizontalBlock"] {
+            flex-wrap: wrap !important; gap: 16px 24px !important;
+          }
+          .st-key-liquor_retail_news_row div[data-testid="stColumn"] {
+            flex: 1 1 45% !important; min-width: 240px !important;
+          }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def get_secret(name: str) -> str | None:
     """st.secretsが未設定（ローカル実行など）でもエラーにならないよう安全に読む。"""
     try:
@@ -1663,3 +1708,6 @@ render_beverage_news_section()
 
 st.divider()
 render_local_news_section()
+
+st.divider()
+render_liquor_retail_news_section()

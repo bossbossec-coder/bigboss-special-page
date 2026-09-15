@@ -12,13 +12,7 @@ LOCAL_NEWS_SOURCESのURLを見直す必要がある。
 
 from __future__ import annotations
 
-import time
-
-import feedparser
-import requests
-
-REQUEST_TIMEOUT_SECONDS = 8
-REQUEST_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; BigbossDashboard/1.0)"}
+from lib import feed_utils
 
 # 表示名 -> フィードURL（未検証のものを含む。ラベルの並び順で表示する）
 LOCAL_NEWS_SOURCES: dict[str, str] = {
@@ -29,39 +23,10 @@ LOCAL_NEWS_SOURCES: dict[str, str] = {
 }
 
 
-def _entry_date_label(entry) -> str:
-    """フィードの各項目から日付を取り出し、日本語表記（例: 2026年9月10日）にする。
-    日付が取れない場合は空文字を返す。"""
-    parsed = entry.get("published_parsed") or entry.get("updated_parsed")
-    if not parsed:
-        return ""
-    return time.strftime("%Y年%-m月%-d日", parsed)
-
-
 def fetch_local_news(max_items: int = 5) -> dict[str, list[dict] | None]:
     """情報源ごとに、新しい記事・お知らせを新しい順に返す。
 
     戻り値は表示名をキーに、[{"title", "link", "date"}, ...] のリスト。
     取得自体に失敗した情報源は値をNoneにする（表示側で「取得できません」に
     切り替える）。"""
-    results: dict[str, list[dict] | None] = {}
-    for label, feed_url in LOCAL_NEWS_SOURCES.items():
-        try:
-            response = requests.get(feed_url, headers=REQUEST_HEADERS, timeout=REQUEST_TIMEOUT_SECONDS)
-            response.raise_for_status()
-            feed = feedparser.parse(response.content)
-        except Exception:
-            results[label] = None
-            continue
-
-        if feed.bozo and not feed.entries:
-            results[label] = None
-            continue
-
-        items = [
-            {"title": entry.title, "link": entry.link, "date": _entry_date_label(entry)}
-            for entry in feed.entries
-        ][:max_items]
-        results[label] = items
-
-    return results
+    return feed_utils.fetch_feed_items(LOCAL_NEWS_SOURCES, max_items=max_items)

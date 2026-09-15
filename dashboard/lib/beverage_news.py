@@ -14,10 +14,7 @@
 
 from __future__ import annotations
 
-import time
-
-import feedparser
-import requests
+from lib import feed_utils
 
 PR_TIMES_COMPANY_IDS: dict[str, str] = {
     "アサヒ": "16166",
@@ -28,22 +25,6 @@ PR_TIMES_COMPANY_IDS: dict[str, str] = {
 
 PRODUCT_KEYWORDS = ("新発売", "新商品", "リニューアル発売", "期間限定発売", "数量限定発売")
 
-REQUEST_TIMEOUT_SECONDS = 8
-REQUEST_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; BigbossDashboard/1.0)"}
-
-
-def _is_product_news(title: str) -> bool:
-    return any(keyword in title for keyword in PRODUCT_KEYWORDS)
-
-
-def _entry_date_label(entry) -> str:
-    """フィードの各項目から日付を取り出し、日本語表記（例: 2026年9月10日）にする。
-    日付が取れない場合は空文字を返す。"""
-    parsed = entry.get("published_parsed") or entry.get("updated_parsed")
-    if not parsed:
-        return ""
-    return time.strftime("%Y年%-m月%-d日", parsed)
-
 
 def fetch_new_products(max_items_per_maker: int = 5) -> dict[str, list[dict] | None]:
     """メーカーごとに、新商品と思われるプレスリリースを新しい順に返す。
@@ -52,26 +33,8 @@ def fetch_new_products(max_items_per_maker: int = 5) -> dict[str, list[dict] | N
     取得自体に失敗した会社は値をNoneにする（表示側で「取得できません」に
     切り替える）。該当する新商品ニュースが1件も見つからない会社は
     空リスト[]を返す。"""
-    results: dict[str, list[dict] | None] = {}
-    for maker_name, company_id in PR_TIMES_COMPANY_IDS.items():
-        feed_url = f"https://prtimes.jp/companyrdf.php?company_id={company_id}"
-        try:
-            response = requests.get(feed_url, headers=REQUEST_HEADERS, timeout=REQUEST_TIMEOUT_SECONDS)
-            response.raise_for_status()
-            feed = feedparser.parse(response.content)
-        except Exception:
-            results[maker_name] = None
-            continue
-
-        if feed.bozo and not feed.entries:
-            results[maker_name] = None
-            continue
-
-        items = [
-            {"title": entry.title, "link": entry.link, "date": _entry_date_label(entry)}
-            for entry in feed.entries
-            if _is_product_news(entry.title)
-        ][:max_items_per_maker]
-        results[maker_name] = items
-
-    return results
+    sources = {
+        maker_name: f"https://prtimes.jp/companyrdf.php?company_id={company_id}"
+        for maker_name, company_id in PR_TIMES_COMPANY_IDS.items()
+    }
+    return feed_utils.fetch_feed_items(sources, max_items=max_items_per_maker, keyword_filter=PRODUCT_KEYWORDS)

@@ -21,6 +21,7 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from lib import data_loader as dl  # noqa: E402
+from lib import day_facts  # noqa: E402
 from lib import github_sync as gh  # noqa: E402
 
 # 店舗識別用の固定カラー順（10店舗分）。店舗が増えたら末尾に追加する。
@@ -845,6 +846,11 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
             font-size: 0.92rem; color: #777; margin-top: 6px; margin-bottom: 18px;
             text-align: center;
         }
+        .password-gate-daytip {
+            font-size: 0.8rem; color: #0d47a1; background: rgba(13,71,161,0.06);
+            border-radius: 999px; padding: 6px 16px; margin: 0 auto 16px auto;
+            text-align: center; width: fit-content; max-width: 100%;
+        }
         .password-gate-notice {
             text-align: left; background: rgba(13,71,161,0.07);
             border: 1px solid rgba(13,71,161,0.28); border-radius: 12px;
@@ -896,10 +902,16 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
                 unsafe_allow_html=True,
             )
         with st.container(key="password_gate_content"):
+            today = date.today()
+            weekday_ja = ["月", "火", "水", "木", "金", "土", "日"][today.weekday()]
+            today_label = f"{today.year}年{today.month}月{today.day}日（{weekday_ja}）"
+            today_fact = day_facts.get_day_fact(today)
+            daytip_text = f"📅 {today_label}　本日は「{today_fact}」です" if today_fact else f"📅 {today_label}"
             st.markdown(
-                """
+                f"""
                 <div class="password-gate-title">売上ダッシュボード</div>
                 <div class="password-gate-sub">閲覧にはパスワードが必要です</div>
+                <div class="password-gate-daytip">{daytip_text}</div>
                 <div class="password-gate-notice">
                   <div class="password-gate-notice-title">パスワードの取り扱いについて</div>
                   <ul>

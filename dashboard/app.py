@@ -20,6 +20,7 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from lib import beverage_news as bn  # noqa: E402
 from lib import data_loader as dl  # noqa: E402
 from lib import day_facts  # noqa: E402
 from lib import github_sync as gh  # noqa: E402
@@ -771,6 +772,51 @@ def render_calendar_section(embed_src: str) -> None:
         f'<iframe src="{embed_src}" style="border:0; width:100%; height:1000px;" '
         f'frameborder="0" scrolling="no"></iframe>',
         height=1020,
+    )
+
+
+@st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
+def _cached_beverage_news() -> dict[str, list[dict] | None]:
+    """各メーカーの新商品情報を6時間キャッシュする（表示のたびに毎回
+    外部サイトへ取得しに行かないようにするため）。"""
+    return bn.fetch_new_products()
+
+
+def render_beverage_news_section() -> None:
+    """アサヒ・キリン・サントリー・サッポロの新商品情報を、各社のプレス
+    リリース配信情報から取得して一覧表示する。取得に失敗した会社は
+    「取得できません」と表示し、他の会社の表示やダッシュボード全体には
+    影響しないようにする。"""
+    st.markdown("#### 新商品情報（アサヒ・キリン・サントリー・サッポロ）")
+    st.caption("各メーカーのプレスリリース配信情報をもとに自動表示しています（新しい順・各社最大5件、6時間おきに更新）。")
+
+    with st.container(key="beverage_news_row"):
+        news_by_maker = _cached_beverage_news()
+        maker_cols = st.columns(4)
+        for col, maker_name in zip(maker_cols, bn.PR_TIMES_COMPANY_IDS):
+            with col:
+                st.markdown(f"**{maker_name}**")
+                items = news_by_maker.get(maker_name)
+                if items is None:
+                    st.caption("現在情報を取得できません")
+                elif not items:
+                    st.caption("新商品情報が見つかりませんでした")
+                else:
+                    for item in items:
+                        date_prefix = f"{item['date']}　" if item["date"] else ""
+                        st.markdown(f"- {date_prefix}[{item['title']}]({item['link']})")
+    st.markdown(
+        """
+        <style>
+          .st-key-beverage_news_row div[data-testid="stHorizontalBlock"] {
+            flex-wrap: wrap !important; gap: 16px 24px !important;
+          }
+          .st-key-beverage_news_row div[data-testid="stColumn"] {
+            flex: 1 1 45% !important; min-width: 240px !important;
+          }
+        </style>
+        """,
+        unsafe_allow_html=True,
     )
 
 
@@ -1566,3 +1612,6 @@ GOOGLE_CALENDAR_SRC = get_secret("google_calendar_src")
 if GOOGLE_CALENDAR_SRC:
     st.divider()
     render_calendar_section(GOOGLE_CALENDAR_SRC)
+
+st.divider()
+render_beverage_news_section()

@@ -1,25 +1,46 @@
 """松戸市・鎌ケ谷市の「お知らせ・新着情報」と地域ニュースを取得する。
 
 各情報源のRSS/Atom/RDFフィードを取得し、タイトル・日付・リンクの一覧に
-まとめる。ここで指定しているフィードのURLは、公開されている情報をもとにした
-推測を含んでおり、実際に正しく取得できるかはこの開発環境からは検証できて
-いない（外部サイトへ接続できないため）。取得に失敗した情報源はNoneとして
-扱い、他の情報源の表示やダッシュボード全体には影響しないようにする。
+まとめる。配信元の正確なフィードURLがこの開発環境からは検証できないため
+（外部サイトへ接続できない）、情報源ごとに複数の候補URLを用意し、実際に
+フィードとして読み込めた最初のURLを使うようにしている（feed_utils側の
+仕組み）。取得に失敗した情報源はNoneとして扱い、他の情報源の表示や
+ダッシュボード全体には影響しないようにする。
 
-本番環境で表示を確認し、うまく取得できない情報源があれば
-LOCAL_NEWS_SOURCESのURLを見直す必要がある。
+本番環境で表示を確認し、それでもうまく取得できない情報源があれば
+LOCAL_NEWS_SOURCESの候補URLを見直す・追加する必要がある。
 """
 
 from __future__ import annotations
 
 from lib import feed_utils
 
-# 表示名 -> フィードURL（未検証のものを含む。ラベルの並び順で表示する）
-LOCAL_NEWS_SOURCES: dict[str, str] = {
-    "松戸市のお知らせ・新着情報": "https://www.city.matsudo.chiba.jp/rss/whatsnew.rdf",
-    "松戸市の地域ニュース（松戸経済新聞）": "https://matsudo.keizai.biz/rss20.xml",
-    "鎌ケ谷市のお知らせ・新着情報": "https://www.city.kamagaya.chiba.jp/rss/whatsnew.rdf",
-    "鎌ケ谷市の地域ニュース（千葉日報 鎌ケ谷版）": "https://www.chibanippo.co.jp/news/area/kamagaya/feed",
+# 表示名 -> フィードURL候補のリスト（先頭から順に試し、最初に読み込めたものを使う）
+LOCAL_NEWS_SOURCES: dict[str, list[str]] = {
+    "松戸市のお知らせ・新着情報": [
+        "https://www.city.matsudo.chiba.jp/rss/whatsnew.rdf",
+        "https://www.city.matsudo.chiba.jp/index.rdf",
+        "https://www.city.matsudo.chiba.jp/rss/index.rdf",
+        "https://www.city.matsudo.chiba.jp/rss.xml",
+    ],
+    "松戸市の地域ニュース（松戸経済新聞）": [
+        "https://matsudo.keizai.biz/rss20.xml",
+        "https://matsudo.keizai.biz/index.rdf",
+        "https://matsudo.keizai.biz/atom.xml",
+        "https://matsudo.keizai.biz/feed/",
+    ],
+    "鎌ケ谷市のお知らせ・新着情報": [
+        "https://www.city.kamagaya.chiba.jp/rss/whatsnew.rdf",
+        "https://www.city.kamagaya.chiba.jp/index.rdf",
+        "https://www.city.kamagaya.chiba.jp/rss/index.rdf",
+        "https://www.city.kamagaya.chiba.jp/rss.xml",
+    ],
+    "鎌ケ谷市の地域ニュース（千葉日報 鎌ケ谷版）": [
+        "https://www.chibanippo.co.jp/news/area/kamagaya/feed",
+        "https://www.chibanippo.co.jp/feed",
+        "https://www.chibanippo.co.jp/rss",
+        "https://kamagaya.mypl.net/article/topics_kamagaya/feed",
+    ],
 }
 
 

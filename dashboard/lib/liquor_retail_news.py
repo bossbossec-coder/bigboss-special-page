@@ -1,23 +1,30 @@
 """酒販店小売業に関するニュース（業界団体・業界紙）を取得する。
 
 各情報源のRSS/RDFフィードを取得し、タイトル・日付・リンクの一覧にまとめる。
-ここで指定しているフィードのURLは、公開されている情報をもとにした推測を
-含んでおり、実際に正しく取得できるかはこの開発環境からは検証できていない
-（外部サイトへ接続できないため）。取得に失敗した情報源はNoneとして扱い、
-他の情報源の表示やダッシュボード全体には影響しないようにする。
+配信元の正確なフィードURLがこの開発環境からは検証できないため（外部サイトへ
+接続できない）、情報源ごとに複数の候補URLを用意し、実際にフィードとして
+読み込めた最初のURLを使うようにしている（feed_utils側の仕組み）。取得に
+失敗した情報源はNoneとして扱い、他の情報源の表示やダッシュボード全体には
+影響しないようにする。
 
-本番環境で表示を確認し、うまく取得できない情報源があれば
-LIQUOR_RETAIL_NEWS_SOURCESのURLを見直す必要がある。
+本番環境で表示を確認し、それでもうまく取得できない情報源があれば
+LIQUOR_RETAIL_NEWS_SOURCESの候補URLを見直す・追加する必要がある。
 """
 
 from __future__ import annotations
 
 from lib import feed_utils
 
-# 表示名 -> フィードURL（未検証のものを含む。ラベルの並び順で表示する）
-LIQUOR_RETAIL_NEWS_SOURCES: dict[str, str] = {
-    "全国小売酒販組合中央会": "https://prtimes.jp/companyrdf.php?company_id=134181",
-    "酒類食品産業新聞（ssnp.co.jp）": "https://www.ssnp.co.jp/liquor/feed/",
+# 表示名 -> フィードURL候補のリスト（先頭から順に試し、最初に読み込めたものを使う）
+LIQUOR_RETAIL_NEWS_SOURCES: dict[str, list[str]] = {
+    "全国小売酒販組合中央会": [
+        "https://prtimes.jp/companyrdf.php?company_id=134181",
+    ],
+    "酒類食品産業新聞（ssnp.co.jp）": [
+        "https://www.ssnp.co.jp/liquor/feed/",
+        "https://www.ssnp.co.jp/feed/",
+        "https://www.ssnp.co.jp/liquor/rss.xml",
+    ],
 }
 
 

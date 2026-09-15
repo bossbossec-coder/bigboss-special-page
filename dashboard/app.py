@@ -361,10 +361,10 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
           .ds-value {{ font-size:1.5rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
           .ds-pct {{ font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap; }}
           @media (min-width: 641px) {{
-            /* PCのみ: カード間のスペースを2倍に、対比の文字を1.5倍→90%→さらに1.5倍に、100%以上は黄色にする */
+            /* PCのみ: カード間のスペースを2倍に、対比の文字は1.62remからさらに80%に、100%以上は黄色にする */
             .ds-cards-grid {{ gap: 20px !important; }}
             .ds-value {{ font-size: 2.4rem !important; }}
-            .ds-pct {{ font-size: 2.43rem !important; }}
+            .ds-pct {{ font-size: 1.296rem !important; }}
             .ds-pct-good {{ color: #ffff00 !important; }}
           }}
         </style>
@@ -377,13 +377,6 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
     def _man(value: float | None) -> str:
         return "—" if value is None or pd.isna(value) else f"{value / 10000:,.0f}"
 
-    def _pct_html(value: float | None) -> str:
-        """小数点以下（.以下）だけ半分の文字サイズにした対比表示を組み立てる。"""
-        if value is None or pd.isna(value):
-            return "—"
-        integer_part, _, decimal_part = f"{value:.1f}".partition(".")
-        return f'{integer_part}<span style="font-size:0.5em;">.{decimal_part}</span>%'
-
     cards_html = ""
     for _, row in df.iterrows():
         if is_daily:
@@ -392,7 +385,7 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
         else:
             main_value = f"{_man(row['mtd_sales'])}{slash}{_man(row['last_year_mtd_sales'])}"
             pct_num = row["mtd_yoy_pct"]
-        pct_value = _pct_html(pct_num)
+        pct_value = format_pct(pct_num)
         pct_class = "ds-pct ds-pct-good" if pd.notna(pct_num) and pct_num >= 100 else "ds-pct"
         # 1行にまとめて書く（複数行にすると、間の空白行がMarkdown側に「HTMLブロックの
         # 終わり」と誤認識され、以降がコードブロック扱いになってしまうため）。

@@ -361,10 +361,10 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
           .ds-value {{ font-size:1.5rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
           .ds-pct {{ font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap; }}
           @media (min-width: 641px) {{
-            /* PCのみ: カード間のスペースを2倍に、対比の文字を1.5倍→さらに90%に、100%以上は黄色にする */
+            /* PCのみ: カード間のスペースを2倍に、対比の文字を1.5倍→90%→さらに1.5倍に、100%以上は黄色にする */
             .ds-cards-grid {{ gap: 20px !important; }}
             .ds-value {{ font-size: 2.4rem !important; }}
-            .ds-pct {{ font-size: 1.62rem !important; }}
+            .ds-pct {{ font-size: 2.43rem !important; }}
             .ds-pct-good {{ color: #ffff00 !important; }}
           }}
         </style>

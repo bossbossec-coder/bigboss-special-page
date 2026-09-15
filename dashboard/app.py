@@ -16,6 +16,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 import streamlit.components.v1 as components
+from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -44,6 +45,9 @@ STORE_DISPLAY_ORDER = [
 
 DEFAULT_DATA_DIR = Path(__file__).resolve().parent / "data" / "incoming"
 
+LOGO_PATH = Path(__file__).resolve().parent / "assets" / "bigboss_logo.png"
+LOGO_B64 = base64.b64encode(LOGO_PATH.read_bytes()).decode() if LOGO_PATH.exists() else ""
+
 
 def order_stores(stores: list[str]) -> list[str]:
     """STORE_DISPLAY_ORDERの並び順にする（未登録の店舗名は末尾にアルファベット順で追加）。"""
@@ -58,7 +62,51 @@ def reorder_by_store(df: pd.DataFrame, store_order: list[str], store_col: str = 
     present_order = [s for s in store_order if s in set(df[store_col])]
     return df.set_index(store_col).loc[present_order].reset_index()
 
-st.set_page_config(page_title="売上ダッシュボード", layout="wide")
+st.set_page_config(
+    page_title="売上ダッシュボード",
+    page_icon=Image.open(LOGO_PATH) if LOGO_PATH.exists() else None,
+    layout="wide",
+)
+
+
+def render_home_screen_icon_tags() -> None:
+    """スマホでホーム画面に追加した際、アイコンがBIGBOSSロゴになるようにする。
+    Streamlitはページの<head>を直接編集する手段が無いため、components.htmlの
+    iframe内スクリプトから親ページ（window.parent.document）のheadに
+    apple-touch-icon等のタグを追加している（既に追加済みなら何もしない）。"""
+    components.html(
+        f"""
+        <script>
+          (function() {{
+            var head = window.parent.document.querySelector('head');
+            if (head.querySelector('link[rel="apple-touch-icon"]')) {{ return; }}
+            var appleIcon = document.createElement('link');
+            appleIcon.rel = 'apple-touch-icon';
+            appleIcon.href = 'data:image/png;base64,{LOGO_B64}';
+            head.appendChild(appleIcon);
+
+            var icon = document.createElement('link');
+            icon.rel = 'icon';
+            icon.href = 'data:image/png;base64,{LOGO_B64}';
+            head.appendChild(icon);
+
+            var capable = document.createElement('meta');
+            capable.name = 'apple-mobile-web-app-capable';
+            capable.content = 'yes';
+            head.appendChild(capable);
+
+            var title = document.createElement('meta');
+            title.name = 'apple-mobile-web-app-title';
+            title.content = '売上ダッシュボード';
+            head.appendChild(title);
+          }})();
+        </script>
+        """,
+        height=1,
+    )
+
+
+render_home_screen_icon_tags()
 
 # スマートフォンなど狭い画面向けの調整（余白・文字サイズを詰めて情報を収めやすくする）。
 # レイアウトの列(st.columns)自体はStreamlit標準機能で狭い画面では自動的に縦積みになる。
@@ -680,8 +728,6 @@ if st.session_state.get("viewer_unlocked"):
         st.session_state.pop("viewer_login_time", None)
 
 if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
-    logo_path = Path(__file__).resolve().parent / "assets" / "bigboss_logo.png"
-    logo_b64 = base64.b64encode(logo_path.read_bytes()).decode() if logo_path.exists() else ""
 
     st.markdown(
         """
@@ -782,7 +828,7 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
     with st.container(key="password_gate_card"):
         with st.container(key="password_gate_logo"):
             st.markdown(
-                f'<img class="password-gate-logo" src="data:image/png;base64,{logo_b64}">',
+                f'<img class="password-gate-logo" src="data:image/png;base64,{LOGO_B64}">',
                 unsafe_allow_html=True,
             )
         with st.container(key="password_gate_content"):

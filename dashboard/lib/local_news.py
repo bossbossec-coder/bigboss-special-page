@@ -41,6 +41,10 @@ LOCAL_NEWS_SOURCES: dict[str, list[str]] = {
         "https://www.chibanippo.co.jp/news/area/kamagaya/feed",
         "https://kamagaya.mypl.net/article/topics_kamagaya/feed",
     ],
+    "松戸市の地域ニュース（松戸つうしん）": [
+        # 実際にブラウザで開いて存在を確認済み
+        "https://matsudo-tsushin.com/feed/",
+    ],
 }
 
 

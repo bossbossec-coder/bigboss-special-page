@@ -795,9 +795,9 @@ def render_beverage_news_section() -> None:
 
     with st.container(key="beverage_news_row"):
         news_by_maker = _cached_beverage_news()
-        maker_cols = st.columns(4)
-        for col, maker_name in zip(maker_cols, bn.PR_TIMES_COMPANY_IDS):
-            with col:
+        maker_cols = st.columns(2)
+        for i, maker_name in enumerate(bn.PR_TIMES_COMPANY_IDS):
+            with maker_cols[i % 2]:
                 st.markdown(f"**{maker_name}**")
                 items = news_by_maker.get(maker_name)
                 if items is None:
@@ -839,9 +839,9 @@ def render_local_news_section() -> None:
 
     with st.container(key="local_news_row"):
         news_by_source = _cached_local_news()
-        source_cols = st.columns(4)
-        for col, source_label in zip(source_cols, ln.LOCAL_NEWS_SOURCES):
-            with col:
+        source_cols = st.columns(2)
+        for i, source_label in enumerate(ln.LOCAL_NEWS_SOURCES):
+            with source_cols[i % 2]:
                 st.markdown(f"**{source_label}**")
                 items = news_by_source.get(source_label)
                 if items is None:
@@ -884,8 +884,8 @@ def render_liquor_retail_news_section() -> None:
     with st.container(key="liquor_retail_news_row"):
         news_by_source = _cached_liquor_retail_news()
         source_cols = st.columns(2)
-        for col, source_label in zip(source_cols, lr.LIQUOR_RETAIL_NEWS_SOURCES):
-            with col:
+        for i, source_label in enumerate(lr.LIQUOR_RETAIL_NEWS_SOURCES):
+            with source_cols[i % 2]:
                 st.markdown(f"**{source_label}**")
                 items = news_by_source.get(source_label)
                 if items is None:

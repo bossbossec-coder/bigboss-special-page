@@ -23,6 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lib import beverage_news as bn  # noqa: E402
 from lib import data_loader as dl  # noqa: E402
 from lib import day_facts  # noqa: E402
+from lib import ec_industry_news as ec  # noqa: E402
 from lib import github_sync as gh  # noqa: E402
 from lib import liquor_retail_news as lr  # noqa: E402
 from lib import local_news as ln  # noqa: E402
@@ -910,6 +911,50 @@ def render_liquor_retail_news_section() -> None:
     )
 
 
+@st.cache_data(ttl=6 * 60 * 60, show_spinner=False)
+def _cached_ec_industry_news() -> dict[str, list[dict] | None]:
+    """EC業界にまつわるニュースを6時間キャッシュする（表示のたびに毎回
+    外部サイトへ取得しに行かないようにするため）。"""
+    return ec.fetch_ec_industry_news()
+
+
+def render_ec_industry_news_section() -> None:
+    """EC業界の動向ニュースと、出店中のECモール運営会社の最新ニュースを
+    一覧表示する。取得に失敗した情報源は「取得できません」と表示し、他の
+    情報源の表示やダッシュボード全体には影響しないようにする。"""
+    st.markdown("#### EC業界ニュース")
+    st.caption("各情報源の更新情報をもとに自動表示しています（新しい順・最大5件、6時間おきに更新）。")
+
+    with st.container(key="ec_industry_news_row"):
+        news_by_source = _cached_ec_industry_news()
+        source_cols = st.columns(2)
+        for i, source_label in enumerate(ec.EC_INDUSTRY_NEWS_SOURCES):
+            with source_cols[i % 2]:
+                st.markdown(f"**{source_label}**")
+                items = news_by_source.get(source_label)
+                if items is None:
+                    st.caption("現在情報を取得できません")
+                elif not items:
+                    st.caption("情報が見つかりませんでした")
+                else:
+                    for item in items:
+                        date_prefix = f"{item['date']}　" if item["date"] else ""
+                        st.markdown(f"- {date_prefix}[{item['title']}]({item['link']})")
+    st.markdown(
+        """
+        <style>
+          .st-key-ec_industry_news_row div[data-testid="stHorizontalBlock"] {
+            flex-wrap: wrap !important; gap: 16px 24px !important;
+          }
+          .st-key-ec_industry_news_row div[data-testid="stColumn"] {
+            flex: 1 1 45% !important; min-width: 240px !important;
+          }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def get_secret(name: str) -> str | None:
     """st.secretsが未設定（ローカル実行など）でもエラーにならないよう安全に読む。"""
     try:
@@ -1711,3 +1756,6 @@ render_local_news_section()
 
 st.divider()
 render_liquor_retail_news_section()
+
+st.divider()
+render_ec_industry_news_section()

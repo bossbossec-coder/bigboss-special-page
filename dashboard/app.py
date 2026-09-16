@@ -11,6 +11,7 @@ import math
 import sys
 from datetime import date, datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import plotly.graph_objects as go
@@ -27,6 +28,18 @@ from lib import ec_industry_news as ec  # noqa: E402
 from lib import github_sync as gh  # noqa: E402
 from lib import liquor_retail_news as lr  # noqa: E402
 from lib import local_news as ln  # noqa: E402
+
+JST = ZoneInfo("Asia/Tokyo")
+
+
+def today_jst() -> date:
+    """日本時間での「今日」の日付を返す。Streamlit Cloudのサーバーは
+    UTC（日本より9時間遅い）で動いていることが多く、date.today()を
+    そのまま使うと、日本時間の深夜0時〜朝9時の間は前日の日付になって
+    しまう。基準日のデフォルト値など「今日」を扱うすべての箇所で、
+    date.today()ではなくこちらを使うこと。"""
+    return datetime.now(JST).date()
+
 
 # 店舗識別用の固定カラー順（10店舗分）。店舗が増えたら末尾に追加する。
 STORE_COLORS = [
@@ -1083,7 +1096,7 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
                 unsafe_allow_html=True,
             )
         with st.container(key="password_gate_content"):
-            today = date.today()
+            today = today_jst()
             weekday_ja = ["月", "火", "水", "木", "金", "土", "日"][today.weekday()]
             today_label = f"{today.year}年{today.month}月{today.day}日（{weekday_ja}）"
             today_fact = day_facts.get_day_fact(today)
@@ -1130,7 +1143,7 @@ st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")
 
 if "as_of" not in st.session_state:
-    st.session_state["as_of"] = date.today() - timedelta(days=1)
+    st.session_state["as_of"] = today_jst() - timedelta(days=1)
 if "selected_stores" not in st.session_state:
     st.session_state["selected_stores"] = []
 
@@ -1259,7 +1272,7 @@ available_months = sorted(
 )
 # 売上テンプレートに来月以降の分の行が既に入っている場合に備え、デフォルト選択は
 # データ上の最新月ではなく「今日時点で迎えている月のうち一番新しいもの」にする。
-today_ym = (date.today().year, date.today().month)
+today_ym = (today_jst().year, today_jst().month)
 past_or_current_months = [m for m in available_months if m <= today_ym]
 default_month = past_or_current_months[0] if past_or_current_months else (
     available_months[0] if available_months else None

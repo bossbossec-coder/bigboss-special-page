@@ -35,10 +35,10 @@ LOCAL_NEWS_SOURCES: dict[str, list[str]] = {
         "https://www.city.kamagaya.chiba.jp/rss/index.rdf",
         "https://www.city.kamagaya.chiba.jp/rss.xml",
     ],
-    "鎌ケ谷市の地域ニュース（千葉日報 鎌ケ谷版）": [
+    "鎌ケ谷市の地域ニュース（号外NET）": [
+        # 実際にブラウザで開いて存在を確認済み（鎌ケ谷市・白井市・印西市の地域ニュースサイト）
+        "https://kamagaya-shiroi-inzai.goguynet.jp/feed/",
         "https://www.chibanippo.co.jp/news/area/kamagaya/feed",
-        "https://www.chibanippo.co.jp/feed",
-        "https://www.chibanippo.co.jp/rss",
         "https://kamagaya.mypl.net/article/topics_kamagaya/feed",
     ],
 }

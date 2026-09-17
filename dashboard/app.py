@@ -1263,7 +1263,7 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
             with st.form(key="password_gate_form", clear_on_submit=False):
                 entered_viewer_password = st.text_input(
                     "パスワード",
-                    type="default",
+                    type="password",
                     key="viewer_password_input",
                     label_visibility="collapsed",
                     placeholder="パスワードを入力",

@@ -28,6 +28,7 @@ from lib import ec_industry_news as ec  # noqa: E402
 from lib import github_sync as gh  # noqa: E402
 from lib import liquor_retail_news as lr  # noqa: E402
 from lib import local_news as ln  # noqa: E402
+from lib import weather as wt  # noqa: E402
 
 JST = ZoneInfo("Asia/Tokyo")
 
@@ -978,6 +979,71 @@ def render_ec_industry_news_section() -> None:
     )
 
 
+@st.cache_data(ttl=30 * 60, show_spinner=False)
+def _cached_weather() -> dict | None:
+    """鎌ケ谷市（千葉県北西部）の天気予報を30分キャッシュする（表示のたびに
+    毎回気象庁のサイトへ取得しに行かないようにするため）。"""
+    return wt.fetch_weather()
+
+
+def render_weather_widget() -> None:
+    """ログイン画面に、鎌ケ谷市（千葉県北西部）の天気予報を表示する
+    （気象庁の無料データを使用）。取得に失敗した場合は何も表示しない。"""
+    weather_data = _cached_weather()
+    if weather_data is None:
+        return
+
+    temp_max = weather_data["today_temp_max"]
+    temp_min = weather_data["tomorrow_temp_min"]
+    temp_label_parts = []
+    if temp_max is not None:
+        temp_label_parts.append(f"最高{temp_max:.0f}℃")
+    if temp_min is not None:
+        temp_label_parts.append(f"最低{temp_min:.0f}℃")
+    temp_label = "　".join(temp_label_parts)
+
+    st.markdown(
+        f"""
+        <div class="password-gate-weather">
+          🌤 本日の鎌ケ谷市（千葉県北西部）: {weather_data["today_weather"]}
+          {f"　{temp_label}" if temp_label else ""}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    with st.expander("📅 24時間・週間の天気予報を見る"):
+        st.caption(
+            "気象庁のデータをもとに表示しています（気温は千葉市の代表値、"
+            "天気・降水確率は鎌ケ谷市を含む「千葉県北西部」の区分の予報です。"
+            "1時間ごとの予報はなく、降水確率は6時間ごとの区切りです）。"
+        )
+        st.markdown("**今後24時間の降水確率**")
+        pop_cols = st.columns(len(weather_data["pop_periods"]) or 1)
+        for col, period in zip(pop_cols, weather_data["pop_periods"]):
+            with col:
+                st.markdown(
+                    f"<div style='text-align:center; font-size:0.78rem;'>"
+                    f"{period['label']}<br><b>{period['pop']}%</b></div>",
+                    unsafe_allow_html=True,
+                )
+
+        st.markdown("**週間天気予報**")
+        weekly_df = pd.DataFrame(
+            [
+                {
+                    "日付": w["date"],
+                    "天気": w["weather"],
+                    "降水確率": f"{w['pop']}%" if w["pop"] != "—" else "—",
+                    "最低気温": f"{w['temp_min']}℃" if w["temp_min"] != "—" else "—",
+                    "最高気温": f"{w['temp_max']}℃" if w["temp_max"] != "—" else "—",
+                }
+                for w in weather_data["weekly"]
+            ]
+        )
+        st.dataframe(weekly_df, use_container_width=True, hide_index=True)
+
+
 def get_secret(name: str) -> str | None:
     """st.secretsが未設定（ローカル実行など）でもエラーにならないよう安全に読む。"""
     try:
@@ -1055,6 +1121,11 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
             border-radius: 999px; padding: 6px 16px; margin: 0 auto 16px auto;
             text-align: center; width: fit-content; max-width: 100%;
         }
+        .password-gate-weather {
+            font-size: 0.8rem; color: #0d47a1; background: rgba(13,71,161,0.06);
+            border-radius: 999px; padding: 6px 16px; margin: 0 auto 10px auto;
+            text-align: center; width: fit-content; max-width: 100%;
+        }
         .password-gate-notice {
             text-align: left; background: rgba(13,71,161,0.07);
             border: 1px solid rgba(13,71,161,0.28); border-radius: 12px;
@@ -1116,6 +1187,12 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
                 <div class="password-gate-title">売上ダッシュボード</div>
                 <div class="password-gate-sub">閲覧にはパスワードが必要です</div>
                 <div class="password-gate-daytip">{daytip_text}</div>
+                """,
+                unsafe_allow_html=True,
+            )
+            render_weather_widget()
+            st.markdown(
+                """
                 <div class="password-gate-notice">
                   <div class="password-gate-notice-title">パスワードの取り扱いについて</div>
                   <ul>

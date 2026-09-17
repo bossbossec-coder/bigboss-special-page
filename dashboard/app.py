@@ -331,7 +331,7 @@ def _kpi_block_html(
 ) -> str:
     """色分けされたKPIブロック1個分のHTMLを組み立てる。pre_captionを渡すと、
     captionと同じ文字サイズの行をcaptionの上にもう1行追加できる
-    （例: 当月累計カードの「前年比」の上に「先月との差」を表示する場合）。"""
+    （例: 当月累計カードの「前年比」の上に「前年差」を表示する場合）。"""
     symbol_html = f'<span style="margin-right:8px;">{symbol}</span>' if symbol else ""
     pre_caption_html = (
         f'<div class="kpi-caption" style="font-size:calc(0.85rem + 2px); opacity:0.9; margin-top:10px;">{pre_caption}</div>'
@@ -732,8 +732,10 @@ def render_compact_table(df: pd.DataFrame, sticky_first_col: bool = False) -> No
     )
     rows_html = ""
     for _, row in df.iterrows():
+        # 「合計」行は店舗の行より1.5倍の高さで目立たせる
+        cell_padding = "10.5px 8px" if row.iloc[0] == "合計" else "7px 8px"
         cells = "".join(
-            f'<td style="padding:7px 8px; font-size:0.85rem; color:#1a1a1a; '
+            f'<td style="padding:{cell_padding}; font-size:0.85rem; color:#1a1a1a; '
             f'border-bottom:1px solid #f0f0f0; white-space:nowrap;'
             f'{first_col_style if i == 0 else ""}">{value}</td>'
             for i, value in enumerate(row)
@@ -766,8 +768,10 @@ def render_pc_table(df: pd.DataFrame, low_yoy_mask: pd.Series, store_col: str = 
     rows_html = ""
     for idx, row in df.iterrows():
         row_bg = "background-color:#fdecea;" if low_yoy_mask.get(idx, False) else ""
+        # 「合計」行は店舗の行より1.5倍の高さで目立たせる
+        cell_padding = "15px 14px" if row[store_col] == "合計" else "10px 14px"
         cells = "".join(
-            f'<td style="padding:10px 14px; font-size:0.95rem; color:#1a1a1a; '
+            f'<td style="padding:{cell_padding}; font-size:0.95rem; color:#1a1a1a; '
             f'border-bottom:1px solid #f0f0f0; white-space:nowrap; '
             f'text-align:{"center" if col == store_col else "right"};">{value}</td>'
             for col, value in row.items()
@@ -1468,6 +1472,11 @@ today_diff = (
     yoy_today["today_total"] - last_year_total if last_year_total is not None else None
 )
 
+last_year_mtd_total = progress["last_year_mtd_total"]
+mtd_diff_vs_last_year = (
+    progress["mtd_total"] - last_year_mtd_total if last_year_mtd_total is not None else None
+)
+
 render_kpi_grid([
     dict(
         label="本日の売上合計",
@@ -1488,7 +1497,7 @@ render_kpi_grid([
         value=format_yen_compact(progress["mtd_total"]),
         bg_color="rgb(196, 8, 24)",
         symbol=symbol_for_ratio(progress["mtd_yoy_pct"]),
-        pre_caption=f"先月との差 {format_delta(progress['mtd_diff_vs_prev_month'], None) or '—'}",
+        pre_caption=f"前年差 {format_delta(mtd_diff_vs_last_year, None) or '—'}",
         caption=f"前年比 {format_pct(progress['mtd_yoy_pct'])}",
         tooltip=format_yen(progress["mtd_total"]),
     ),

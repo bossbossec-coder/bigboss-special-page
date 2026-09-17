@@ -1077,8 +1077,12 @@ def render_today_events_widget(embed_src: str | None) -> None:
         return
 
     items_html = "".join(
-        f'<li><span class="today-events-time">{event["start_label"]}</span>'
-        f'<span class="today-events-title">{event["title"]}</span></li>'
+        (
+            f'<li><span class="today-events-time">{event["time_label"]}</span>'
+            f'<span class="today-events-title">{event["title"]}</span></li>'
+            if event["time_label"]
+            else f'<li><span class="today-events-title">{event["title"]}</span></li>'
+        )
         for event in events
     )
     st.markdown(

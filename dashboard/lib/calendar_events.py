@@ -52,8 +52,15 @@ def fetch_today_events(embed_src: str, target_date: date | None = None) -> list[
     """指定日（省略時は日本時間での本日）の予定一覧を取得する。取得・解析に
     失敗した場合はNoneを返す（表示側では何も表示しない）。
 
-    戻り値の形式（開始時刻の早い順。終日予定は先頭にまとめる）:
-    [{"title": str, "start_label": str, "all_day": bool}, ...]
+    現在時刻に関係なく、その日が予定の対象日に含まれていれば一覧に含める
+    （「20時開始の予定は20時になるまで表示されない」ということはない）。
+    時刻を表示するのは、指定日が予定の「開始日」そのものである場合だけ。
+    終日予定、および複数日にまたがる予定のうち指定日が開始日ではない日
+    （2日目以降・最終日）は、時刻を表示せずタイトルのみ表示する。
+
+    戻り値の形式（時刻表示の無い予定を先頭にまとめ、時刻表示のあるものは
+    開始時刻の早い順）:
+    [{"title": str, "time_label": str | None}, ...]
     """
     if icalendar is None or recurring_ical_events is None:
         return None
@@ -86,18 +93,15 @@ def fetch_today_events(embed_src: str, target_date: date | None = None) -> list[
         try:
             title = str(component.get("summary", "（無題の予定）"))
             dtstart = component.get("dtstart").dt
-            all_day = not isinstance(dtstart, datetime)
-            if all_day:
-                sort_key = (0, "")
-                start_label = "終日"
-            else:
+            time_label = None
+            sort_key = (0, "")
+            if isinstance(dtstart, datetime):
                 if dtstart.tzinfo is not None:
                     dtstart = dtstart.astimezone(JST)
-                start_label = dtstart.strftime("%H:%M")
-                sort_key = (1, start_label)
-            events.append(
-                {"title": title, "start_label": start_label, "all_day": all_day, "_sort_key": sort_key}
-            )
+                if dtstart.date() == target:
+                    time_label = dtstart.strftime("%H:%M")
+                    sort_key = (1, time_label)
+            events.append({"title": title, "time_label": time_label, "_sort_key": sort_key})
         except Exception:
             continue
 

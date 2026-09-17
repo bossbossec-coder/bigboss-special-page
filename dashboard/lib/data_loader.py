@@ -59,11 +59,22 @@ def _read_one_file(path: Path) -> pd.DataFrame:
     # 適用しようとして、形式が混在する列でエラーになることがある）。
     parsed_date = pd.to_datetime(df["日付"], format="mixed", errors="coerce")
 
+    # 売上金額が空欄のセルは「その日は売上が無かった」という意味で0円として扱う
+    # （外販のように、月に数回しか実績が無い店舗では空欄の行が普通にあるため）。
+    # 一方、空欄ではないのに数値として読めない値（入力ミスなど）は、これまで
+    # 通りファイル全体を読み込みエラーとして扱う。
+    raw_sales = df["売上金額"]
+    parsed_sales = pd.to_numeric(raw_sales, errors="coerce")
+    unparseable_sales = parsed_sales.isna() & raw_sales.notna()
+    if unparseable_sales.any():
+        raise ValueError("売上金額に数値として読めない値があります")
+    parsed_sales = parsed_sales.fillna(0)
+
     out = pd.DataFrame(
         {
             "date": parsed_date.dt.normalize(),
             "store": df["店舗名"].astype(str).str.strip(),
-            "sales": pd.to_numeric(df["売上金額"], errors="coerce"),
+            "sales": parsed_sales,
         }
     )
     out["customers"] = (
@@ -73,10 +84,6 @@ def _read_one_file(path: Path) -> pd.DataFrame:
     bad_dates = out["date"].isna()
     if bad_dates.any():
         raise ValueError("日付列に日付として読み取れない値があります")
-
-    bad_sales = out["sales"].isna()
-    if bad_sales.any():
-        raise ValueError("売上金額に数値として読めない値があります")
 
     out["source_file"] = path.name
     return out

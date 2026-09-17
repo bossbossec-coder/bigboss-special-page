@@ -445,6 +445,7 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
           }}
           .ds-value {{ font-size:1.5rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
           .ds-pct {{ font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap; }}
+          .ds-note {{ font-size:0.62rem; opacity:0.92; margin-top:4px; line-height:1.25; }}
           @media (max-width: 640px) {{
             .st-key-ds_cards_tap_overlay {{ grid-template-columns:repeat(2, minmax(0, 1fr)) !important; }}
           }}
@@ -454,6 +455,7 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             .ds-value {{ font-size: 2.4rem !important; }}
             .ds-pct {{ font-size: 1.296rem !important; }}
             .ds-pct-good {{ color: #ffff00 !important; }}
+            .ds-note {{ font-size: 0.78rem !important; }}
           }}
           .st-key-ds_cards_tap_wrapper {{ position: relative; }}
           .st-key-ds_cards_tap_wrapper > div:has(.st-key-ds_cards_tap_overlay) {{
@@ -487,12 +489,19 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
         if store_is_daily:
             main_value = f"{_man(row['sales'])}{slash}{_man(row['last_year_sales'])}"
             pct_num = row["yoy_pct"]
+            is_zero_sales = pd.notna(row["sales"]) and row["sales"] == 0
         else:
             main_value = f"{_man(row['mtd_sales'])}{slash}{_man(row['last_year_mtd_sales'])}"
             pct_num = row["mtd_yoy_pct"]
+            is_zero_sales = False
         pct_value = format_pct(pct_num)
         pct_class = "ds-pct ds-pct-good" if pd.notna(pct_num) and pct_num >= 100 else "ds-pct"
         card_class = "ds-card ds-card-daily" if store_is_daily else "ds-card ds-card-monthly"
+        note_html = (
+            '<div class="ds-note">※システム側のエラーにより現在¥0と表示されています</div>'
+            if is_zero_sales
+            else ""
+        )
         # 1行にまとめて書く（複数行にすると、間の空白行がMarkdown側に「HTMLブロックの
         # 終わり」と誤認識され、以降がコードブロック扱いになってしまうため）。
         cards_html += (
@@ -500,6 +509,7 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             f'<div class="ds-store-name">{row["store"]}</div>'
             f'<div class="ds-value">{main_value}</div>'
             f'<div class="{pct_class}">{pct_value}</div>'
+            f"{note_html}"
             "</div>"
         )
     with st.container(key="ds_cards_tap_wrapper"):

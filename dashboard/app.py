@@ -1005,7 +1005,8 @@ def render_weather_widget() -> None:
     st.markdown(
         f"""
         <div class="password-gate-weather">
-          🌤 本日の鎌ケ谷市（千葉県北西部）: {weather_data["today_weather"]}
+          <span style="font-size:1.3em;">{weather_data["today_icon"]}</span>
+          本日の鎌ケ谷市（千葉県北西部）: {weather_data["today_weather"]}
           {f"　{temp_label}" if temp_label else ""}
         </div>
         """,
@@ -1033,6 +1034,7 @@ def render_weather_widget() -> None:
             [
                 {
                     "日付": w["date"],
+                    "": w["icon"],
                     "天気": w["weather"],
                     "降水確率": f"{w['pop']}%" if w["pop"] != "—" else "—",
                     "最低気温": f"{w['temp_min']}℃" if w["temp_min"] != "—" else "—",

@@ -75,6 +75,29 @@ def _weather_text(code: str | None) -> str:
     return WEATHER_CODE_TEXT.get(code, f"（コード{code}）")
 
 
+def _icon_from_text(text: str | None) -> str:
+    """天気テキスト（「晴れ時々曇り」等）から絵文字アイコンを判定する。
+    気象庁のAPIには絵文字アイコンのデータが無いため、天気コードを日本語に
+    変換した後のテキストにキーワードが含まれるかどうかで簡易的に決めている。
+    複数の空模様が混じる表記（例:「晴れ時々雨」）は、より荒れた方の絵文字
+    （雷 > 雪 > 雨 > 霧 > 曇り > 晴れ の優先順）を採用する。"""
+    if not text or text == "—" or text.startswith("（コード"):
+        return "🌡️"
+    if "雷" in text:
+        return "⛈️"
+    if "雪" in text:
+        return "🌨️" if ("晴" in text or "曇" in text) else "❄️"
+    if "雨" in text:
+        return "🌦️" if "晴" in text else "🌧️"
+    if "霧" in text:
+        return "🌫️"
+    if "曇" in text:
+        return "⛅" if "晴" in text else "☁️"
+    if "晴" in text:
+        return "☀️"
+    return "🌡️"
+
+
 def _find_area(areas: list[dict], area_code: str) -> dict | None:
     for area in areas:
         if area.get("area", {}).get("code") == area_code:
@@ -98,10 +121,11 @@ def fetch_weather() -> dict | None:
     戻り値の形式:
     {
         "today_weather": str,                # 本日の天気（テキスト）
+        "today_icon": str,                   # 本日の天気の絵文字アイコン
         "today_temp_max": float | None,      # 本日の最高気温（℃、千葉市の代表値）
         "tomorrow_temp_min": float | None,   # 明日の最低気温（℃、千葉市の代表値）
         "pop_periods": [{"label": "18時", "pop": "20"}, ...],  # 概ね24時間分、6時間ごと
-        "weekly": [{"date": "9/18(木)", "weather": str, "pop": str,
+        "weekly": [{"date": "9/18(木)", "weather": str, "icon": str, "pop": str,
                     "temp_min": str, "temp_max": str}, ...],
     }
     """
@@ -120,6 +144,7 @@ def fetch_weather() -> dict | None:
         weather_series = short_range["timeSeries"][0]
         weather_area = _find_area(weather_series["areas"], KAMAGAYA_AREA_CODE)
         today_weather = weather_area["weathers"][0].replace("　", " ").strip() if weather_area else "—"
+        today_icon = _icon_from_text(today_weather)
 
         # 6時間ごとの降水確率（今後24時間程度、気象庁が公開する中で最も細かい時間単位）
         pop_series = short_range["timeSeries"][1]
@@ -151,13 +176,15 @@ def fetch_weather() -> dict | None:
             dt = datetime.fromisoformat(time_str)
             date_label = f"{dt.month}/{dt.day}({WEEKDAY_JA[dt.weekday()]})"
             weather_code = weekly_weather_area["weatherCodes"][i] if weekly_weather_area else None
+            weather_text = _weather_text(weather_code)
             pop = weekly_weather_area["pops"][i] if weekly_weather_area else ""
             temp_min = weekly_temp_area["tempsMin"][i] if weekly_temp_area else ""
             temp_max = weekly_temp_area["tempsMax"][i] if weekly_temp_area else ""
             weekly.append(
                 {
                     "date": date_label,
-                    "weather": _weather_text(weather_code),
+                    "weather": weather_text,
+                    "icon": _icon_from_text(weather_text),
                     "pop": pop if pop else "—",
                     "temp_min": temp_min if temp_min else "—",
                     "temp_max": temp_max if temp_max else "—",
@@ -166,6 +193,7 @@ def fetch_weather() -> dict | None:
 
         return {
             "today_weather": today_weather,
+            "today_icon": today_icon,
             "today_temp_max": today_temp_max,
             "tomorrow_temp_min": tomorrow_temp_min,
             "pop_periods": pop_periods,

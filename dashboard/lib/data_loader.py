@@ -211,6 +211,16 @@ def month_progress(df: pd.DataFrame, year: int, month: int, as_of: date) -> dict
     if last_year_mtd_total > 0:
         mtd_yoy_pct = mtd_total / last_year_mtd_total * 100
 
+    # 先月同時点（同じ経過日数まで）の累計と比較する（月末まで終わっている
+    # 先月の総売上とではなく、公平に「同じ日数分」で比較するため）
+    prev_month, prev_month_year = (12, year - 1) if month == 1 else (month - 1, year)
+    prev_month_slice = month_slice(df, prev_month_year, prev_month)
+    prev_month_mtd = prev_month_slice[prev_month_slice["date"].dt.day <= elapsed_days]
+    prev_month_mtd_total = float(prev_month_mtd["sales"].sum())
+    mtd_diff_vs_prev_month = (
+        mtd_total - prev_month_mtd_total if prev_month_mtd_total > 0 else None
+    )
+
     forecast = forecast_yoy_adjusted or forecast_run_rate
     forecast_yoy_pct = None
     if last_year_full_total > 0:
@@ -229,6 +239,8 @@ def month_progress(df: pd.DataFrame, year: int, month: int, as_of: date) -> dict
         "last_year_full_total": last_year_full_total if last_year_full_total else None,
         "mtd_yoy_pct": mtd_yoy_pct,
         "forecast_yoy_pct": forecast_yoy_pct,
+        "prev_month_mtd_total": prev_month_mtd_total if prev_month_mtd_total else None,
+        "mtd_diff_vs_prev_month": mtd_diff_vs_prev_month,
     }
 
 

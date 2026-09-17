@@ -22,6 +22,7 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from lib import beverage_news as bn  # noqa: E402
+from lib import calendar_events as ce  # noqa: E402
 from lib import data_loader as dl  # noqa: E402
 from lib import day_facts  # noqa: E402
 from lib import ec_industry_news as ec  # noqa: E402
@@ -325,12 +326,20 @@ def _kpi_block_html(
     bg_color: str,
     symbol: str = "",
     caption: str | None = None,
+    pre_caption: str | None = None,
     tooltip: str | None = None,
 ) -> str:
-    """色分けされたKPIブロック1個分のHTMLを組み立てる。"""
+    """色分けされたKPIブロック1個分のHTMLを組み立てる。pre_captionを渡すと、
+    captionと同じ文字サイズの行をcaptionの上にもう1行追加できる
+    （例: 当月累計カードの「前年比」の上に「先月との差」を表示する場合）。"""
     symbol_html = f'<span style="margin-right:8px;">{symbol}</span>' if symbol else ""
+    pre_caption_html = (
+        f'<div class="kpi-caption" style="font-size:calc(0.85rem + 2px); opacity:0.9; margin-top:10px;">{pre_caption}</div>'
+        if pre_caption
+        else ""
+    )
     caption_html = (
-        f'<div class="kpi-caption" style="font-size:calc(0.85rem + 2px); opacity:0.9; margin-top:10px;">{caption}</div>'
+        f'<div class="kpi-caption" style="font-size:calc(0.85rem + 2px); opacity:0.9; margin-top:{"2px" if pre_caption else "10px"};">{caption}</div>'
         if caption
         else ""
     )
@@ -343,6 +352,7 @@ def _kpi_block_html(
           <div class="kpi-value" style="font-size:2.4rem; font-weight:800; margin-top:10px; white-space:nowrap;">
             {symbol_html}{value}
           </div>
+          {pre_caption_html}
           {caption_html}
         </div>
         """
@@ -1046,6 +1056,38 @@ def render_weather_widget() -> None:
         st.dataframe(weekly_df, use_container_width=True, hide_index=True)
 
 
+@st.cache_data(ttl=30 * 60, show_spinner=False)
+def _cached_today_events(embed_src: str, target_date: date) -> list[dict] | None:
+    """本日の予定一覧を30分キャッシュする（表示のたびに毎回Googleカレンダー
+    へ取得しに行かないようにするため）。"""
+    return ce.fetch_today_events(embed_src, target_date)
+
+
+def render_today_events_widget(embed_src: str | None) -> None:
+    """ログイン画面に、Googleカレンダー（予定表）から本日の予定を抽出して
+    表示する。予定が無い/取得に失敗した場合は何も表示しない。"""
+    if not embed_src:
+        return
+    events = _cached_today_events(embed_src, today_jst())
+    if not events:
+        return
+
+    items_html = "".join(
+        f'<li><span class="today-events-time">{event["start_label"]}</span>'
+        f'<span class="today-events-title">{event["title"]}</span></li>'
+        for event in events
+    )
+    st.markdown(
+        f"""
+        <div class="password-gate-events">
+          <div class="today-events-title-heading">📌 本日の予定</div>
+          <ul>{items_html}</ul>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def get_secret(name: str) -> str | None:
     """st.secretsが未設定（ローカル実行など）でもエラーにならないよう安全に読む。"""
     try:
@@ -1128,6 +1170,16 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
             border-radius: 999px; padding: 6px 16px; margin: 0 auto 10px auto;
             text-align: center; width: fit-content; max-width: 100%;
         }
+        .password-gate-events {
+            text-align: left; background: rgba(13,71,161,0.06);
+            border-radius: 12px; padding: 10px 16px; margin: 0 0 16px 0;
+            font-size: 0.8rem; color: #123a66;
+        }
+        .today-events-title-heading { font-weight: 800; margin-bottom: 4px; }
+        .password-gate-events ul { margin: 0; padding-left: 1.1em; }
+        .password-gate-events li { margin-bottom: 4px; }
+        .password-gate-events li:last-child { margin-bottom: 0; }
+        .today-events-time { font-weight: 700; margin-right: 8px; }
         .password-gate-notice {
             text-align: left; background: rgba(13,71,161,0.07);
             border: 1px solid rgba(13,71,161,0.28); border-radius: 12px;
@@ -1193,6 +1245,7 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
                 unsafe_allow_html=True,
             )
             render_weather_widget()
+            render_today_events_widget(get_secret("google_calendar_src"))
             st.markdown(
                 """
                 <div class="password-gate-notice">
@@ -1435,6 +1488,7 @@ render_kpi_grid([
         value=format_yen_compact(progress["mtd_total"]),
         bg_color="rgb(196, 8, 24)",
         symbol=symbol_for_ratio(progress["mtd_yoy_pct"]),
+        pre_caption=f"先月との差 {format_delta(progress['mtd_diff_vs_prev_month'], None) or '—'}",
         caption=f"前年比 {format_pct(progress['mtd_yoy_pct'])}",
         tooltip=format_yen(progress["mtd_total"]),
     ),
@@ -1537,6 +1591,37 @@ daily_store_display = pd.DataFrame(
         "当月累計前年比": daily_store["store"].map(daily_store_mtd_yoy).map(format_pct),
     }
 )
+daily_store_total_sales = daily_store["sales"].sum()
+daily_store_total_last_year_sales = daily_store["last_year_sales"].sum()
+daily_store_total_yoy_pct = (
+    daily_store_total_sales / daily_store_total_last_year_sales * 100
+    if daily_store_total_last_year_sales
+    else None
+)
+daily_store_total_mtd_sales = daily_store_ranking["mtd_sales"].sum()
+daily_store_total_last_year_mtd_sales = daily_store_ranking["last_year_mtd_sales"].sum()
+daily_store_total_mtd_yoy_pct = (
+    daily_store_total_mtd_sales / daily_store_total_last_year_mtd_sales * 100
+    if daily_store_total_last_year_mtd_sales
+    else None
+)
+daily_store_display = pd.concat(
+    [
+        daily_store_display,
+        pd.DataFrame(
+            [
+                {
+                    "店舗": "合計",
+                    "当日売上": format_yen(daily_store_total_sales),
+                    "前年同日売上": format_yen(daily_store_total_last_year_sales),
+                    "前年同日比": format_pct(daily_store_total_yoy_pct),
+                    "当月累計前年比": format_pct(daily_store_total_mtd_yoy_pct),
+                }
+            ]
+        ),
+    ],
+    ignore_index=True,
+)
 with st.container(key="daily_store_table_pc"):
     render_pc_table(daily_store_display, daily_store["yoy_pct"] <= 99.9)
 with st.container(key="daily_store_table_mobile"):
@@ -1582,6 +1667,31 @@ ranking_display = pd.DataFrame(
         "前年比": ranking["yoy_pct"].map(format_pct),
         "前年売上計": ranking["last_year_full_sales"].map(format_yen),
     }
+)
+ranking_total_mtd_sales = ranking["mtd_sales"].sum()
+ranking_total_last_year_mtd_sales = ranking["last_year_mtd_sales"].sum()
+ranking_total_yoy_pct = (
+    ranking_total_mtd_sales / ranking_total_last_year_mtd_sales * 100
+    if ranking_total_last_year_mtd_sales
+    else None
+)
+ranking_total_last_year_full_sales = ranking["last_year_full_sales"].sum()
+ranking_display = pd.concat(
+    [
+        ranking_display,
+        pd.DataFrame(
+            [
+                {
+                    "店舗": "合計",
+                    "当月累計売上": format_yen(ranking_total_mtd_sales),
+                    "前年同期間売上": format_yen(ranking_total_last_year_mtd_sales),
+                    "前年比": format_pct(ranking_total_yoy_pct),
+                    "前年売上計": format_yen(ranking_total_last_year_full_sales),
+                }
+            ]
+        ),
+    ],
+    ignore_index=True,
 )
 with st.container(key="ranking_table_pc"):
     render_pc_table(ranking_display, ranking["yoy_pct"] <= 99.9)

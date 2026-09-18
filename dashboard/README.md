@@ -457,9 +457,15 @@ iPhoneのSafariなどで「ホーム画面に追加」をすると、通常は�
 （favicon）も同じロゴです。
 
 Streamlitはページの`<head>`を直接編集する手段が無いため、
-`render_home_screen_icon_tags()` が高さ1pxの見えないiframe経由で
-`window.parent.document.head`に`apple-touch-icon`等のタグを追加しています
-（`render_scroll_top_button()`と同じ「iframeから親ページを操作する」手法）。
+`render_home_screen_icon_tags()` が`st.markdown(unsafe_allow_html=True)`で
+`apple-touch-icon`等のタグを描画しています。以前は高さ1pxの見えない
+iframe経由で`window.parent.document.head`にタグを追加する方式でしたが、
+実機のiOS Safariで反映されなかったため変更しました（iframeのサンドボックス
+設定がブラウザによって挙動が異なり、開発環境のChromeでは動いてもSafariでは
+親ドキュメントへのアクセスがブロックされていた可能性が高い）。現在の方式は
+アプリ本体のドキュメントに直接タグを描画するため、その問題を回避できる
+（`<head>`ではなく本文内に挿入される形にはなるが、多くのブラウザは
+link/metaタグをheadの外に書いても認識する）。
 
 iOSの「ホーム画面に追加」機能は、アイコンが`data:`形式（画像データを直接
 埋め込む方式）だと認識してくれないことがあるため、`apple-touch-icon`だけは
@@ -468,6 +474,9 @@ iOSの「ホーム画面に追加」機能は、アイコンが`data:`形式（�
 `dashboard/static/bigboss_logo.png`を`/app/static/bigboss_logo.png`という
 実URLとして公開し、それを`apple-touch-icon`のURLとして使っています
 （ロゴ画像を差し替える場合は`assets/`と`static/`の両方を更新してください）。
+URLの末尾には`HOME_SCREEN_ICON_VERSION`によるバージョン番号（`?v=3`等）を
+付けている。iOSはアイコンをURLごとに長期間キャッシュすることがあるため、
+ロゴやタグの内容を変えた際はこの番号を増やし、古いキャッシュを無視させる。
 
 ## 今後の拡張候補
 

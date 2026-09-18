@@ -89,45 +89,31 @@ st.set_page_config(
 )
 
 
+HOME_SCREEN_ICON_VERSION = 3  # ロゴ画像やタグの中身を変えたときはiOS側の
+# アイコンキャッシュを強制的に無視させるため、この数字を増やす
+
+
 def render_home_screen_icon_tags() -> None:
     """スマホでホーム画面に追加した際、アイコンがBIGBOSSロゴになるようにする。
-    Streamlitはページの<head>を直接編集する手段が無いため、components.htmlの
-    iframe内スクリプトから親ページ（window.parent.document）のheadに
-    apple-touch-icon等のタグを追加している（既に追加済みなら何もしない）。
+    Streamlitはページの<head>を直接編集する手段が無い。以前はcomponents.html
+    のiframe内スクリプトからwindow.parent.documentのheadにタグを追加していたが、
+    実機（iOS Safari）では反映されなかった。iframeのサンドボックス設定は
+    ブラウザによって挙動が異なり、Chromeの検証環境では動いてもSafariでは
+    親ドキュメントへのアクセスがブロックされている可能性が高いため、iframeを
+    経由せず、st.markdown(unsafe_allow_html=True)でタグをアプリ本体の
+    ドキュメントに直接描画する方式に変更した（<head>ではなく本文内に挿入される
+    形になるが、多くのブラウザはlink/metaタグをheadの外に書いても認識する）。
     iOSの「ホーム画面に追加」はdata:URIのアイコンを認識しないことがあるため、
     server.enableStaticServing（.streamlit/config.toml）で公開した
-    static/bigboss_logo.png への実URLを使う。"""
-    components.html(
-        f"""
-        <script>
-          (function() {{
-            var head = window.parent.document.querySelector('head');
-            if (head.querySelector('link[rel="apple-touch-icon"]')) {{ return; }}
-            var logoUrl = window.parent.location.origin + '/app/static/bigboss_logo.png';
-
-            var appleIcon = document.createElement('link');
-            appleIcon.rel = 'apple-touch-icon';
-            appleIcon.href = logoUrl;
-            head.appendChild(appleIcon);
-
-            var icon = document.createElement('link');
-            icon.rel = 'icon';
-            icon.href = logoUrl;
-            head.appendChild(icon);
-
-            var capable = document.createElement('meta');
-            capable.name = 'apple-mobile-web-app-capable';
-            capable.content = 'yes';
-            head.appendChild(capable);
-
-            var title = document.createElement('meta');
-            title.name = 'apple-mobile-web-app-title';
-            title.content = '売上ダッシュボード';
-            head.appendChild(title);
-          }})();
-        </script>
-        """,
-        height=1,
+    static/bigboss_logo.png への実URLを使う（末尾のバージョン番号は、iOSが
+    古いアイコンをキャッシュしたままになるのを防ぐためのキャッシュ回避策）。"""
+    logo_url = f"/app/static/bigboss_logo.png?v={HOME_SCREEN_ICON_VERSION}"
+    st.markdown(
+        f'<link rel="apple-touch-icon" href="{logo_url}">'
+        f'<link rel="icon" href="{logo_url}">'
+        f'<meta name="apple-mobile-web-app-capable" content="yes">'
+        f'<meta name="apple-mobile-web-app-title" content="売上ダッシュボード">',
+        unsafe_allow_html=True,
     )
 
 

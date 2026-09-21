@@ -1363,8 +1363,14 @@ with st.sidebar:
                 st.rerun()
 
 
-@st.cache_data(show_spinner="Excelファイルを読み込み中...")
+@st.cache_data(ttl=15 * 60, show_spinner="Excelファイルを読み込み中...")
 def _load(folder_str: str) -> dl.LoadResult:
+    """Excelフォルダの内容を読み込む。自動アップロード（PowerShellスクリプトから
+    GitHubへ直接反映する方式）は、この画面の「再読み込み」ボタンやアップロード欄を
+    経由しないため、st.cache_data.clear()が呼ばれない。TTLを設定せずにいると、
+    Streamlit Cloud側の自動再起動が遅れた場合、新しいデータが反映されるまで
+    「実行は成功しているのに前の（0円などの）表示のまま」という状態が続いて
+    しまうため、15分ごとに自動で読み直すようにしている。"""
     return dl.load_all_records(Path(folder_str))
 
 

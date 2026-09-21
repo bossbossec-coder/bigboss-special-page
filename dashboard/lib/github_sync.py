@@ -77,3 +77,50 @@ def upload_file_to_github(
         )
 
     return GitHubSyncResult(True, "GitHubに保存しました。")
+
+
+def download_folder_files(
+    *,
+    repo: str,
+    branch: str,
+    token: str,
+    path_in_repo: str,
+    suffix: str = ".xlsx",
+) -> list[tuple[str, bytes]] | None:
+    """GitHubリポジトリの指定フォルダにある、拡張子が一致するファイルを
+    全件ダウンロードする。取得に失敗した場合はNoneを返す（呼び出し側では、
+    既にローカルにある内容をそのまま使い続けるフォールバックとして扱う）。
+
+    Streamlit Cloud側の「GitHubの変更を検知して自動デプロイする」機能の
+    タイミングに依存すると、コンテナ側の反映が遅れたり行われなかったりして
+    「自動アップロードは成功しているのに画面には反映されない」状態が
+    起こり得るため、アプリ自身が定期的にGitHubから直接最新のファイルを
+    取得できるようにするための関数。
+    """
+    url = f"{API_ROOT}/repos/{repo}/contents/{path_in_repo}"
+    try:
+        resp = requests.get(url, headers=_headers(token), params={"ref": branch}, timeout=20)
+    except requests.RequestException:
+        return None
+    if resp.status_code != 200:
+        return None
+
+    entries = resp.json()
+    if not isinstance(entries, list):
+        return None
+
+    files: list[tuple[str, bytes]] = []
+    for entry in entries:
+        name = entry.get("name", "")
+        download_url = entry.get("download_url")
+        if entry.get("type") != "file" or not name.endswith(suffix) or not download_url:
+            continue
+        try:
+            file_resp = requests.get(download_url, timeout=20)
+        except requests.RequestException:
+            continue
+        if file_resp.status_code != 200:
+            continue
+        files.append((name, file_resp.content))
+
+    return files

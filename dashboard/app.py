@@ -1363,15 +1363,41 @@ with st.sidebar:
                 st.rerun()
 
 
+def _sync_data_dir_from_github(folder: Path) -> None:
+    """github_token等のSecretsが設定されていれば、GitHubリポジトリ側の
+    dashboard/data/incoming/にある最新のExcelファイルをローカルのfolderへ
+    同期する（無ければ何もせず、ローカル実行時と同じ挙動のまま）。
+
+    Streamlit Cloud側の「GitHubの変更を検知して自動デプロイする」機能の
+    タイミングは外部からは見えず、当てにできない（自動アップロードは
+    成功しているのに、動いているコンテナ側がGitHubの最新コミットを
+    取り込めておらず、手動の「Reboot app」をしないと反映されない状態が
+    実際に繰り返し発生した）。そのためコンテナの再デプロイを待たず、
+    アプリ自身が定期的にGitHubから直接最新ファイルを取りに行くようにした。
+    取得に失敗した場合は何もしない（ローカルに既にある内容をそのまま使う）。"""
+    if not (GITHUB_TOKEN and GITHUB_REPO and GITHUB_BRANCH):
+        return
+    files = gh.download_folder_files(
+        repo=GITHUB_REPO,
+        branch=GITHUB_BRANCH,
+        token=GITHUB_TOKEN,
+        path_in_repo="dashboard/data/incoming",
+    )
+    if not files:
+        return
+    folder.mkdir(parents=True, exist_ok=True)
+    for name, content in files:
+        (folder / name).write_bytes(content)
+
+
 @st.cache_data(ttl=15 * 60, show_spinner="Excelファイルを読み込み中...")
 def _load(folder_str: str) -> dl.LoadResult:
-    """Excelフォルダの内容を読み込む。自動アップロード（PowerShellスクリプトから
-    GitHubへ直接反映する方式）は、この画面の「再読み込み」ボタンやアップロード欄を
-    経由しないため、st.cache_data.clear()が呼ばれない。TTLを設定せずにいると、
-    Streamlit Cloud側の自動再起動が遅れた場合、新しいデータが反映されるまで
-    「実行は成功しているのに前の（0円などの）表示のまま」という状態が続いて
-    しまうため、15分ごとに自動で読み直すようにしている。"""
-    return dl.load_all_records(Path(folder_str))
+    """Excelフォルダの内容を読み込む。読み込み前にGitHubから最新ファイルを
+    同期し、15分ごとに自動で読み直すことで、自動アップロード後に手動で
+    「Reboot app」しなくても最新データが反映されるようにしている。"""
+    folder = Path(folder_str)
+    _sync_data_dir_from_github(folder)
+    return dl.load_all_records(folder)
 
 
 if not data_dir.exists():

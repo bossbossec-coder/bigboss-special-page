@@ -1378,8 +1378,13 @@ def _sync_data_dir_from_github(folder: Path) -> None:
     取り込めておらず、手動の「Reboot app」をしないと反映されない状態が
     実際に繰り返し発生した）。そのためコンテナの再デプロイを待たず、
     アプリ自身が定期的にGitHubから直接最新ファイルを取りに行くようにした。
-    取得に失敗した場合は何もしない（ローカルに既にある内容をそのまま使う）。"""
+    取得に失敗した場合は何もしない（ローカルに既にある内容をそのまま使う）。
+    取得できたか・失敗したかはst.session_state["github_sync_status"]に記録し、
+    失敗時は画面上に注意書きを表示できるようにする（サイレントに失敗すると、
+    「反映されない」問題の原因がGitHub側の取得エラーなのか別の理由なのか、
+    利用者にも開発側にも分からなくなってしまうため）。"""
     if not (GITHUB_TOKEN and GITHUB_REPO and GITHUB_BRANCH):
+        st.session_state["github_sync_status"] = None
         return
     files = gh.download_folder_files(
         repo=GITHUB_REPO,
@@ -1388,10 +1393,13 @@ def _sync_data_dir_from_github(folder: Path) -> None:
         path_in_repo="dashboard/data/incoming",
     )
     if not files:
+        st.session_state["github_sync_status"] = "error"
         return
     folder.mkdir(parents=True, exist_ok=True)
     for name, content in files:
         (folder / name).write_bytes(content)
+    st.session_state["github_sync_status"] = "ok"
+    st.session_state["github_sync_time"] = datetime.now(JST).strftime("%H:%M")
 
 
 @st.cache_data(ttl=15 * 60, show_spinner="Excelファイルを読み込み中...")
@@ -1410,6 +1418,15 @@ if not data_dir.exists():
 
 result = _load(str(data_dir))
 records = result.records
+
+if st.session_state.get("github_sync_status") == "error":
+    st.warning(
+        "⚠️ GitHubから最新のExcelファイルを取得できませんでした。"
+        "前回取得できた時点の内容を表示しています。しばらくしてから"
+        "「再読み込み」をお試しください。"
+    )
+elif st.session_state.get("github_sync_status") == "ok" and st.session_state.get("github_sync_time"):
+    st.caption(f"GitHubから最新データを取得済み（{st.session_state['github_sync_time']} 時点）")
 
 if result.errors:
     with st.expander(f"⚠️ 読み込めなかったファイルが {len(result.errors)} 件あります", expanded=False):

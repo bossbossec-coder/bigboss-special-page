@@ -486,19 +486,23 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
         if store_is_daily:
             main_value = f"{_man(row['sales'])}{slash}{_man(row['last_year_sales'])}"
             pct_num = row["yoy_pct"]
-            is_zero_sales = pd.notna(row["sales"]) and row["sales"] == 0
+            has_data_today = row.get("has_data_today", True)
+            is_zero_sales = has_data_today and pd.notna(row["sales"]) and row["sales"] == 0
+            not_yet_entered = not has_data_today
         else:
             main_value = f"{_man(row['mtd_sales'])}{slash}{_man(row['last_year_mtd_sales'])}"
             pct_num = row["mtd_yoy_pct"]
             is_zero_sales = False
+            not_yet_entered = False
         pct_value = format_pct(pct_num)
         pct_class = "ds-pct ds-pct-good" if pd.notna(pct_num) and pct_num >= 100 else "ds-pct"
         card_class = "ds-card ds-card-daily" if store_is_daily else "ds-card ds-card-monthly"
-        note_html = (
-            '<div class="ds-note">※システム側のエラーにより現在¥0と表示されています</div>'
-            if is_zero_sales
-            else ""
-        )
+        if not_yet_entered:
+            note_html = '<div class="ds-note">※本日分はまだ入力されていません</div>'
+        elif is_zero_sales:
+            note_html = '<div class="ds-note">※システム側のエラーにより現在¥0と表示されています</div>'
+        else:
+            note_html = ""
         # 1行にまとめて書く（複数行にすると、間の空白行がMarkdown側に「HTMLブロックの
         # 終わり」と誤認識され、以降がコードブロック扱いになってしまうため）。
         cards_html += (
@@ -1499,18 +1503,24 @@ mtd_diff_vs_last_year = (
     progress["mtd_total"] - last_year_mtd_total if last_year_mtd_total is not None else None
 )
 
+today_has_data = yoy_today["has_data"]
+
 render_kpi_grid([
     dict(
         label="本日の売上合計",
-        value=format_yen_compact(yoy_today["today_total"]),
+        value=format_yen_compact(yoy_today["today_total"]) if today_has_data else "未集計",
         bg_color=KPI_BLUE,
-        symbol=symbol_for_ratio(yoy_today["pct_change"]),
-        caption=f"前年差 {format_delta(today_diff, None) or '—'}",
-        tooltip=format_yen(yoy_today["today_total"]),
+        symbol=symbol_for_ratio(yoy_today["pct_change"]) if today_has_data else "",
+        caption=(
+            f"前年差 {format_delta(today_diff, None) or '—'}"
+            if today_has_data
+            else "本日分はまだ登録されていません"
+        ),
+        tooltip=format_yen(yoy_today["today_total"]) if today_has_data else None,
     ),
     dict(
         label="前年同日比",
-        value=format_pct(yoy_today["pct_change"]),
+        value=format_pct(yoy_today["pct_change"]) if today_has_data else "—",
         bg_color=KPI_GREEN,
         caption="&nbsp;",
     ),

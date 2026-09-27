@@ -234,7 +234,9 @@ def month_progress(df: pd.DataFrame, year: int, month: int, as_of: date) -> dict
 
 def yoy_same_day(df: pd.DataFrame, target_date: date) -> dict:
     """指定日の売上と、前年同日の売上を比較する。"""
-    today_total = float(df[df["date"].dt.date == target_date]["sales"].sum())
+    today_rows = df[df["date"].dt.date == target_date]
+    has_data = not today_rows.empty
+    today_total = float(today_rows["sales"].sum())
     try:
         last_year_date = target_date.replace(year=target_date.year - 1)
     except ValueError:
@@ -249,6 +251,7 @@ def yoy_same_day(df: pd.DataFrame, target_date: date) -> dict:
     return {
         "target_date": target_date,
         "today_total": today_total,
+        "has_data": has_data,
         "last_year_date": last_year_date,
         "last_year_total": last_year_total if last_year_total else None,
         "pct_change": pct_change,
@@ -408,11 +411,16 @@ def daily_store_snapshot(df: pd.DataFrame, target_date: date) -> pd.DataFrame:
         last_year_date = target_date.replace(year=target_date.year - 1, day=28)
 
     today_df = df[df["date"].dt.date == target_date][["store", "sales"]]
+    stores_with_data_today = set(today_df["store"])
     last_year_df = df[df["date"].dt.date == last_year_date][["store", "sales"]].rename(
         columns={"sales": "last_year_sales"}
     )
 
     merged = pd.merge(today_df, last_year_df, on="store", how="outer").fillna(0)
+    # 本日分がまだ1行も無い店舗（自動アップロード時点でExcelが未入力など）を、
+    # 実際に0円と入力された場合と区別できるようにしておく（表示側で
+    # 「未集計」と「本当の0円」を分けて案内するため）。
+    merged["has_data_today"] = merged["store"].isin(stores_with_data_today)
     merged["yoy_pct"] = merged.apply(
         lambda r: (r["sales"] / r["last_year_sales"] * 100) if r["last_year_sales"] > 0 else None,
         axis=1,

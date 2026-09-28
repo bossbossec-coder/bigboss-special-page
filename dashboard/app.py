@@ -579,21 +579,29 @@ def render_header_badges(store_label: str, target_date: date) -> None:
     )
 
 
-def render_progress_bar(elapsed: int, total: int) -> None:
-    """月の経過日数をグラデーションのプログレスバーで表示する。"""
-    pct = (elapsed / total * 100) if total else 0
+def render_progress_bar(mtd_total: float, last_year_full_total: float | None) -> None:
+    """当月累計が、前年同月のフル月実績に対してどこまで進んでいるかを
+    グラデーションのプログレスバーで表示する（前年同月実績＝100%）。
+    前年データが無い月は、進捗率を出せないため0%のグレーのバーにする。"""
+    has_last_year = bool(last_year_full_total)
+    pct = (mtd_total / last_year_full_total * 100) if has_last_year else None
+    bar_pct = min(pct, 100) if pct is not None else 0
+    pct_label = f"{pct:.0f}%" if pct is not None else "—"
+    right_label = (
+        f"前年 {format_yen_compact(last_year_full_total)}" if has_last_year else "前年データなし"
+    )
     st.markdown(
         f"""
         <div style="margin:4px 0 20px 0;">
           <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
             <span style="font-size:1.7rem; font-weight:800; color:#1a1a1a;">
-              {elapsed}<span style="font-size:1rem; font-weight:600; color:#8a8a8a;"> / {total}日経過</span>
+              {format_yen_compact(mtd_total)}<span style="font-size:1rem; font-weight:600; color:#8a8a8a;"> / {right_label}</span>
             </span>
-            <span style="font-size:1.3rem; font-weight:700; color:{ACCENT_COLOR};">{pct:.0f}%</span>
+            <span style="font-size:1.3rem; font-weight:700; color:{ACCENT_COLOR};">{pct_label}</span>
           </div>
           <div style="width:100%; height:14px; border-radius:7px; background:#eef0f3;
                       overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.08);">
-            <div style="width:{pct:.1f}%; height:100%; border-radius:7px;
+            <div style="width:{bar_pct:.1f}%; height:100%; border-radius:7px;
                         background:linear-gradient(90deg, {PRIMARY_COLOR}, {ACCENT_COLOR});
                         box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
           </div>
@@ -1591,9 +1599,7 @@ with left:
 
 with right:
     st.markdown("#### 月進捗")
-    total_days = progress["total_days"]
-    elapsed = progress["elapsed_days"]
-    render_progress_bar(elapsed, total_days)
+    render_progress_bar(progress["mtd_total"], progress["last_year_full_total"])
     st.write(f"当月累計: **{format_yen(progress['mtd_total'])}**")
     st.write(f"1日あたり平均: {format_yen(progress['avg_daily'])}")
     if progress["last_year_full_total"]:

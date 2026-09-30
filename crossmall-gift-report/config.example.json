@@ -1,6 +1,6 @@
 {
   "site": {
-    "login_url": "ここにクロスモールのログイン画面のURLを入力",
+    "login_url": "https://www.crossmall.jp/",
     "login_id": "ここにクロスモールのログインIDを入力"
   },
   "search": {

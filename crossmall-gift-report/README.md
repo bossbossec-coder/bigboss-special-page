@@ -34,7 +34,7 @@ crossmall-gift-report/
 2. Edgeのバージョンに合った `msedgedriver.exe` を入手する
    (https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/ )
 3. `config.example.json` をコピーして `config.json` を作り、次を入力する
-   - `site.login_url`: クロスモールのログイン画面のURL
+   - `site.login_url`: クロスモールのログイン画面のURL(既定: https://www.crossmall.jp/ )
    - `site.login_id`: ログインID
 4. 次の4つを1つのフォルダにまとめる
    - `GiftCsvTool.exe` / `run_gift_csv.bat` / `config.json` / `msedgedriver.exe`

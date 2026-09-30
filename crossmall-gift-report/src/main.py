@@ -60,8 +60,8 @@ def get_password(login_id, interactive):
     return password
 
 
-def csv_path_for(download_dir, day):
-    return os.path.join(download_dir, f"ギフト_{day.isoformat()}.csv")
+def csv_path_for(download_dir, day, shop):
+    return os.path.join(download_dir, f"ギフト_{day.isoformat()}_{shop['name']}.csv")
 
 
 def date_range(start, end):
@@ -87,26 +87,38 @@ def log(message):
 
 def download_days(config, password, days, overwrite, interactive):
     download_dir = config["browser"]["download_dir"]
-    targets = [d for d in days if overwrite or not os.path.exists(csv_path_for(download_dir, d))]
-    skipped = len(days) - len(targets)
+    shops = config["shops"]
+    all_targets = [(d, shop) for d in days for shop in shops]
+    targets = [
+        (d, shop)
+        for d, shop in all_targets
+        if overwrite or not os.path.exists(csv_path_for(download_dir, d, shop))
+    ]
+    skipped = len(all_targets) - len(targets)
     if skipped:
-        log(f"ダウンロード済みの{skipped}日分は飛ばします。")
+        log(f"ダウンロード済みの{skipped}件は飛ばします。")
     if not targets:
-        log("ダウンロードが必要な日はありませんでした。")
+        log("ダウンロードが必要なものはありませんでした。")
         return
 
-    log(f"クロスモールにログインし、{len(targets)}日分をダウンロードします...")
+    log(
+        f"クロスモールにログインし、{len(days)}日分×{len(shops)}店舗のうち"
+        f"{len(targets)}件をダウンロードします..."
+    )
     session = CrossMallSession(config, password)
     try:
         session.login()
         session.open_order_analysis()
-        for i, day in enumerate(targets, start=1):
-            downloaded = session.download_day(day)
-            final_path = csv_path_for(download_dir, day)
+        for i, (day, shop) in enumerate(targets, start=1):
+            downloaded = session.download_day(day, shop["value"])
+            final_path = csv_path_for(download_dir, day, shop)
             if os.path.exists(final_path):
                 os.remove(final_path)
             os.rename(downloaded, final_path)
-            log(f"  ({i}/{len(targets)}) {day:%Y/%m/%d} → {os.path.basename(final_path)}")
+            log(
+                f"  ({i}/{len(targets)}) {day:%Y/%m/%d} {shop['name']}"
+                f" → {os.path.basename(final_path)}"
+            )
     except Exception:
         if interactive:
             print("\n[エラーが発生しました。開いているブラウザの画面を確認してください]")

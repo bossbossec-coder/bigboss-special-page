@@ -17,6 +17,7 @@ outerHTMLを受け取ってから実装した。
 | 商品名 | `<input id="item_name">` | id。「サントリー」 |
 | カテゴリ1 | `<select id="main_ctgr1" onchange="chng_ctgr(2);">` | 値 982313(ギフト) |
 | カテゴリ2 | `<select id="sub_ctgr1">` | 値 129397(ビール)。カテゴリ1変更で選択肢が作り直されるため、出現を待ってから選ぶ |
+| 店舗 | `<select id="shop_id">` | 値で選ぶ。5255=ビッグボス楽天 / 5256=ドリームクラフト / 5257=Yahoo / 8581=wine.com / 8014=Wowma(9365=Wowma2店舗目は対象外)。1店舗ずつ検索→CSV出力を繰り返す |
 | 検索 | `<input name="commit" type="button" value=" 検 索 " onclick="getList();">` | onclickに getList を含むbutton |
 | CSV出力 | `<span id="bbtn-btnInnerEl">CSV出力</span>` | id |
 
@@ -24,7 +25,7 @@ outerHTMLを受け取ってから実装した。
 - 検索結果の表示に時間がかかる場合がある → Ext JSの読み込みマスク(`.x-mask-msg`)が
   消えるのを待ち、さらに数秒待ってからCSV出力を押す(前日の結果を出力しないため)
 - CSV出力を押すとすぐにダウンロードされる。ファイル名は `item_order_MMDDhhmmss.csv`
-  (ダウンロードした日時)なので、`ギフト_YYYY-MM-DD.csv` に名前を変える
+  (ダウンロードした日時)なので、`ギフト_YYYY-MM-DD_店舗名.csv` に名前を変える
 - Edgeの「保存場所を確認する」設定が有効だと保存ダイアログが出るため、
   `download.prompt_for_download=False` で抑止している
 - 画面の一部がiframeの可能性を考慮し、要素はトップ画面とiframe内の両方から探す

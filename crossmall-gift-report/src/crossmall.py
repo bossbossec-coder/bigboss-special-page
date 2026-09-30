@@ -1,7 +1,7 @@
 """クロスモール(CROSS MALL)への自動ログインと「商品注文分析」CSVのダウンロード。
 
 ログインは1回だけ行い、指定された日付を1日ずつ
-「集計対象の開始日=終了日」に設定して検索→CSV出力を繰り返す。
+「集計対象の開始日=終了日」に設定し、店舗ごとに検索→CSV出力を繰り返す。
 各要素の特定方法は、依頼者から受け取った実際のHTML(outerHTML)に基づく。
 """
 import os
@@ -37,6 +37,7 @@ DATE_TO = (By.ID, "date_to")
 ITEM_NAME = (By.ID, "item_name")
 MAIN_CATEGORY = (By.ID, "main_ctgr1")
 SUB_CATEGORY = (By.ID, "sub_ctgr1")
+SHOP = (By.ID, "shop_id")
 SEARCH_BUTTON = (By.XPATH, "//input[@type='button' and contains(@onclick, 'getList')]")
 CSV_BUTTON = (By.ID, "bbtn-btnInnerEl")
 
@@ -236,8 +237,8 @@ class CrossMallSession:
                 f"『商品注文分析』の画面が表示されませんでした。\n{_page_excerpt(d)}"
             )
 
-    def download_day(self, day):
-        """dayの1日分(開始日=終了日)を検索してCSVを出力し、ダウンロードしたパスを返す。"""
+    def download_day(self, day, shop_value):
+        """dayの1日分(開始日=終了日)・1店舗分を検索してCSVを出力し、ダウンロードしたパスを返す。"""
         d = self.driver
         browser = self.config["browser"]
         search = self.config["search"]
@@ -263,6 +264,7 @@ class CrossMallSession:
             raise CrossMallError(f"カテゴリ2に選択肢(値 {sub_value})が表示されませんでした。")
         time.sleep(0.5)
         Select(d.find_element(*SUB_CATEGORY)).select_by_value(sub_value)
+        Select(d.find_element(*SHOP)).select_by_value(shop_value)
 
         _click(d, d.find_element(*SEARCH_BUTTON))
         # 押した直後はまだ読み込み中の表示が出ていないことがあるため、少し待ってから確認する。

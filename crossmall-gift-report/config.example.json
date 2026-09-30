@@ -8,6 +8,28 @@
     "main_category_value": "982313",
     "sub_category_value": "129397"
   },
+  "shops": [
+    {
+      "value": "5255",
+      "name": "ビッグボス楽天"
+    },
+    {
+      "value": "5256",
+      "name": "ドリームクラフト"
+    },
+    {
+      "value": "5257",
+      "name": "Yahoo"
+    },
+    {
+      "value": "8581",
+      "name": "wine.com"
+    },
+    {
+      "value": "8014",
+      "name": "Wowma"
+    }
+  ],
   "backfill": {
     "date_from": "2025/10/15",
     "date_to": "2025/12/31"

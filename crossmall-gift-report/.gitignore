@@ -1,9 +1,0 @@
-config.json
-downloads/
-dist/
-build/
-*.spec
-__pycache__/
-*.pyc
-venv/
-msedgedriver.exe

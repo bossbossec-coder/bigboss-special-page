@@ -1,0 +1,22 @@
+{
+  "site": {
+    "login_url": "ここにクロスモールのログイン画面のURLを入力",
+    "login_id": "ここにクロスモールのログインIDを入力"
+  },
+  "search": {
+    "item_name": "サントリー",
+    "main_category_value": "982313",
+    "sub_category_value": "129397"
+  },
+  "backfill": {
+    "date_from": "2025/10/15",
+    "date_to": "2025/12/31"
+  },
+  "browser": {
+    "edge_driver_path": "msedgedriver.exe",
+    "headless": false,
+    "download_dir": "downloads",
+    "search_timeout_seconds": 180,
+    "wait_after_search_seconds": 3
+  }
+}

@@ -628,7 +628,7 @@ def _progress_gauge_svg(pct: float | None, pace_pct: float | None, left_label: s
             </linearGradient>
           </defs>
           <path d="M 20 {cy} A {radius} {radius} 0 0 1 180 {cy}" fill="none"
-                stroke="#333844" stroke-width="{stroke_w}" stroke-linecap="round" />
+                stroke="#58585c" stroke-width="{stroke_w}" stroke-linecap="round" />
           <path d="M 20 {cy} A {radius} {radius} 0 0 1 180 {cy}" fill="none"
                 stroke="url(#gaugeFillGradient)" stroke-width="{stroke_w}" stroke-linecap="round"
                 stroke-dasharray="{circumference:.2f}" stroke-dashoffset="{dash_offset:.2f}" />
@@ -667,10 +667,10 @@ def render_progress_bar(
     gauge_svg = _progress_gauge_svg(pct, pace_pct, left_label, right_label)
 
     if mtd_total >= (last_year_full_total or 0) and has_last_year:
-        remaining_html = '<div style="font-weight:700; color:#8BE28B;">達成済み</div>'
+        remaining_html = '<div style="color:#8BE28B;">達成済み</div>'
     else:
         remaining = (last_year_full_total - mtd_total) if has_last_year else None
-        remaining_html = f'<div style="font-weight:700; color:#ffffff;">{format_yen(remaining) if remaining is not None else "—"}</div>'
+        remaining_html = f'<div style="color:#ffffff;">{format_yen(remaining) if remaining is not None else "—"}</div>'
 
     forecast_badge = (
         f"前年比 {format_pct(forecast_yoy_pct)}" if forecast_yoy_pct is not None else "前年比 —"
@@ -678,7 +678,7 @@ def render_progress_bar(
 
     st.markdown(
         f"""
-        <div style="background:#1b1e27; border-radius:16px; padding:20px 18px 16px 18px;
+        <div style="background:#3a3a3a; border-radius:16px; padding:20px 18px 16px 18px;
                     color:#ffffff; margin:4px 0 20px 0;">
           {gauge_svg}
           <div style="text-align:center; margin-top:2px;">
@@ -690,19 +690,20 @@ def render_progress_bar(
             </div>
             <div style="display:inline-block; margin-top:6px; padding:4px 16px; border-radius:999px;
                         background:linear-gradient(90deg, {ACCENT_COLOR}, #ff6b6b);
-                        color:#1b1e27; font-weight:700; font-size:0.78rem;">
+                        color:#3a3a3a; font-weight:700; font-size:0.78rem;">
               {forecast_badge}
             </div>
           </div>
-          <div style="margin-top:16px; border-top:1px solid #2e323c; padding-top:12px;
-                      display:flex; justify-content:space-between; font-size:0.78rem; color:#c6c9d2; text-align:center;">
+          <div style="margin-top:16px; border-top:1px solid #4d4d4d; padding-top:12px;
+                      display:flex; justify-content:space-between;
+                      font-size:calc(0.85rem + 2px); color:#c6c9d2; text-align:center;">
             <div><div style="color:#9aa0ac;">前年同月実績</div>
-              <div style="font-weight:700; color:#fff;">{format_yen(last_year_full_total) if has_last_year else "—"}</div></div>
+              <div style="color:#fff;">{format_yen(last_year_full_total) if has_last_year else "—"}</div></div>
             <div><div style="color:#9aa0ac;">当月累計</div>
-              <div style="font-weight:700; color:#fff;">{format_yen(mtd_total)}</div></div>
+              <div style="color:#fff;">{format_yen(mtd_total)}</div></div>
             <div><div style="color:#9aa0ac;">前年実績まで</div>{remaining_html}</div>
           </div>
-          <div style="margin-top:8px; font-size:0.7rem; color:#6f7580; text-align:right;">
+          <div style="margin-top:8px; font-size:0.7rem; color:#a0a0a0; text-align:right;">
             1日あたり平均 {format_yen(avg_daily)}
           </div>
         </div>

@@ -1297,11 +1297,35 @@ if "selected_stores" not in st.session_state:
 
 
 def _sync_as_of_from_sidebar() -> None:
-    st.session_state["as_of_popover"] = st.session_state["as_of"]
+    new_as_of = st.session_state["as_of"]
+    st.session_state["as_of_popover"] = new_as_of
+    # 対象月プルダウンは、available_monthsが確定してから（スクリプトの
+    # もっと後ろで）でないと「何番目の選択肢か」を決められないため、ここでは
+    # 「次に合わせるべき年月」をいったん覚えておくだけにする。
+    st.session_state["pending_target_ym"] = (new_as_of.year, new_as_of.month)
 
 
 def _sync_as_of_from_popover() -> None:
-    st.session_state["as_of"] = st.session_state["as_of_popover"]
+    new_as_of = st.session_state["as_of_popover"]
+    st.session_state["as_of"] = new_as_of
+    st.session_state["pending_target_ym"] = (new_as_of.year, new_as_of.month)
+
+
+def _sync_as_of_from_month() -> None:
+    """「対象月」プルダウンが変更されたら、基準日もその月に合わせる
+    （今月が選ばれた場合は「昨日」、それ以外の月は月末日にする）。"""
+    available = st.session_state.get("available_months_cache", [])
+    idx = st.session_state.get("target_month_idx")
+    if idx is None or idx >= len(available):
+        return
+    year, month = available[idx]
+    today = today_jst()
+    if (year, month) == (today.year, today.month):
+        new_as_of = today - timedelta(days=1)
+    else:
+        new_as_of = date(year, month, dl.days_in_month(year, month))
+    st.session_state["as_of"] = new_as_of
+    st.session_state["as_of_popover"] = new_as_of
 
 
 def _sync_stores_from_sidebar() -> None:
@@ -1477,13 +1501,25 @@ default_month = past_or_current_months[0] if past_or_current_months else (
 default_month_idx = (
     available_months.index(default_month) if default_month in available_months else 0
 )
+st.session_state["available_months_cache"] = available_months
+
+pending_ym = st.session_state.pop("pending_target_ym", None)
+if pending_ym is not None and pending_ym in available_months:
+    st.session_state["target_month_idx"] = available_months.index(pending_ym)
+if (
+    "target_month_idx" not in st.session_state
+    or st.session_state["target_month_idx"] >= len(available_months)
+):
+    st.session_state["target_month_idx"] = default_month_idx
+
 with st.sidebar:
     month_labels = [f"{y}年{m}月" for y, m in available_months]
     month_idx = st.selectbox(
         "対象月",
         range(len(available_months)),
-        index=default_month_idx,
         format_func=lambda i: month_labels[i],
+        key="target_month_idx",
+        on_change=_sync_as_of_from_month,
     )
 target_year, target_month = available_months[month_idx]
 

@@ -579,31 +579,131 @@ def render_header_badges(store_label: str, target_date: date) -> None:
     )
 
 
-def render_progress_bar(mtd_total: float, last_year_full_total: float | None) -> None:
+def _gauge_arc_point(cx: float, cy: float, radius: float, pct_val: float) -> tuple[float, float]:
+    """半円ゲージの弧上で、0〜100%のどの位置に当たる座標かを計算する
+    （0%が弧の左端、100%が右端。弧は上半分の半円）。"""
+    angle_deg = 180 - (pct_val / 100 * 180)
+    angle_rad = math.radians(angle_deg)
+    return cx + radius * math.cos(angle_rad), cy - radius * math.sin(angle_rad)
+
+
+def _progress_gauge_svg(pct: float | None, pace_pct: float | None, left_label: str, right_label: str) -> str:
+    """当月累計の前年同月実績に対する進捗を、半円のメーター（ゲージ）で
+    表現するSVGを組み立てる。pace_pctが指定されていれば、「前年の同じ
+    経過日数時点での達成率」を示す目印の線を弧の上に重ねて表示する
+    （去年の同じタイミングと比べて、今どれくらい進んでいるかが一目で
+    分かるようにするため）。"""
+    cx, cy, radius, stroke_w = 100, 100, 80, 14
+    circumference = math.pi * radius
+    bar_pct = max(0.0, min(pct if pct is not None else 0.0, 100.0))
+    dash_offset = circumference * (1 - bar_pct / 100)
+    pct_label = f"{pct:.1f}%" if pct is not None else "—"
+
+    tick_html = ""
+    if pace_pct is not None:
+        pace_clamped = max(0.0, min(pace_pct, 100.0))
+        inner_x, inner_y = _gauge_arc_point(cx, cy, radius - 11, pace_clamped)
+        outer_x, outer_y = _gauge_arc_point(cx, cy, radius + 11, pace_clamped)
+        tick_html = (
+            f'<line x1="{inner_x:.1f}" y1="{inner_y:.1f}" x2="{outer_x:.1f}" y2="{outer_y:.1f}" '
+            f'stroke="#ffffff" stroke-width="3" stroke-linecap="round" />'
+        )
+        # 弧の両端近く（0%や100%付近）にラベルを文字で置くと、左右の目盛り
+        # 表示（0・前年同月実績の金額）と重なってしまうため、その場合は
+        # 目印の線だけ残し、文字ラベルは省略する。
+        if 12 <= pace_clamped <= 88:
+            label_x, label_y = _gauge_arc_point(cx, cy, radius + 27, pace_clamped)
+            anchor = "start" if pace_clamped <= 35 else "end" if pace_clamped >= 65 else "middle"
+            tick_html += (
+                f'<text x="{label_x:.1f}" y="{label_y:.1f}" fill="#c6c9d2" font-size="9" '
+                f'text-anchor="{anchor}">昨年ペース</text>'
+            )
+
+    return f"""
+        <svg viewBox="-15 -15 230 143" style="width:100%; max-width:300px; display:block; margin:0 auto;">
+          <defs>
+            <linearGradient id="gaugeFillGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="{ACCENT_COLOR}" />
+              <stop offset="100%" stop-color="#F6C453" />
+            </linearGradient>
+          </defs>
+          <path d="M 20 {cy} A {radius} {radius} 0 0 1 180 {cy}" fill="none"
+                stroke="#333844" stroke-width="{stroke_w}" stroke-linecap="round" />
+          <path d="M 20 {cy} A {radius} {radius} 0 0 1 180 {cy}" fill="none"
+                stroke="url(#gaugeFillGradient)" stroke-width="{stroke_w}" stroke-linecap="round"
+                stroke-dasharray="{circumference:.2f}" stroke-dashoffset="{dash_offset:.2f}" />
+          {tick_html}
+          <text x="{cx}" y="{cy - 16}" fill="#ffffff" font-size="28" font-weight="800" text-anchor="middle">{pct_label}</text>
+          <text x="{cx}" y="{cy + 4}" fill="#9aa0ac" font-size="10" text-anchor="middle">前年実績 達成率</text>
+          <text x="20" y="{cy + 20}" fill="#9aa0ac" font-size="10" text-anchor="start">{left_label}</text>
+          <text x="180" y="{cy + 20}" fill="#9aa0ac" font-size="10" text-anchor="end">{right_label}</text>
+        </svg>
+        """
+
+
+def render_progress_bar(
+    mtd_total: float,
+    last_year_mtd_total: float | None,
+    last_year_full_total: float | None,
+    forecast: float | None,
+    forecast_yoy_pct: float | None,
+    avg_daily: float,
+) -> None:
     """当月累計が、前年同月のフル月実績に対してどこまで進んでいるかを
-    グラデーションのプログレスバーで表示する（前年同月実績＝100%）。
-    前年データが無い月は、進捗率を出せないため0%のグレーのバーにする。"""
+    半円のゲージメーターで表示する（前年同月実績＝100%）。あわせて、前年の
+    同じ経過日数時点での達成率を目印の線で示し、月末着地予測もカードの
+    主役であるメーターを邪魔しない形でまとめて表示する。前年データが無い
+    月は、達成率などを「—」にして弧を空のまま表示する。"""
     has_last_year = bool(last_year_full_total)
     pct = (mtd_total / last_year_full_total * 100) if has_last_year else None
-    bar_pct = min(pct, 100) if pct is not None else 0
-    pct_label = f"{pct:.0f}%" if pct is not None else "—"
-    right_label = (
-        f"前年 {format_yen_compact(last_year_full_total)}" if has_last_year else "前年データなし"
+    pace_pct = (
+        (last_year_mtd_total / last_year_full_total * 100)
+        if has_last_year and last_year_mtd_total
+        else None
     )
+    left_label = "0"
+    right_label = format_yen_compact(last_year_full_total) if has_last_year else "前年データなし"
+
+    gauge_svg = _progress_gauge_svg(pct, pace_pct, left_label, right_label)
+
+    if mtd_total >= (last_year_full_total or 0) and has_last_year:
+        remaining_html = '<div style="font-weight:700; color:#8BE28B;">達成済み</div>'
+    else:
+        remaining = (last_year_full_total - mtd_total) if has_last_year else None
+        remaining_html = f'<div style="font-weight:700; color:#ffffff;">{format_yen(remaining) if remaining is not None else "—"}</div>'
+
+    forecast_badge = (
+        f"前年比 {format_pct(forecast_yoy_pct)}" if forecast_yoy_pct is not None else "前年比 —"
+    )
+
     st.markdown(
         f"""
-        <div style="margin:4px 0 20px 0;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;">
-            <span style="font-size:1.7rem; font-weight:800; color:#1a1a1a;">
-              {format_yen_compact(mtd_total)}<span style="font-size:1rem; font-weight:600; color:#8a8a8a;"> / {right_label}</span>
-            </span>
-            <span style="font-size:1.3rem; font-weight:700; color:{ACCENT_COLOR};">{pct_label}</span>
+        <div style="background:#1b1e27; border-radius:16px; padding:20px 18px 16px 18px;
+                    color:#ffffff; margin:4px 0 20px 0;">
+          {gauge_svg}
+          <div style="text-align:center; margin-top:2px;">
+            <div style="font-size:0.78rem; color:#9aa0ac; margin-bottom:2px;">着地見込み</div>
+            <div style="font-size:2.1rem; font-weight:800; line-height:1.2;
+                        background:linear-gradient(90deg, {ACCENT_COLOR}, #ff6b6b);
+                        -webkit-background-clip:text; background-clip:text; color:transparent;">
+              {format_yen_compact(forecast) if forecast is not None else "—"}
+            </div>
+            <div style="display:inline-block; margin-top:6px; padding:4px 16px; border-radius:999px;
+                        background:linear-gradient(90deg, {ACCENT_COLOR}, #ff6b6b);
+                        color:#1b1e27; font-weight:700; font-size:0.78rem;">
+              {forecast_badge}
+            </div>
           </div>
-          <div style="width:100%; height:14px; border-radius:7px; background:#eef0f3;
-                      overflow:hidden; box-shadow:inset 0 1px 2px rgba(0,0,0,0.08);">
-            <div style="width:{bar_pct:.1f}%; height:100%; border-radius:7px;
-                        background:linear-gradient(90deg, {PRIMARY_COLOR}, {ACCENT_COLOR});
-                        box-shadow:0 1px 3px rgba(0,0,0,0.2);"></div>
+          <div style="margin-top:16px; border-top:1px solid #2e323c; padding-top:12px;
+                      display:flex; justify-content:space-between; font-size:0.78rem; color:#c6c9d2; text-align:center;">
+            <div><div style="color:#9aa0ac;">前年同月実績</div>
+              <div style="font-weight:700; color:#fff;">{format_yen(last_year_full_total) if has_last_year else "—"}</div></div>
+            <div><div style="color:#9aa0ac;">当月累計</div>
+              <div style="font-weight:700; color:#fff;">{format_yen(mtd_total)}</div></div>
+            <div><div style="color:#9aa0ac;">前年実績まで</div>{remaining_html}</div>
+          </div>
+          <div style="margin-top:8px; font-size:0.7rem; color:#6f7580; text-align:right;">
+            1日あたり平均 {format_yen(avg_daily)}
           </div>
         </div>
         """,
@@ -1635,12 +1735,15 @@ with left:
 
 with right:
     st.markdown("#### 月進捗")
-    render_progress_bar(progress["mtd_total"], progress["last_year_full_total"])
-    st.write(f"当月累計: **{format_yen(progress['mtd_total'])}**")
-    st.write(f"1日あたり平均: {format_yen(progress['avg_daily'])}")
-    if progress["last_year_full_total"]:
-        st.write(f"前年同月 実績（フル月）: {format_yen(progress['last_year_full_total'])}")
-    st.write(f"月末着地予測: **{format_yen(forecast)}**（{forecast_note}）")
+    render_progress_bar(
+        progress["mtd_total"],
+        progress["last_year_mtd_total"],
+        progress["last_year_full_total"],
+        forecast,
+        progress["forecast_yoy_pct"],
+        progress["avg_daily"],
+    )
+    st.caption(f"月末着地予測は{forecast_note}で算出")
 
 st.divider()
 

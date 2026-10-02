@@ -684,12 +684,12 @@ def render_progress_bar(
           <div style="text-align:center; margin-top:2px;">
             <div style="font-size:0.78rem; color:#9aa0ac; margin-bottom:2px;">着地見込み</div>
             <div style="font-size:2.1rem; font-weight:800; line-height:1.2;
-                        background:linear-gradient(90deg, {ACCENT_COLOR}, #ff6b6b);
+                        background:linear-gradient(90deg, #F2C12E, #F6DC6B);
                         -webkit-background-clip:text; background-clip:text; color:transparent;">
               {format_yen_compact(forecast) if forecast is not None else "—"}
             </div>
             <div style="display:inline-block; margin-top:6px; padding:4px 16px; border-radius:999px;
-                        background:linear-gradient(90deg, {ACCENT_COLOR}, #ff6b6b);
+                        background:linear-gradient(90deg, #F2C12E, #F6DC6B);
                         color:#3a3a3a; font-weight:700; font-size:0.78rem;">
               {forecast_badge}
             </div>

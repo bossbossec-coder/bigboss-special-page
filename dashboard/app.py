@@ -623,8 +623,8 @@ def _progress_gauge_svg(pct: float | None, pace_pct: float | None, left_label: s
         <svg viewBox="-15 -15 230 143" style="width:100%; max-width:300px; display:block; margin:0 auto;">
           <defs>
             <linearGradient id="gaugeFillGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="{ACCENT_COLOR}" />
-              <stop offset="100%" stop-color="#F6C453" />
+              <stop offset="0%" stop-color="#F2C12E" />
+              <stop offset="100%" stop-color="#F6DC6B" />
             </linearGradient>
           </defs>
           <path d="M 20 {cy} A {radius} {radius} 0 0 1 180 {cy}" fill="none"

@@ -442,16 +442,16 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
           }}
           .ds-value {{ font-size:1.5rem; font-weight:800; margin-top:4px; white-space:nowrap; }}
           .ds-pct {{ font-size:1.2rem; font-weight:400; margin-top:2.7px; white-space:nowrap; }}
+          .ds-pct-good {{ color: #ffff00 !important; }}
           .ds-note {{ font-size:0.62rem; opacity:0.92; margin-top:4px; line-height:1.25; }}
           @media (max-width: 640px) {{
             .st-key-ds_cards_tap_overlay {{ grid-template-columns:repeat(2, minmax(0, 1fr)) !important; }}
           }}
           @media (min-width: 641px) {{
-            /* PCのみ: カード間のスペースを2倍に、対比の文字は1.62remからさらに80%に、100%以上は黄色にする */
+            /* PCのみ: カード間のスペースを2倍に、対比の文字は1.62remからさらに80%に */
             .ds-cards-grid, .st-key-ds_cards_tap_overlay {{ gap: 20px !important; }}
             .ds-value {{ font-size: 2.4rem !important; }}
             .ds-pct {{ font-size: 1.296rem !important; }}
-            .ds-pct-good {{ color: #ffff00 !important; }}
             .ds-note {{ font-size: 0.78rem !important; }}
           }}
           .st-key-ds_cards_tap_wrapper {{ position: relative; }}

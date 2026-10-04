@@ -1696,12 +1696,10 @@ render_kpi_grid([
         tooltip=format_yen(progress["mtd_total"]),
     ),
     dict(
-        label="月末着地予測",
-        value=format_yen_compact(forecast),
+        label="前年同月比",
+        value=format_pct(progress["mtd_yoy_pct"]),
         bg_color="rgb(48, 47, 47)",
-        symbol=symbol_for_ratio(progress["forecast_yoy_pct"]),
-        caption=f"前年比 {format_pct(progress['forecast_yoy_pct'])}",
-        tooltip=f"{forecast_note} / {format_yen(forecast)}",
+        caption="&nbsp;",
     ),
 ])
 

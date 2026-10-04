@@ -1698,7 +1698,7 @@ render_kpi_grid([
     dict(
         label="前年同月比",
         value=format_pct(progress["mtd_yoy_pct"]),
-        bg_color="rgb(48, 47, 47)",
+        bg_color=ACCENT_COLOR,
         caption="&nbsp;",
     ),
 ])

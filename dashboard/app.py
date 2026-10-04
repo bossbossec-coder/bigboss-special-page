@@ -1391,6 +1391,19 @@ render_scroll_top_button()
 st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")
 
+_notice_start = date(2026, 10, 5)
+if _notice_start <= today_jst() < _notice_start + timedelta(days=7):
+    st.markdown(
+        """
+        <div style="background:#4d4d4d; color:#ffffff; border-radius:10px;
+                    padding:14px 18px; margin:4px 0 20px 0; font-size:0.95rem; line-height:1.6;">
+          📢 売上サマリーのカードの仕様を変更しました。月末着地予測は「月進捗」の
+          メーターに一本化し、4枚目のカードは前年同月比の表示に変わりました。
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 if "as_of" not in st.session_state:
     st.session_state["as_of"] = today_jst() - timedelta(days=1)
 if "selected_stores" not in st.session_state:

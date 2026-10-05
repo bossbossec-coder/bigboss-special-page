@@ -2026,8 +2026,8 @@ st.markdown(
         color:#ffffff !important; border:none !important; font-weight:700 !important;
         opacity:0.45; transition:opacity 0.2s ease, transform 0.2s ease;
       }}
-      .st-key-monthly_mode_month_btn button {{ background:{KPI_GREEN} !important; }}
-      .st-key-monthly_mode_year_btn button {{ background:{KPI_BLUE} !important; }}
+      .st-key-monthly_mode_month_btn button {{ background:{ACCENT_COLOR} !important; }}
+      .st-key-monthly_mode_year_btn button {{ background:#F2C12E !important; }}
       .st-key-monthly_mode_month_btn button:hover, .st-key-monthly_mode_year_btn button:hover {{
         color:#ffffff !important;
       }}
@@ -2048,7 +2048,7 @@ fig3 = go.Figure()
 if monthly_yoy_is_month:
     fig3.add_bar(
         x=monthly_yoy["label"], y=monthly_yoy["this_year"],
-        name="当年", marker_color=KPI_GREEN,
+        name="当年", marker_color=ACCENT_COLOR,
     )
     fig3.add_bar(
         x=monthly_yoy["label"], y=monthly_yoy["last_year"],
@@ -2059,7 +2059,7 @@ else:
         x=monthly_yoy["label"], y=monthly_yoy["this_year"],
         name="年間売上",
         marker_color=[
-            KPI_BLUE if is_partial else COMPARISON_COLOR
+            "#F2C12E" if is_partial else COMPARISON_COLOR
             for is_partial in monthly_yoy["is_partial"]
         ],
     )

@@ -1786,6 +1786,12 @@ with left:
                 max-width: none !important;
                 flex: none !important;
               }}
+              /* グラフ直後の「横にスワイプすると...」の注意書きは、既定の余白のままだと
+                 グラフから離れすぎて、下にある「月進捗」セクションの説明のように
+                 誤解されやすいため、グラフのすぐ下にくっつける */
+              .st-key-daily_chart_mobile .stElementContainer:has(.stPlotlyChart) + .stElementContainer {{
+                margin-top: -14px !important;
+              }}
             </style>
             """,
             unsafe_allow_html=True,

@@ -8,11 +8,14 @@ GitHub側にも保存しておき、次回の起動時にも同じファイル�
 from __future__ import annotations
 
 import base64
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 
 import requests
 
 API_ROOT = "https://api.github.com"
+FILE_DOWNLOAD_TIMEOUT = 8  # 秒。1ファイルずつ直列に待つと遅い時に何分も止まって
+# しまうため、ファイル取得は並列化した上でこの秒数で見切りをつける。
 
 
 @dataclass
@@ -79,6 +82,16 @@ def upload_file_to_github(
     return GitHubSyncResult(True, "GitHubに保存しました。")
 
 
+def _download_one(name: str, download_url: str) -> tuple[str, bytes] | None:
+    try:
+        file_resp = requests.get(download_url, timeout=FILE_DOWNLOAD_TIMEOUT)
+    except requests.RequestException:
+        return None
+    if file_resp.status_code != 200:
+        return None
+    return name, file_resp.content
+
+
 def download_folder_files(
     *,
     repo: str,
@@ -96,10 +109,15 @@ def download_folder_files(
     「自動アップロードは成功しているのに画面には反映されない」状態が
     起こり得るため、アプリ自身が定期的にGitHubから直接最新のファイルを
     取得できるようにするための関数。
+
+    ファイルは1つずつ順番にではなく並列で取得する。直列に取得していた頃は、
+    GitHub側がたまたま遅い瞬間に当たると「1ファイルあたり最大20秒 × 店舗数」
+    待たされてしまい、スマホで何分もぐるぐる回ったまま開かなくなる不具合が
+    あったため。
     """
     url = f"{API_ROOT}/repos/{repo}/contents/{path_in_repo}"
     try:
-        resp = requests.get(url, headers=_headers(token), params={"ref": branch}, timeout=20)
+        resp = requests.get(url, headers=_headers(token), params={"ref": branch}, timeout=FILE_DOWNLOAD_TIMEOUT)
     except requests.RequestException:
         return None
     if resp.status_code != 200:
@@ -109,18 +127,22 @@ def download_folder_files(
     if not isinstance(entries, list):
         return None
 
+    targets = [
+        (entry.get("name", ""), entry.get("download_url"))
+        for entry in entries
+        if entry.get("type") == "file"
+        and entry.get("name", "").endswith(suffix)
+        and entry.get("download_url")
+    ]
+
     files: list[tuple[str, bytes]] = []
-    for entry in entries:
-        name = entry.get("name", "")
-        download_url = entry.get("download_url")
-        if entry.get("type") != "file" or not name.endswith(suffix) or not download_url:
-            continue
-        try:
-            file_resp = requests.get(download_url, timeout=20)
-        except requests.RequestException:
-            continue
-        if file_resp.status_code != 200:
-            continue
-        files.append((name, file_resp.content))
+    if not targets:
+        return files
+    with ThreadPoolExecutor(max_workers=min(8, len(targets))) as executor:
+        futures = [executor.submit(_download_one, name, download_url) for name, download_url in targets]
+        for future in as_completed(futures):
+            result = future.result()
+            if result is not None:
+                files.append(result)
 
     return files

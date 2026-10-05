@@ -161,13 +161,6 @@ st.markdown(
         .st-key-daily_chart_pc, .st-key-daily_store_chart_pc,
         .st-key-ranking_chart_pc, .st-key-monthly_chart_pc { display: none !important; }
 
-        /* グループ日別売上（今年vs前年同月）のスマホ版グラフは、棒が細くなりすぎない
-           よう横に長く描画し、このコンテナ側を横スクロール（スワイプ）させる */
-        .st-key-daily_chart_mobile {
-            overflow-x: auto !important; overflow-y: hidden !important;
-            -webkit-overflow-scrolling: touch !important;
-        }
-
         /* 店舗別売上カード（日/月切り替え）はスマホでは2列 */
         .ds-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 
@@ -795,30 +788,6 @@ def to_mobile_chart(fig: go.Figure) -> go.Figure:
     )
     fig_m.update_layout(dragmode=False)
     return fig_m
-
-
-MOBILE_SCROLL_DAY_PX = 36  # スマホで横スクロールするグラフの、1日あたりの幅（約10日分が最初に見える）
-
-
-def to_mobile_scrollable_chart(fig: go.Figure, day_count: int) -> tuple[go.Figure, int]:
-    """スマホ向けに、日数分だけ横に長いグラフを作り、画面では横スクロール（スワイプ）で
-    全体を見られるようにする。棒が細くなりすぎて見えづらくなるのを防ぐため、
-    コンテナ幅に合わせて縮小する`to_mobile_chart`とは別に、1日あたりの幅を固定で
-    確保する（最初の画面には約10日分が収まり、残りはスワイプで見られる）。
-    Plotly自体のドラッグ操作は`to_mobile_chart`と同様に無効化し、スクロールは
-    外側のdiv（CSSのoverflow-x:auto）のネイティブなスワイプで行う。"""
-    fig_m, ticks = _rescale_chart_to_man(fig)
-    width_px = max(1, day_count) * MOBILE_SCROLL_DAY_PX
-    fig_m.update_xaxes(fixedrange=True, tickmode="linear", dtick=1)
-    fig_m.update_yaxes(
-        title=None,
-        tickmode="array",
-        tickvals=ticks,
-        ticktext=[_format_man_unit(t) for t in ticks],
-        fixedrange=True,
-    )
-    fig_m.update_layout(dragmode=False, width=width_px)
-    return fig_m, width_px
 
 
 def apply_pc_chart_style(fig: go.Figure, height_multiplier: float = 1.5) -> go.Figure:
@@ -1563,17 +1532,12 @@ def _sync_data_dir_from_github(folder: Path) -> None:
     if not (GITHUB_TOKEN and GITHUB_REPO and GITHUB_BRANCH):
         st.session_state["github_sync_status"] = None
         return
-    try:
-        files = gh.download_folder_files(
-            repo=GITHUB_REPO,
-            branch=GITHUB_BRANCH,
-            token=GITHUB_TOKEN,
-            path_in_repo="dashboard/data/incoming",
-        )
-    except Exception:  # noqa: BLE001 - 同期処理のどんな想定外エラーも、
-        # 画面全体を止めずローカルの内容で表示を続けられるようにする
-        st.session_state["github_sync_status"] = "error"
-        return
+    files = gh.download_folder_files(
+        repo=GITHUB_REPO,
+        branch=GITHUB_BRANCH,
+        token=GITHUB_TOKEN,
+        path_in_repo="dashboard/data/incoming",
+    )
     if not files:
         st.session_state["github_sync_status"] = "error"
         return
@@ -1779,24 +1743,7 @@ with left:
     with st.container(key="daily_chart_pc"):
         st.plotly_chart(apply_pc_chart_style(fig), use_container_width=True, config={"displayModeBar": False})
     with st.container(key="daily_chart_mobile"):
-        fig_mobile_scroll, mobile_scroll_width = to_mobile_scrollable_chart(fig, len(series["day"]))
-        # StreamlitのstElementContainerには`max-width:100%`が既定でかかっており、
-        # widthを指定しても親要素の幅までしか広がらない（横スクロールが働かない）
-        # ため、このグラフ分だけ固定幅になるよう上書きする。
-        st.markdown(
-            f"""
-            <style>
-              .st-key-daily_chart_mobile .stElementContainer:has(.stPlotlyChart) {{
-                width: {mobile_scroll_width}px !important;
-                max-width: none !important;
-                flex: none !important;
-              }}
-            </style>
-            """,
-            unsafe_allow_html=True,
-        )
-        st.plotly_chart(fig_mobile_scroll, width=mobile_scroll_width, config={"displayModeBar": False})
-        st.caption("← 横にスワイプすると全期間を見られます")
+        st.plotly_chart(to_mobile_chart(fig), use_container_width=True, config={"displayModeBar": False})
 
 with right:
     st.markdown("#### 月進捗")

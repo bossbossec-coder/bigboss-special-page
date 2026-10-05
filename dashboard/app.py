@@ -1563,12 +1563,17 @@ def _sync_data_dir_from_github(folder: Path) -> None:
     if not (GITHUB_TOKEN and GITHUB_REPO and GITHUB_BRANCH):
         st.session_state["github_sync_status"] = None
         return
-    files = gh.download_folder_files(
-        repo=GITHUB_REPO,
-        branch=GITHUB_BRANCH,
-        token=GITHUB_TOKEN,
-        path_in_repo="dashboard/data/incoming",
-    )
+    try:
+        files = gh.download_folder_files(
+            repo=GITHUB_REPO,
+            branch=GITHUB_BRANCH,
+            token=GITHUB_TOKEN,
+            path_in_repo="dashboard/data/incoming",
+        )
+    except Exception:  # noqa: BLE001 - 同期処理のどんな想定外エラーも、
+        # 画面全体を止めずローカルの内容で表示を続けられるようにする
+        st.session_state["github_sync_status"] = "error"
+        return
     if not files:
         st.session_state["github_sync_status"] = "error"
         return

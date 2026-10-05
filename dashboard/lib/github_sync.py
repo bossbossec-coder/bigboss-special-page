@@ -123,7 +123,10 @@ def download_folder_files(
     if resp.status_code != 200:
         return None
 
-    entries = resp.json()
+    try:
+        entries = resp.json()
+    except ValueError:
+        return None
     if not isinstance(entries, list):
         return None
 
@@ -141,7 +144,10 @@ def download_folder_files(
     with ThreadPoolExecutor(max_workers=min(8, len(targets))) as executor:
         futures = [executor.submit(_download_one, name, download_url) for name, download_url in targets]
         for future in as_completed(futures):
-            result = future.result()
+            try:
+                result = future.result()
+            except Exception:  # noqa: BLE001 - 1ファイルの想定外エラーで全体を止めない
+                continue
             if result is not None:
                 files.append(result)
 

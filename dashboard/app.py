@@ -1829,14 +1829,28 @@ with st.container(key="daily_store_cards"):
     daily_store_cards_df["mtd_yoy_pct"] = daily_store_cards_df["store"].map(daily_store_ranking["yoy_pct"])
     render_daily_store_cards(daily_store_cards_df)
 
+daily_store_cards_is_monthly = st.session_state.get("ds_card_view", "daily") == "monthly"
+if daily_store_cards_is_monthly:
+    daily_store_chart_this = daily_store["store"].map(daily_store_ranking["mtd_sales"])
+    daily_store_chart_last_year = daily_store["store"].map(daily_store_ranking["last_year_mtd_sales"])
+    daily_store_chart_this_name = "当月累計"
+    daily_store_chart_last_name = "前年同期間売上"
+    daily_store_chart_color = ACCENT_COLOR
+else:
+    daily_store_chart_this = daily_store["sales"]
+    daily_store_chart_last_year = daily_store["last_year_sales"]
+    daily_store_chart_this_name = "当日売上"
+    daily_store_chart_last_name = "前年同日売上"
+    daily_store_chart_color = KPI_BLUE
+
 fig_daily_store = go.Figure()
 fig_daily_store.add_bar(
-    x=daily_store["store"], y=daily_store["sales"],
-    name="当日売上", marker_color=KPI_BLUE,
+    x=daily_store["store"], y=daily_store_chart_this,
+    name=daily_store_chart_this_name, marker_color=daily_store_chart_color,
 )
 fig_daily_store.add_bar(
-    x=daily_store["store"], y=daily_store["last_year_sales"],
-    name="前年同日売上", marker_color=COMPARISON_COLOR,
+    x=daily_store["store"], y=daily_store_chart_last_year,
+    name=daily_store_chart_last_name, marker_color=COMPARISON_COLOR,
 )
 fig_daily_store.update_layout(
     barmode="group",

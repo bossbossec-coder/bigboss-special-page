@@ -689,7 +689,7 @@ def render_progress_bar(
                     color:#ffffff; margin:4px 0 20px 0;">
           {gauge_svg}
           <div style="text-align:center; margin-top:2px;">
-            <div style="font-size:0.78rem; color:#9aa0ac; margin-bottom:2px;">着地見込み</div>
+            <div style="font-size:0.78rem; color:#F2C12E; margin-bottom:2px;">着地見込み</div>
             <div style="font-size:2.1rem; font-weight:800; line-height:1.2;
                         background:linear-gradient(90deg, #F2C12E, #F6DC6B);
                         -webkit-background-clip:text; background-clip:text; color:transparent;">

@@ -1419,6 +1419,38 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
 
 render_scroll_top_button()
 
+# 上部の「ギフト全体レポート」ボタン。押すと別タブでギフト全体レポート
+# （claude.aiのアーティファクト）を開く。URLはSecretsの gift_report_url で
+# 差し替えられる（未設定なら下の既定URL）。
+GIFT_REPORT_URL = get_secret("gift_report_url") or "https://claude.ai/artifact/2LyuBJmzvhD82tT97RKPRH"
+st.markdown(
+    """
+    <style>
+    .st-key-gift_report_link { margin-bottom: -8px; }
+    .st-key-gift_report_link a {
+        background: linear-gradient(135deg, #3fe0ff 0%, #12b4f0 50%, #0a84e0 100%) !important;
+        border: 0 !important; color: #ffffff !important; font-weight: 700 !important;
+        box-shadow: 0 6px 16px -6px rgba(10, 132, 224, .7) !important;
+    }
+    .st-key-gift_report_link a:hover { filter: brightness(1.08); color: #ffffff !important; }
+    .st-key-gift_report_link a p { color: #ffffff !important; font-weight: 700 !important; }
+    /* PCだけ2倍の大きさ */
+    @media (min-width: 641px) {
+        .st-key-gift_report_link a { padding: 0.75rem 1.75rem !important; min-height: 5rem !important; border-radius: 14px !important; }
+        .st-key-gift_report_link a p { font-size: 2rem !important; font-weight: 700 !important; }
+    }
+    @media (max-width: 640px) {
+        .st-key-gift_report_link { margin-bottom: 0; }
+        .st-key-gift_report_link > div { width: 100%; }
+        .st-key-gift_report_link a { width: 100% !important; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+with st.container(key="gift_report_link"):
+    st.link_button("🎁 ギフト全体レポート", GIFT_REPORT_URL)
+
 st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")
 

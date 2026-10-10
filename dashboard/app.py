@@ -1428,10 +1428,17 @@ st.markdown(
     <style>
     .st-key-gift_report_link { margin-bottom: -8px; }
     .st-key-gift_report_link a {
-        background: #b8862b !important; border-color: #b8862b !important; color: #ffffff !important;
-        font-weight: 700 !important;
+        background: linear-gradient(135deg, #3fe0ff 0%, #12b4f0 50%, #0a84e0 100%) !important;
+        border: 0 !important; color: #ffffff !important; font-weight: 700 !important;
+        box-shadow: 0 6px 16px -6px rgba(10, 132, 224, .7) !important;
     }
-    .st-key-gift_report_link a:hover { background: #9c7022 !important; border-color: #9c7022 !important; }
+    .st-key-gift_report_link a:hover { filter: brightness(1.08); color: #ffffff !important; }
+    .st-key-gift_report_link a p { color: #ffffff !important; font-weight: 700 !important; }
+    /* PCだけ2倍の大きさ */
+    @media (min-width: 641px) {
+        .st-key-gift_report_link a { padding: 0.75rem 1.75rem !important; min-height: 5rem !important; border-radius: 14px !important; }
+        .st-key-gift_report_link a p { font-size: 2rem !important; font-weight: 700 !important; }
+    }
     @media (max-width: 640px) {
         .st-key-gift_report_link { margin-bottom: 0; }
         .st-key-gift_report_link > div { width: 100%; }

@@ -1419,6 +1419,31 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
 
 render_scroll_top_button()
 
+# 上部の「ギフト全体レポート」ボタン。押すと別タブでギフト全体レポート
+# （claude.aiのアーティファクト）を開く。URLはSecretsの gift_report_url で
+# 差し替えられる（未設定なら下の既定URL）。
+GIFT_REPORT_URL = get_secret("gift_report_url") or "https://claude.ai/artifact/2LyuBJmzvhD82tT97RKPRH"
+st.markdown(
+    """
+    <style>
+    .st-key-gift_report_link { margin-bottom: -8px; }
+    .st-key-gift_report_link a {
+        background: #b8862b !important; border-color: #b8862b !important; color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+    .st-key-gift_report_link a:hover { background: #9c7022 !important; border-color: #9c7022 !important; }
+    @media (max-width: 640px) {
+        .st-key-gift_report_link { margin-bottom: 0; }
+        .st-key-gift_report_link > div { width: 100%; }
+        .st-key-gift_report_link a { width: 100% !important; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+with st.container(key="gift_report_link"):
+    st.link_button("🎁 ギフト全体レポート", GIFT_REPORT_URL)
+
 st.title("売上ダッシュボード")
 st.caption("決まったフォルダに置かれた日次売上Excelを自動集計するプロトタイプです。")
 

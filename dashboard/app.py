@@ -1731,7 +1731,7 @@ render_kpi_grid([
         caption="&nbsp;",
     ),
     dict(
-        label=f"当月累計（{progress['elapsed_days']}/{progress['total_days']}日）",
+        label=f"当月累計（{progress['elapsed_days']}日目/{progress['total_days']}日）",
         value=format_yen_compact(progress["mtd_total"]),
         bg_color="rgb(196, 8, 24)",
         symbol=symbol_for_ratio(progress["mtd_yoy_pct"]),
@@ -2229,7 +2229,7 @@ external_mtd_diff = (
     else None
 )
 ecol3.metric(
-    f"当月累計（{external_progress['elapsed_days']}/{external_progress['total_days']}日）",
+    f"当月累計（{external_progress['elapsed_days']}日目/{external_progress['total_days']}日）",
     format_yen_compact(external_progress["mtd_total"]),
     delta=format_delta(external_mtd_diff, external_progress["mtd_yoy_pct"]),
     help=(

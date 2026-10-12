@@ -1745,14 +1745,14 @@ today_has_data = yoy_today["has_data"]
 
 render_kpi_grid([
     dict(
-        label="本日の売上合計",
+        label="昨日の売上合計",
         value=format_yen_compact(yoy_today["today_total"]) if today_has_data else "未集計",
         bg_color=KPI_BLUE,
         symbol=symbol_for_ratio(yoy_today["pct_change"]) if today_has_data else "",
         caption=(
             f"前年差 {format_delta(today_diff, None) or '—'}"
             if today_has_data
-            else "本日分はまだ登録されていません"
+            else "昨日分はまだ登録されていません"
         ),
         tooltip=format_yen(yoy_today["today_total"]) if today_has_data else None,
     ),

@@ -1513,34 +1513,43 @@ def _sync_stores_from_popover() -> None:
     st.session_state["selected_stores"] = st.session_state["stores_popover"]
 
 
-with st.sidebar:
-    st.header("設定")
-    data_dir_input = st.text_input("Excelフォルダ", value=str(DEFAULT_DATA_DIR))
-    if st.button("再読み込み", use_container_width=True):
-        st.cache_data.clear()
-
-    as_of = st.date_input(
-        "基準日（本日扱いにする日付）", key="as_of", on_change=_sync_as_of_from_sidebar
-    )
-
-data_dir = Path(data_dir_input)
-
 ADMIN_PASSWORD = get_secret("admin_password")
 GITHUB_TOKEN = get_secret("github_token")
 GITHUB_REPO = get_secret("github_repo")
 GITHUB_BRANCH = get_secret("github_branch")
 
 with st.sidebar:
-    st.divider()
-    with st.expander("📤 データ登録（Excelアップロード）"):
-        upload_unlocked = True
-        if ADMIN_PASSWORD:
-            entered_password = st.text_input("パスワード", type="password", key="admin_password_input")
-            upload_unlocked = entered_password == ADMIN_PASSWORD
-            if entered_password and not upload_unlocked:
-                st.error("パスワードが違います。")
+    st.header("設定")
+    upload_unlocked = True
+    if ADMIN_PASSWORD:
+        entered_password = st.text_input("パスワード", type="password", key="admin_password_input")
+        upload_unlocked = entered_password == ADMIN_PASSWORD
+        if entered_password and not upload_unlocked:
+            st.error("パスワードが違います。")
 
-        if upload_unlocked:
+    # 「Excelフォルダ」「再読み込み」「基準日」は管理者向けの設定項目のため、
+    # admin_passwordが設定されている場合はパスワード認証後のみ表示する
+    # （未認証の一般閲覧者には見せない）。基準日自体は未認証でも
+    # st.session_state["as_of"]（初期値は前日）を使って動作を続け、
+    # 画面上部の「対象日・表示店舗を変更」ポップオーバーから変更できる。
+    if upload_unlocked:
+        data_dir_input = st.text_input("Excelフォルダ", value=str(DEFAULT_DATA_DIR))
+        if st.button("再読み込み", use_container_width=True):
+            st.cache_data.clear()
+
+        as_of = st.date_input(
+            "基準日（本日扱いにする日付）", key="as_of", on_change=_sync_as_of_from_sidebar
+        )
+    else:
+        data_dir_input = str(DEFAULT_DATA_DIR)
+        as_of = st.session_state["as_of"]
+
+data_dir = Path(data_dir_input)
+
+with st.sidebar:
+    if upload_unlocked:
+        st.divider()
+        with st.expander("📤 データ登録（Excelアップロード）"):
             uploaded_files = st.file_uploader(
                 "売上Excelを選択してください（複数選択可）",
                 type=["xlsx"],

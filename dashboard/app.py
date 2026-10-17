@@ -51,7 +51,7 @@ STORE_COLORS = [
 PRIMARY_COLOR = "#4E79A7"
 COMPARISON_COLOR = "#BAB0AC"
 ACCENT_COLOR = "#F28E2B"
-KPI_BLUE = "rgb(6, 81, 201)"
+KPI_BLUE = "#2F7BDB"
 KPI_GREEN = "rgb(3, 138, 52)"
 
 WEEKDAY_JP = ["月", "火", "水", "木", "金", "土", "日"]

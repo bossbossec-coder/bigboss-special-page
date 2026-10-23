@@ -144,6 +144,22 @@ def clean_name_yahoo(name, dates):
     return new
 
 
+def ship_text(d):
+    """商品名の先頭にある出荷日表記。例: 10月25日出荷 (月・日はゼロ埋めしない)"""
+    return "%d月%d日出荷" % (d.month, d.day)
+
+
+def clean_name_ship(name, dates):
+    """先頭の '<M月D日>出荷' と、その直後の半角スペース1つだけ消す。他は触らない。"""
+    new = name
+    for d in dates:
+        new = re.sub(r"^" + re.escape(ship_text(d)) + r" ?", "", new, count=1)
+    return new
+
+
+SHIP_SHOPS = [("5257", "Yahoo"), ("8581", "wine.com")]  # 出荷日表記の削除は、この2店舗だけ
+
+
 # ---------------------------------------------------------------- 画面操作
 def find_crossmall_page():
     for t in list_pages():
@@ -289,7 +305,12 @@ def edit_one(page, idx, kind, dates, dry_run):
         if not pop.wait_for("!!document.querySelector('%s')" % sel, 30):
             raise RuntimeError("商品名欄が見つかりません")
         old = pop.ev("document.querySelector('%s').value" % sel)
-        new = clean_name_yahoo(old, dates) if kind == "yahoo" else clean_name(old, dates)
+        if kind == "yahoo":
+            new = clean_name_yahoo(old, dates)
+        elif kind == "ship":
+            new = clean_name_ship(old, dates)
+        else:
+            new = clean_name(old, dates)
         if new == old:
             logging.info("  [%d] 変更なし(スキップ): %s", idx, old)
             return "skipped"
@@ -358,8 +379,9 @@ def run_items(page, n, kind, dates, dry_run, errors, shop_name):
     return updated
 
 
-def bulk_upload(page):
-    logging.info("=== 一括出品処理 ===")
+def bulk_upload(page, only_shops=None):
+    """表示商品を一括出品処理。only_shops(店舗IDのリスト)を渡すと、その店舗だけチェックして出品する。"""
+    logging.info("=== 一括出品処理 %s ===", only_shops or "(全店舗)")
     page.ev("""(()=>{document.querySelectorAll('.x-grid-row-checker').forEach(e=>e.click());})()""")
     time.sleep(1)
     before = {t["id"] for t in list_pages()}
@@ -369,7 +391,18 @@ def bulk_upload(page):
     try:
         if not target.wait_for("!!document.querySelector('input[value=\"全選択\"]')", 30):
             raise RuntimeError("一括出品処理の確認画面が出ません")
-        target.ev("document.querySelector('input[value=\"全選択\"]').click()")
+        if only_shops is None:
+            target.ev("document.querySelector('input[value=\"全選択\"]').click()")
+        else:
+            checked = target.ev("""(()=>{const ids=%s;
+              const all=[...document.querySelectorAll('input[type=checkbox]')]
+                .filter(e=>/^select_shop_id_/.test(e.id||e.name||''));
+              all.forEach(e=>{const want=ids.some(i=>(e.id||e.name)==='select_shop_id_'+i);
+                if(e.checked!==want) e.click();});
+              return all.filter(e=>e.checked).map(e=>e.id||e.name).sort();})()""" % json.dumps(only_shops))
+            want = sorted("select_shop_id_" + i for i in only_shops)
+            if checked != want:  # 想定外の店舗に出品しないよう、合わなければ中止
+                raise RuntimeError("出品先店舗のチェックが想定と違います: %s (想定 %s)" % (checked, want))
         time.sleep(1)
         target.ev("document.querySelector('input[value=\"処理開始\"]').click()")
         time.sleep(3)
@@ -387,6 +420,58 @@ def bulk_upload(page):
         if pop:
             time.sleep(10)
             pop.close()
+
+
+def shipping_job(page, dates, dry_run, errors):
+    """Yahoo/wine.com の商品名先頭の『○月○日出荷 』を消して、その2店舗だけに出品する。"""
+    logging.info("########## 出荷日表記の削除 (Yahoo / wine.com) ##########")
+    open_bulk_page(page)
+    total = 0
+    for sid, name in SHIP_SHOPS:
+        logging.info("=== %s (%s) 出荷日表記 ===", name, sid)
+        try:
+            switch_shop(page, sid)
+            for d in dates:
+                clear_dates(page)
+                key = ship_text(d)
+                set_conditions(page, key, False)
+                n = search(page)
+                logging.info("%s 検索(%s): %d件", name, key, n)
+                if n == 0:
+                    continue
+                if not dry_run:
+                    if tick_marks_and_update(page) == 0:
+                        errors.append("%s: Markのチェックが0件(出荷日表記)" % name)
+                        logging.error("Markのチェックが0件でした")
+                    set_conditions(page, key, False)
+                    n = search(page)
+                total += run_items(page, n, "ship", dates, dry_run, errors, name)
+        except LoginRequired:
+            raise
+        except Exception as e:
+            logging.error("出荷日表記 店舗処理失敗 %s: %s", name, e)
+            errors.append("%s(出荷日表記): %s" % (name, e))
+    if total and not dry_run:
+        for sid, name in SHIP_SHOPS:  # 名前を消すと検索に出なくなるため、Mark有で表示して店舗ごとに出品
+            try:
+                switch_shop(page, sid)
+                set_conditions(page, "", True)
+                n = search(page)
+                logging.info("%s Mark有: %d件", name, n)
+                if n:
+                    bulk_upload(page, only_shops=[sid])
+            except LoginRequired:
+                raise
+            except Exception as e:
+                logging.error("出荷日表記 出品失敗 %s: %s", name, e)
+                errors.append("%s(出荷日表記の出品): %s" % (name, e))
+        if not errors:
+            clear_marks(page)
+        else:
+            logging.warning("失敗があるためMarkは外しません")
+    else:
+        logging.info("出荷日表記: 更新0件のため出品処理はスキップ")
+    return total
 
 
 def main():
@@ -426,6 +511,7 @@ def main():
                 logging.warning("失敗があるためMarkは外しません")
         else:
             logging.info("更新0件のため一括出品処理はスキップ")
+        total += shipping_job(page, dates, a.dry_run, errors)
     except LoginRequired:
         logging.error("ログインが切れています。自動化用Chromeでログインし直してください")
         return 2

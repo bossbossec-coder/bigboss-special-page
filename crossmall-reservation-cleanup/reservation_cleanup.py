@@ -227,6 +227,31 @@ def tick_marks_and_update(page):
     page.wait_for("document.readyState==='complete'", 60)
 
 
+def untick_marks_and_update(page):
+    """検索結果のうちチェック済みの Mark(予約Claude) を1件ずつ直接クリックで外す→更新。"""
+    n = page.ev("""(()=>{let c=0; document.querySelectorAll('input.chk_mark[id^="chk%s_"]').forEach(e=>{
+        if(e.checked){e.click(); c++;}}); return c;})()""" % MARK_ID)
+    logging.info("Mark解除 %s件", n)
+    page.ev("window.__cm_mark=1")
+    page.ev("onSubmit()")
+    page.wait_for("!window.__cm_mark", 60)
+    page.wait_for("document.readyState==='complete'", 60)
+
+
+def clear_marks(page):
+    """出品処理後にMarkを外す。Mark有が0件になるまで、店舗を切り替えながら確認する。"""
+    logging.info("=== Mark解除 ===")
+    for sid, name, _ in reversed(SHOPS):
+        switch_shop(page, sid)
+        set_conditions(page, "", True)
+        n = search(page)
+        logging.info("%s Mark有: %d件", name, n)
+        if n == 0:
+            return
+        untick_marks_and_update(page)
+    logging.warning("全店舗確認してもMark有が残っている可能性があります")
+
+
 def fill(pop, selector, value):
     pop.ev("""(()=>{const e=document.querySelector(%s); if(!e) throw new Error('要素なし '+%s);
       e.value=%s; e.dispatchEvent(new Event('input',{bubbles:true}));
@@ -375,6 +400,10 @@ def main():
                 errors.append("%s: %s" % (shop[1], e))
         if total and not a.dry_run:
             bulk_upload(page)
+            if not errors:  # 失敗があった日はMarkを残し、翌日以降に再実行できるようにする
+                clear_marks(page)
+            else:
+                logging.warning("失敗があるためMarkは外しません")
         else:
             logging.info("更新0件のため一括出品処理はスキップ")
     except LoginRequired:

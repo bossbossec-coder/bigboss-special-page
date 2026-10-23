@@ -201,8 +201,8 @@ def set_conditions(page, item_name, use_mark):
       ['item_cd1','item_cd2','item_cd_plural'].forEach(i=>set(i,''));  // 前回の商品コード条件を消す
       set('item_name', %s);
       set('stc_flag','2');
-      if (%s) set('mark_set%s','1');
-    })()""" % (json.dumps(item_name), "true" if use_mark else "false", MARK_ID))
+      set('mark_set%s', %s ? '1' : '');  // 前回のMark条件が残らないよう、使わないときは空にする
+    })()""" % (json.dumps(item_name), MARK_ID, "true" if use_mark else "false"))
 
 
 def clear_dates(page):

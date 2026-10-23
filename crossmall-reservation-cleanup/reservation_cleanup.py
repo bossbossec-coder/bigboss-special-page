@@ -196,22 +196,39 @@ def clear_dates(page):
 LINKS = "document.querySelectorAll('a[href*=\"doEditShopItem\"]')"
 
 
-def search(page):
+LOADING_JS = """(()=>{
+  let loading=false;
+  try{ if(window.Ext && Ext.StoreManager) Ext.StoreManager.each(s=>{
+        if(s.isLoading && s.isLoading()) loading=true;}); }catch(e){}
+  const vis=e=>e.offsetParent!==null && getComputedStyle(e).visibility!=='hidden';
+  const mask=[...document.querySelectorAll('.x-mask,.x-mask-msg')].some(vis);
+  return loading||mask;
+})()"""
+
+
+def search(page, zero_wait=40):
+    """検索して件数を返す。表示まで数十秒かかるため、読み込み中表示が終わるまで待つ。
+    読み込み中表示が一度も確認できなかった場合は、0件を確定する前に zero_wait 秒まで待つ。"""
     page.ev("window.__cm_mark=1")
     page.ev("onSrch()")
-    page.wait_for("!window.__cm_mark", 15)
-    page.wait_for("document.readyState==='complete'", 60)
-    # 件数が安定するまで待つ(0件も正常なので最低8秒は待つ)
-    start, last, same = time.time(), -1, 0
-    while time.time() - start < 120:
-        time.sleep(2)
+    start, seen_loading, last, same = time.time(), False, -1, 0
+    while time.time() - start < 180:
+        time.sleep(1.5)
         try:
-            n = page.ev("%s.length" % LINKS)
+            loading = bool(page.ev(LOADING_JS))
+            n = page.ev("(document.readyState==='complete') ? %s.length : -1" % LINKS)
         except Exception:
+            continue  # ページ遷移中
+        seen_loading = seen_loading or loading
+        if loading or n < 0:
+            same = 0
             continue
         same = same + 1 if n == last else 0
         last = n
-        if same >= 2 and time.time() - start >= 8:
+        elapsed = time.time() - start
+        if same >= 3 and n > 0 and elapsed >= 5:
+            break
+        if same >= 3 and n == 0 and ((seen_loading and elapsed >= 8) or elapsed >= zero_wait):
             break
     return max(last, 0)
 

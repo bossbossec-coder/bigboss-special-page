@@ -1234,13 +1234,21 @@ def get_secret(name: str) -> str | None:
         return None
 
 
-VIEWER_SESSION_TIMEOUT = timedelta(hours=12)
+def _next_1am_jst_after(dt: datetime) -> datetime:
+    """dt以降で最初に訪れる「日本時間の深夜1時」を返す。
+    ログイン保持を「ログインから何時間」ではなく「次の深夜1時まで」にする
+    ための補助関数（1日1回、深夜1時にだけログアウトさせたいため）。"""
+    candidate = dt.replace(hour=1, minute=0, second=0, microsecond=0)
+    if candidate <= dt:
+        candidate += timedelta(days=1)
+    return candidate
+
 
 VIEWER_PASSWORD = get_secret("viewer_password")
 
 if st.session_state.get("viewer_unlocked"):
     login_time = st.session_state.get("viewer_login_time")
-    if login_time is None or datetime.now() - login_time > VIEWER_SESSION_TIMEOUT:
+    if login_time is None or datetime.now(JST) >= _next_1am_jst_after(login_time):
         st.session_state["viewer_unlocked"] = False
         st.session_state.pop("viewer_login_time", None)
 
@@ -1392,7 +1400,7 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
                     <li>本パスワードは毎月月初に更新されます。新しいパスワードは、その都度メールにてご案内いたします。</li>
                     <li>日々の売上をご確認いただくことは、経営感覚を養い、店舗運営の質を高める大切な習慣です。毎日のご確認が、店舗と皆様ご自身の成長につながります。</li>
                     <li>本ページで扱う情報は、当社を代表する役職者・店長の皆様にのみ共有しているものです。重要な情報である事をご理解のうえ、責任を持って閲覧・管理をお願いいたします。</li>
-                    <li>セキュリティのため、ログインから12時間が経過すると自動的にログアウトされます。再度ご覧になる際は、お手数ですがパスワードの再入力をお願いいたします。</li>
+                    <li>セキュリティのため、毎日深夜1時に自動的にログアウトされます。再度ご覧になる際は、お手数ですがパスワードの再入力をお願いいたします。</li>
                   </ul>
                 </div>
                 """,
@@ -1410,7 +1418,7 @@ if VIEWER_PASSWORD and not st.session_state.get("viewer_unlocked"):
             if submitted:
                 if entered_viewer_password == VIEWER_PASSWORD:
                     st.session_state["viewer_unlocked"] = True
-                    st.session_state["viewer_login_time"] = datetime.now()
+                    st.session_state["viewer_login_time"] = datetime.now(JST)
                     st.rerun()
                 else:
                     st.error("パスワードが違います。")

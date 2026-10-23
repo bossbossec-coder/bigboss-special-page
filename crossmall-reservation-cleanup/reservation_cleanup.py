@@ -172,7 +172,7 @@ def switch_shop(page, shop_id):
     page.ev("window.__cm_mark=1")
     page.ev("(()=>{const s=document.getElementById('shop_id'); s.value='%s'; chngShop();})()" % shop_id)
     time.sleep(1)
-    page.wait_for("!window.__cm_mark", 30)  # 再読込されたら消える。されなくても進む
+    page.wait_for("!window.__cm_mark", 10)  # 再読込されたら消える。されなくても進む
     if not page.wait_for("document.readyState==='complete' && !!document.getElementById('shop_id') "
                          "&& document.getElementById('shop_id').value==='%s'" % shop_id, 60):
         raise RuntimeError("店舗切替失敗 %s" % shop_id)
@@ -199,19 +199,19 @@ LINKS = "document.querySelectorAll('a[href*=\"doEditShopItem\"]')"
 def search(page):
     page.ev("window.__cm_mark=1")
     page.ev("onSrch()")
-    page.wait_for("!window.__cm_mark", 90)
-    page.wait_for("document.readyState==='complete'", 90)
-    # 件数が安定するまで待つ(表示まで数十秒かかるため。0件も正常なので最低10秒は待つ)
+    page.wait_for("!window.__cm_mark", 15)
+    page.wait_for("document.readyState==='complete'", 60)
+    # 件数が安定するまで待つ(0件も正常なので最低8秒は待つ)
     start, last, same = time.time(), -1, 0
     while time.time() - start < 120:
-        time.sleep(3)
+        time.sleep(2)
         try:
             n = page.ev("%s.length" % LINKS)
         except Exception:
             continue
         same = same + 1 if n == last else 0
         last = n
-        if same >= 2 and time.time() - start >= 10:
+        if same >= 2 and time.time() - start >= 8:
             break
     return max(last, 0)
 
@@ -223,8 +223,9 @@ def tick_marks_and_update(page):
     logging.info("Markチェック %s件", n)
     page.ev("window.__cm_mark=1")
     page.ev("onSubmit()")
-    page.wait_for("!window.__cm_mark", 60)
+    page.wait_for("!window.__cm_mark", 15)
     page.wait_for("document.readyState==='complete'", 60)
+    return n
 
 
 def untick_marks_and_update(page):
@@ -312,7 +313,9 @@ def process_shop(page, shop, dates, dry_run, errors):
             if n == 0:
                 continue
             if not dry_run:
-                tick_marks_and_update(page)
+                if tick_marks_and_update(page) == 0:
+                    errors.append("%s: Markのチェックが0件(Mark欄の要素が違う可能性)" % name)
+                    logging.error("Markのチェックが0件でした")
                 set_conditions(page, "【予約】【" + jp_date(d), False)
                 n = search(page)
             updated += run_items(page, n, kind, dates, dry_run, errors, name)

@@ -369,14 +369,20 @@ def process_shop(page, shop, dates, dry_run, errors):
 def run_items(page, n, kind, dates, dry_run, errors, shop_name):
     updated = 0
     for i in range(n):
-        try:
-            if edit_one(page, i, kind, dates, dry_run) == "updated":
-                updated += 1
-        except LoginRequired:
-            raise
-        except Exception as e:  # 1商品の失敗で残りを止めない
-            logging.error("  失敗 %s idx=%d: %s", shop_name, i, e)
-            errors.append("%s idx=%d: %s" % (shop_name, i, e))
+        for attempt in (1, 2):  # 他の作業と画面が被った等の一時的な失敗は、1回だけやり直す
+            try:
+                if edit_one(page, i, kind, dates, dry_run) == "updated":
+                    updated += 1
+                break
+            except LoginRequired:
+                raise
+            except Exception as e:  # 1商品の失敗で残りを止めない
+                if attempt == 1:
+                    logging.warning("  失敗(やり直します) %s idx=%d: %s", shop_name, i, e)
+                    time.sleep(5)
+                    continue
+                logging.error("  失敗 %s idx=%d: %s", shop_name, i, e)
+                errors.append("%s idx=%d: %s" % (shop_name, i, e))
     return updated
 
 

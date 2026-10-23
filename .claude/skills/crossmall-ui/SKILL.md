@@ -29,6 +29,7 @@ description: クロスモール(crossmall.jp)の商品一括処理画面のボ�
 - 編集対象(店舗切替): `select#shop_id`、`onchange="chngShop();"`(切替後にページ再読込) ✔
 - 最終日付のクリア: `<a onclick="clearDate();">クリア</a>`
 - 店舗商品名(検索): `input#item_name`(maxlength 40、部分一致) ✔
+- 商品コード(検索): `input#item_cd1`〜`input#item_cd2`(範囲)、`input#item_cd_plural`(カンマ区切り複数)。前回の入力が残ると結果が絞られて0件になるため、検索前に必ず空にする ✔
 - `select#stc_flag`(1=無, 2=有)。画面上は「商品登録」の欄と思われる(要確認)。予約処理では「有」 ✔
 - 検索ボタン: `input[name=commit][value=" 検 索 "]`、`onclick="onSrch();"` ✔
 - Mark:

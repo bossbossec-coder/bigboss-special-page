@@ -198,6 +198,7 @@ def set_conditions(page, item_name, use_mark):
     page.ev("""(()=>{
       const set=(id,v)=>{const e=document.getElementById(id); if(e){e.value=v;
         e.dispatchEvent(new Event('change',{bubbles:true}));}};
+      ['item_cd1','item_cd2','item_cd_plural'].forEach(i=>set(i,''));  // 前回の商品コード条件を消す
       set('item_name', %s);
       set('stc_flag','2');
       if (%s) set('mark_set%s','1');

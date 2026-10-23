@@ -150,10 +150,11 @@ def ship_text(d):
 
 
 def clean_name_ship(name, dates):
-    """先頭の '<M月D日>出荷' と、その直後の半角スペース1つだけ消す。他は触らない。"""
+    """先頭の '<M月D日>出荷' と、その直後に続く半角スペースを消す(消した結果、名前がスペースで始まらないように)。
+    商品名の途中のスペースは触らない。"""
     new = name
     for d in dates:
-        new = re.sub(r"^" + re.escape(ship_text(d)) + r" ?", "", new, count=1)
+        new = re.sub(r"^" + re.escape(ship_text(d)) + r" *", "", new, count=1)
     return new
 
 

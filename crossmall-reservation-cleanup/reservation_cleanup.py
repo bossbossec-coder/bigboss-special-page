@@ -255,12 +255,14 @@ def tick_marks_and_update(page):
     """検索結果の各行の Mark(予約Claude) を1件ずつ直接クリックでチェック→更新。"""
     n = page.ev("""(()=>{let c=0; document.querySelectorAll('input.chk_mark[id^="chk%s_"]').forEach(e=>{
         if(!e.checked){e.click(); c++;}}); return c;})()""" % MARK_ID)
-    logging.info("Markチェック %s件", n)
+    # すでにチェック済みの商品(他店舗の処理で付いたMark)も有効。更新後にチェック済みの数を返す
+    total = page.ev("""document.querySelectorAll('input.chk_mark[id^="chk%s_"]:checked').length""" % MARK_ID)
+    logging.info("Markチェック 新規%s件 / チェック済み計%s件", n, total)
     page.ev("window.__cm_mark=1")
     page.ev("onSubmit()")
     page.wait_for("!window.__cm_mark", 15)
     page.wait_for("document.readyState==='complete'", 60)
-    return n
+    return total
 
 
 def untick_marks_and_update(page):
@@ -489,6 +491,8 @@ def main():
     ap.add_argument("--ship-offset", type=int, default=0,
                     help="出荷日表記(○月○日出荷)の対象日。0=当日(既定)、1=前日")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--clear-marks-only", action="store_true",
+                    help="商品名の処理はせず、残っているMark(予約Claude)を外すだけ")
     a = ap.parse_args()
 
     here = os.path.dirname(os.path.abspath(__file__))
@@ -502,6 +506,20 @@ def main():
     ship_dates = [today - datetime.timedelta(days=a.ship_offset + i) for i in range(a.days)]
     logging.info("開始 対象発売日: %s 出荷日表記: %s dry_run=%s", [jp_date(d) for d in dates],
                  [ship_text(d) for d in ship_dates], a.dry_run)
+
+    if a.clear_marks_only:
+        try:
+            page = find_crossmall_page()
+            open_bulk_page(page)
+            clear_marks(page)
+        except LoginRequired:
+            logging.error("ログインが切れています。自動化用Chromeでログインし直してください")
+            return 2
+        except Exception:
+            logging.error("致命的エラー\n%s", traceback.format_exc())
+            return 1
+        logging.info("Mark解除のみ完了")
+        return 0
 
     errors, total = [], 0
     try:

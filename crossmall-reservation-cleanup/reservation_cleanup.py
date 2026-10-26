@@ -486,6 +486,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=1)
     ap.add_argument("--date", help="基準日(YYYY-MM-DD)。省略時は今日")
+    ap.add_argument("--ship-offset", type=int, default=0,
+                    help="出荷日表記(○月○日出荷)の対象日。0=当日(既定)、1=前日")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
 
@@ -497,7 +499,9 @@ def main():
         handlers=[logging.FileHandler(os.path.join(here, "logs", today.strftime("%Y%m%d") + ".log"),
                                       encoding="utf-8"), logging.StreamHandler()])
     dates = [today - datetime.timedelta(days=i) for i in range(1, a.days + 1)]
-    logging.info("開始 対象発売日: %s dry_run=%s", [jp_date(d) for d in dates], a.dry_run)
+    ship_dates = [today - datetime.timedelta(days=a.ship_offset + i) for i in range(a.days)]
+    logging.info("開始 対象発売日: %s 出荷日表記: %s dry_run=%s", [jp_date(d) for d in dates],
+                 [ship_text(d) for d in ship_dates], a.dry_run)
 
     errors, total = [], 0
     try:
@@ -519,7 +523,7 @@ def main():
                 logging.warning("失敗があるためMarkは外しません")
         else:
             logging.info("更新0件のため一括出品処理はスキップ")
-        total += shipping_job(page, dates, a.dry_run, errors)
+        total += shipping_job(page, ship_dates, a.dry_run, errors)
     except LoginRequired:
         logging.error("ログインが切れています。自動化用Chromeでログインし直してください")
         return 2

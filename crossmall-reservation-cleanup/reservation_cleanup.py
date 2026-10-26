@@ -158,6 +158,20 @@ def clean_name_ship(name, dates):
     return new
 
 
+SAIKYO = "【最強配送】"
+
+
+def add_saikyo(name):
+    """【本州のみ 送料無料】または【送料無料】の直前に【最強配送】を足す。戻り値 (新しい名前, スキップ理由)。
+    すでに【最強配送】がある・どちらの文字もない場合は (None, 理由)。"""
+    if SAIKYO in name:
+        return None, "すでに【最強配送】あり"
+    m = re.search(r"【(?:本州のみ )?送料無料】", name)
+    if not m:
+        return None, "【本州のみ 送料無料】/【送料無料】がない"
+    return name[:m.start()] + SAIKYO + name[m.start():], ""
+
+
 SHIP_SHOPS = [("5257", "Yahoo"), ("8581", "wine.com")]  # 出荷日表記の削除は、この2店舗だけ
 
 
@@ -213,6 +227,14 @@ def clear_dates(page):
 
 LINKS = "document.querySelectorAll('a[href*=\"doEditShopItem\"]')"
 
+ROW_CODE_JS = r"""(()=>{const a=%s[%d]; if(!a) return null; const tr=a.closest('tr'); if(!tr) return null;
+  const m=(tr.innerText||'').match(/\d{13}[-\w]*/); return m?m[0]:null;})()"""
+
+
+def row_code(page, idx):
+    """検索結果のidx番目の行の商品コード(標準)。例 4901004006684-sbl-1"""
+    return page.ev(ROW_CODE_JS % (LINKS, idx))
+
 
 LOADING_JS = """(()=>{
   let loading=false;
@@ -251,12 +273,22 @@ def search(page, zero_wait=40):
     return max(last, 0)
 
 
-def tick_marks_and_update(page):
-    """検索結果の各行の Mark(予約Claude) を1件ずつ直接クリックでチェック→更新。"""
-    n = page.ev("""(()=>{let c=0; document.querySelectorAll('input.chk_mark[id^="chk%s_"]').forEach(e=>{
-        if(!e.checked){e.click(); c++;}}); return c;})()""" % MARK_ID)
+def tick_marks_and_update(page, only=None):
+    """検索結果の各行の Mark(予約Claude) を1件ずつ直接クリックでチェック→更新。
+    only(商品コードの集合)を渡すと、その商品の行だけチェックする。"""
+    if only is None:
+        n = page.ev("""(()=>{let c=0; document.querySelectorAll('input.chk_mark[id^="chk%s_"]').forEach(e=>{
+            if(!e.checked){e.click(); c++;}}); return c;})()""" % MARK_ID)
+    else:
+        n = 0
+        for i in range(page.ev("%s.length" % LINKS)):
+            if row_code(page, i) in only:
+                n += page.ev("""(()=>{const a=%s[%d]; const e=a.closest('tr').querySelector('input.chk_mark[id^="chk%s_"]');
+                  if(e && !e.checked){e.click(); return 1;} return 0;})()""" % (LINKS, i, MARK_ID))
     # すでにチェック済みの商品(他店舗の処理で付いたMark)も有効。更新後にチェック済みの数を返す
     total = page.ev("""document.querySelectorAll('input.chk_mark[id^="chk%s_"]:checked').length""" % MARK_ID)
+    if only is not None and total == 0:
+        n = 0
     logging.info("Markチェック 新規%s件 / チェック済み計%s件", n, total)
     page.ev("window.__cm_mark=1")
     page.ev("onSubmit()")
@@ -309,7 +341,12 @@ def edit_one(page, idx, kind, dates, dry_run):
         if not pop.wait_for("!!document.querySelector('%s')" % sel, 30):
             raise RuntimeError("商品名欄が見つかりません")
         old = pop.ev("document.querySelector('%s').value" % sel)
-        if kind == "yahoo":
+        if kind == "saikyo":
+            new, why = add_saikyo(old)
+            if new is None:
+                logging.info("  [%d] スキップ(%s): %s", idx, why, old)
+                return "skipped"
+        elif kind == "yahoo":
             new = clean_name_yahoo(old, dates)
         elif kind == "ship":
             new = clean_name_ship(old, dates)
@@ -326,13 +363,17 @@ def edit_one(page, idx, kind, dates, dry_run):
         if kind == "rakuten":
             fill(pop, 'input[name$="[stock_shipping_lead_time_label]"]', code or "BSH")
             fill(pop, 'input[name$="[stock_delivery_date_no]"]', "3")
+        elif kind == "saikyo":
+            fill(pop, 'input[name$="[stock_shipping_lead_time_label]"]', "SAIKYO")
+            fill(pop, 'input[name$="[stock_delivery_date_no]"]', "1")
         elif kind == "wowma":
             pop.ev("document.getElementById('kbn_09_1').click()")
             fill(pop, "#char_13", "2")
             fill(pop, "#char_12", code or "2")
         pop.ev("document.getElementById('update').click()")
         if not popup_gone(pop.id, 30):
-            raise RuntimeError("更新後もポップアップが閉じません(失敗の可能性)")
+            raise RuntimeError("更新後もポップアップが閉じません(文字数オーバー等の入力エラーの可能性) 画面のメッセージ: %s"
+                               % (pop.dialogs[-1] if pop.dialogs else "なし"))
         return "updated"
     finally:
         try:
@@ -369,13 +410,20 @@ def process_shop(page, shop, dates, dry_run, errors):
     return updated
 
 
-def run_items(page, n, kind, dates, dry_run, errors, shop_name):
+def run_items(page, n, kind, dates, dry_run, errors, shop_name, codes=None, only=None):
+    """codes: 更新できた商品の商品コードを集める集合 / only: この商品コードの行だけ処理する集合"""
     updated = 0
     for i in range(n):
+        code = row_code(page, i) if (codes is not None or only is not None) else None
+        if only is not None and code not in only:
+            logging.info("  [%d] 対象外のためスキップ: %s", i, code)
+            continue
         for attempt in (1, 2):  # 他の作業と画面が被った等の一時的な失敗は、1回だけやり直す
             try:
                 if edit_one(page, i, kind, dates, dry_run) == "updated":
                     updated += 1
+                    if codes is not None and code:
+                        codes.add(code)
                 break
             except LoginRequired:
                 raise
@@ -389,10 +437,24 @@ def run_items(page, n, kind, dates, dry_run, errors, shop_name):
     return updated
 
 
-def bulk_upload(page, only_shops=None):
-    """表示商品を一括出品処理。only_shops(店舗IDのリスト)を渡すと、その店舗だけチェックして出品する。"""
+def select_rows(page, only_codes=None):
+    """検索結果の行チェックを1つずつ直接クリック。only_codes(商品コードの集合)があれば、その行だけ。戻り値は選んだ行数。"""
+    if only_codes is None:
+        return page.ev("""(()=>{const l=[...document.querySelectorAll('.x-grid-row-checker')]; l.forEach(e=>e.click()); return l.length;})()""")
+    n = 0
+    for i in range(page.ev("%s.length" % LINKS)):
+        if row_code(page, i) in only_codes:
+            n += page.ev("""(()=>{const e=[...document.querySelectorAll('.x-grid-row-checker')][%d]; if(e){e.click(); return 1;} return 0;})()""" % i)
+    return n
+
+
+def bulk_upload(page, only_shops=None, only_codes=None):
+    """表示商品を一括出品処理。only_shops(店舗IDのリスト)を渡すと、その店舗だけチェックして出品する。
+    only_codes(商品コードの集合)を渡すと、その商品の行だけ選んで出品する。"""
     logging.info("=== 一括出品処理 %s ===", only_shops or "(全店舗)")
-    page.ev("""(()=>{document.querySelectorAll('.x-grid-row-checker').forEach(e=>e.click());})()""")
+    if select_rows(page, only_codes) == 0:
+        logging.warning("出品する行が選べませんでした。出品処理をスキップします")
+        return
     time.sleep(1)
     before = {t["id"] for t in list_pages()}
     page.ev("onMultiMallUpload()")
@@ -432,11 +494,13 @@ def bulk_upload(page, only_shops=None):
             pop.close()
 
 
-def shipping_job(page, dates, dry_run, errors):
-    """Yahoo/wine.com の商品名先頭の『○月○日出荷 』を消して、その2店舗だけに出品する。"""
+def shipping_job(page, dates, dry_run, errors, only=None):
+    """Yahoo/wine.com の商品名先頭の『○月○日出荷 』を消す → 楽天に【最強配送】等を足す → 3店舗に出品 → Mark解除。
+    only: 商品コードの集合を渡すと、その商品だけ処理する(テスト用)。"""
     logging.info("########## 出荷日表記の削除 (Yahoo / wine.com) ##########")
     open_bulk_page(page)
     total = 0
+    ship_codes = set()  # Yahooで今回更新できた商品の商品コード(楽天の対象はこれだけ)
     for sid, name in SHIP_SHOPS:
         logging.info("=== %s (%s) 出荷日表記 ===", name, sid)
         try:
@@ -450,37 +514,61 @@ def shipping_job(page, dates, dry_run, errors):
                 if n == 0:
                     continue
                 if not dry_run:
-                    if tick_marks_and_update(page) == 0:
+                    if tick_marks_and_update(page, only) == 0:
                         errors.append("%s: Markのチェックが0件(出荷日表記)" % name)
                         logging.error("Markのチェックが0件でした")
                     set_conditions(page, key, False)
                     n = search(page)
-                total += run_items(page, n, "ship", dates, dry_run, errors, name)
+                total += run_items(page, n, "ship", dates, dry_run, errors, name,
+                                   codes=ship_codes if sid == "5257" else None, only=only)
         except LoginRequired:
             raise
         except Exception as e:
             logging.error("出荷日表記 店舗処理失敗 %s: %s", name, e)
             errors.append("%s(出荷日表記): %s" % (name, e))
-    if total and not dry_run:
-        for sid, name in SHIP_SHOPS:  # 名前を消すと検索に出なくなるため、Mark有で表示して店舗ごとに出品
-            try:
-                switch_shop(page, sid)
-                set_conditions(page, "", True)
-                n = search(page)
-                logging.info("%s Mark有: %d件", name, n)
-                if n:
-                    bulk_upload(page, only_shops=[sid])
-            except LoginRequired:
-                raise
-            except Exception as e:
-                logging.error("出荷日表記 出品失敗 %s: %s", name, e)
-                errors.append("%s(出荷日表記の出品): %s" % (name, e))
-        if not errors:
-            clear_marks(page)
-        else:
-            logging.warning("失敗があるためMarkは外しません")
+    if dry_run:
+        logging.info("dry-run: 楽天の【最強配送】追加と出品処理は省略(Markが付かないため)")
+        return total
+    if not total:
+        logging.info("出荷日表記: 更新0件のため楽天の追加・出品処理はスキップ")
+        return total
+
+    saikyo_done = set()  # 楽天で【最強配送】を足せた商品コード
+    try:
+        logging.info("########## 最強配送の追加 (ビッグボス楽天) ##########")
+        switch_shop(page, "5255")
+        set_conditions(page, "", True)
+        n = search(page)
+        logging.info("ビッグボス楽天 Mark有: %d件 (対象はYahoo更新分 %d件)", n, len(ship_codes))
+        run_items(page, n, "saikyo", dates, dry_run, errors, "ビッグボス楽天(最強配送)",
+                  codes=saikyo_done, only=ship_codes)
+    except LoginRequired:
+        raise
+    except Exception as e:
+        logging.error("最強配送の追加 失敗: %s", e)
+        errors.append("ビッグボス楽天(最強配送): %s" % e)
+
+    # 名前を消すと検索に出なくなるため、Mark有で表示して店舗ごとに出品(Yahoo/wine.com/楽天)
+    for sid, name in SHIP_SHOPS + [("5255", "ビッグボス楽天")]:
+        try:
+            if sid == "5255" and not saikyo_done:
+                continue
+            switch_shop(page, sid)
+            set_conditions(page, "", True)
+            n = search(page)
+            logging.info("%s Mark有: %d件", name, n)
+            if n:
+                bulk_upload(page, only_shops=[sid],
+                            only_codes=saikyo_done if sid == "5255" else only)
+        except LoginRequired:
+            raise
+        except Exception as e:
+            logging.error("出荷日表記 出品失敗 %s: %s", name, e)
+            errors.append("%s(出品): %s" % (name, e))
+    if not errors:
+        clear_marks(page)
     else:
-        logging.info("出荷日表記: 更新0件のため出品処理はスキップ")
+        logging.warning("失敗があるためMarkは外しません")
     return total
 
 
@@ -491,6 +579,9 @@ def main():
     ap.add_argument("--ship-offset", type=int, default=0,
                     help="出荷日表記(○月○日出荷)の対象日。0=当日(既定)、1=前日")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--ship-only", action="store_true",
+                    help="予約テキストの処理を飛ばし、出荷日表記(+楽天の最強配送)の処理だけ行う")
+    ap.add_argument("--only-codes", help="この商品コードだけ処理する(カンマ区切り。テスト用)")
     ap.add_argument("--clear-marks-only", action="store_true",
                     help="商品名の処理はせず、残っているMark(予約Claude)を外すだけ")
     a = ap.parse_args()
@@ -521,27 +612,29 @@ def main():
         logging.info("Mark解除のみ完了")
         return 0
 
+    only = {c.strip() for c in a.only_codes.split(",") if c.strip()} if a.only_codes else None
     errors, total = [], 0
     try:
         page = find_crossmall_page()
         open_bulk_page(page)
-        for shop in SHOPS:
-            try:
-                total += process_shop(page, shop, dates, a.dry_run, errors)
-            except LoginRequired:
-                raise
-            except Exception as e:
-                logging.error("店舗処理失敗 %s: %s", shop[1], e)
-                errors.append("%s: %s" % (shop[1], e))
-        if total and not a.dry_run:
-            bulk_upload(page)
-            if not errors:  # 失敗があった日はMarkを残し、翌日以降に再実行できるようにする
-                clear_marks(page)
+        if not a.ship_only:
+            for shop in SHOPS:
+                try:
+                    total += process_shop(page, shop, dates, a.dry_run, errors)
+                except LoginRequired:
+                    raise
+                except Exception as e:
+                    logging.error("店舗処理失敗 %s: %s", shop[1], e)
+                    errors.append("%s: %s" % (shop[1], e))
+            if total and not a.dry_run:
+                bulk_upload(page)
+                if not errors:  # 失敗があった日はMarkを残し、翌日以降に再実行できるようにする
+                    clear_marks(page)
+                else:
+                    logging.warning("失敗があるためMarkは外しません")
             else:
-                logging.warning("失敗があるためMarkは外しません")
-        else:
-            logging.info("更新0件のため一括出品処理はスキップ")
-        total += shipping_job(page, ship_dates, a.dry_run, errors)
+                logging.info("更新0件のため一括出品処理はスキップ")
+        total += shipping_job(page, ship_dates, a.dry_run, errors, only)
     except LoginRequired:
         logging.error("ログインが切れています。自動化用Chromeでログインし直してください")
         return 2

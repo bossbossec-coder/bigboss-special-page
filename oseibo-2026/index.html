@@ -702,7 +702,7 @@ h2 .po{margin-left:-.5em}
 .pickup .mklabel{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;color:#fff;background:var(--blue);padding:2px 12px;margin-bottom:8px}
 /* ご予算で選ぶ：金額ボタン（押すと下に該当商品を表示） */
 .budget{padding-top:64px;padding-bottom:0}
-.budget-list{grid-template-columns:repeat(5,1fr)}
+.budget-list{grid-template-columns:repeat(4,1fr)}
 button.budget-card{font:inherit;cursor:pointer;width:100%}
 .budget-card[aria-pressed=true]{border:2px solid var(--red);background:#fff6ec;box-shadow:0 12px 24px #c94f0026}
 .budget-card[aria-pressed=true] .count{color:var(--red)}
@@ -712,15 +712,45 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 .budget-results-head b{font-size:20px}
 .budget-results-head span{font-size:14px;color:#746751}
 .budget-results .grid{grid-template-columns:repeat(4,1fr);gap:16px}
-@media(max-width:1080px){.budget-list{grid-template-columns:repeat(3,1fr)}.budget-results .grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1080px){.budget-list{grid-template-columns:repeat(2,1fr)}.budget-results .grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:760px){
   .budget{padding-top:40px}
   .budget-list{grid-template-columns:1fr 1fr}
-  .budget-list .budget-card:last-child:nth-child(odd){grid-column:1/-1}
   .budget-results{padding:14px 10px;margin-top:18px}
   .budget-results-head b{font-size:17px}
   .budget-results .grid{grid-template-columns:1fr;gap:12px}
 }
+/* ---------- FV：バナー画像（PC：img/fv-pc.jpg 2000×848／スマホ：img/fv-sp.jpg）----------
+   文字は画像に含まれるため、HTMLの文字は読み上げ・検索用に非表示で残す。スマホは画像下の空き部分で商品が流れる */
+.hero{height:auto;padding:0;background:#a20f1c}
+.hero-stage{position:relative;width:auto;height:auto;transform:none;padding:0;display:block}
+.hero-banner,.hero-banner img{display:block;width:100%;height:auto;max-width:none}
+.hero-copy,.hero-en,.vertical{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(min-width:761px){.hero-art{display:none}}
+@media(max-width:760px){
+  .hero{padding:0;height:auto}
+  .hero-art{position:absolute!important;left:0;right:0;top:80%;bottom:2%;height:auto;width:auto;margin:0;overflow:hidden}
+  .lane,.track{height:100%}
+  .track img{height:86%;width:auto;margin:0 20px 0 0;align-self:center}
+}
+/* ---------- 会社・団体バナー：オレンジ ---------- */
+.corp{background:linear-gradient(120deg,#f08a2c 0%,#e2650f 55%,#c94f00 100%);box-shadow:0 10px 24px #c94f0033}
+.corp b{color:#fff}
+.corp p{color:#fff;opacity:1}
+.corp a{background:#fff;color:#b84700;box-shadow:0 4px 10px #7a2e0033;transition:background .2s,transform .2s}
+.corp a:hover{background:#fff4e8;transform:translateY(-1px)}
+/* ---------- PICK UP：年末年始の背景（紺×金の青海波＋四隅の金の帯）。商品カードは白で商品を主役に ---------- */
+.pickup-sec{position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#0f255000 0,#0f255000 45%,#081733cc 100%),url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2280%22%20height%3D%2240%22%20viewBox%3D%220%200%2080%2040%22%3E%3Cg%20fill%3D%22%230f2550%22%20stroke%3D%22%23d9b45a%22%20stroke-opacity%3D%22.28%22%20stroke-width%3D%221.2%22%3E%3Cg%20transform%3D%22translate%2840%200%29%22%3E%3Ccircle%20r%3D%2220%22/%3E%3Ccircle%20r%3D%2215%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%2210%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%225%22%20fill%3D%22none%22/%3E%3C/g%3E%3Cg%20transform%3D%22translate%280%2020%29%22%3E%3Ccircle%20r%3D%2220%22/%3E%3Ccircle%20r%3D%2215%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%2210%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%225%22%20fill%3D%22none%22/%3E%3C/g%3E%3Cg%20transform%3D%22translate%2880%2020%29%22%3E%3Ccircle%20r%3D%2220%22/%3E%3Ccircle%20r%3D%2215%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%2210%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%225%22%20fill%3D%22none%22/%3E%3C/g%3E%3Cg%20transform%3D%22translate%2840%2040%29%22%3E%3Ccircle%20r%3D%2220%22/%3E%3Ccircle%20r%3D%2215%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%2210%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%225%22%20fill%3D%22none%22/%3E%3C/g%3E%3Cg%20transform%3D%22translate%280%2060%29%22%3E%3Ccircle%20r%3D%2220%22/%3E%3Ccircle%20r%3D%2215%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%2210%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%225%22%20fill%3D%22none%22/%3E%3C/g%3E%3Cg%20transform%3D%22translate%2880%2060%29%22%3E%3Ccircle%20r%3D%2220%22/%3E%3Ccircle%20r%3D%2215%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%2210%22%20fill%3D%22none%22/%3E%3Ccircle%20r%3D%225%22%20fill%3D%22none%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat center/80px 40px,#0f2550}
+.pickup-sec::before,.pickup-sec::after{content:"";position:absolute;width:min(30vw,360px);height:min(30vw,360px);pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(135deg,#e4c375 0 22px,#f6ecd2 22px 34px,#c79a3e 34px 52px,#1d3f7a 52px 70px,#f6ecd2 70px 78px,#d9b45a 78px 100px)}
+.pickup-sec::before{top:0;left:0;clip-path:polygon(0 0,100% 0,0 100%);opacity:.6}
+.pickup-sec::after{right:0;bottom:0;clip-path:polygon(100% 0,100% 100%,0 100%);opacity:.6}
+.pickup-inner{position:relative;z-index:1}
+.pickup-head{text-shadow:0 2px 12px #0008}
+.pickup{background:#fff;border:1px solid #d9b45a;box-shadow:0 0 0 6px #ffffff1f,0 22px 44px #00000059}
+.pickup:hover{box-shadow:0 0 0 6px #ffffff2e,0 28px 52px #00000066}
+.pickup .ph.cut{background:radial-gradient(circle at 50% 55%,#fbf7ee 0,#fbf7ee 55%,#fff 72%)}
+@media(max-width:760px){.pickup-sec::before,.pickup-sec::after{width:30vw;height:30vw;opacity:.5}}
 /* 商品カードの「商品ページを見る」は緑 */
 .product .btn.dark{background:linear-gradient(180deg,#2f7a4c 0%,#1b5a35 55%,#0f4024 100%);border-color:#1b5a35}
 .product .btn.dark:hover{background:linear-gradient(180deg,#378a57,#1f6a3f 55%,#124d2c);border-color:#1f6a3f}
@@ -752,6 +782,7 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 <section class="hero">
   <canvas class="gold-dust" aria-hidden="true"></canvas>
   <div class="hero-stage">
+  <picture class="hero-banner"><source media="(max-width:760px)" srcset="img/fv-sp.jpg" width="1200" height="1448"><img src="img/fv-pc.jpg" width="2000" height="848" alt="酒のビッグボスのお歳暮 ビールギフト特集。一年の「ありがとう」を、とっておきの乾杯で。サッポロ・アサヒ・キリン・サントリー"></picture>
   <div class="hero-en" aria-hidden="true">WINTER BEER<br class="sp-br"> GIFT 2026</div>
   <div class="hero-copy">
     <h1 class="fv-title"><span class="l l1">一年のありがとうに、</span><span class="l">いつもより、</span><span class="l">少しいいビールを。</span></h1>
@@ -760,7 +791,7 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
     <ul class="fv-makers" aria-label="掲載メーカー"><li>サッポロ</li><li>アサヒ</li><li>キリン</li><li>サントリー</li></ul>
   </div>
   <div class="hero-art" aria-label="お歳暮・お年賀のギフトセット">
-    <div class="lane"><div class="track"><img src="img/sapporo-yef3d.png" width="352" height="500" alt="サッポロ ヱビス 飲み比べセット"><img src="img/asahi-as3n.png" width="320" height="500" alt="アサヒ スーパードライ セット"><img src="img/kirin-kipf3.png" width="313" height="500" alt="キリン 一番搾り 3種セット"><img src="img/suntory-vm3s.png" width="500" height="321" alt="サントリー プレモル 5種セット"><img src="img/sapporo-yef5dt.png" width="500" height="354" alt="サッポロ ヱビス 飲み比べセット"><img src="img/asahi-avg5.png" width="500" height="499" alt="アサヒ 飲み比べセット"><img src="img/kirin-kis5.png" width="500" height="312" alt="キリン 一番搾り セット"><img src="img/suntory-bp5ag.png" width="500" height="406" alt="サントリー 7種飲み比べセット"><img src="img/sapporo-ks3d.jpg" width="500" height="500" alt="サッポロ生ビール黒ラベル セット"><img src="img/asahi-avg4.png" width="392" height="500" alt="アサヒ 飲み比べセット"><img src="img/kirin-knrl3.png" width="310" height="500" alt="キリンラガービール セット"><img src="img/suntory-bpf4s.png" width="500" height="422" alt="ザ・プレミアム・モルツ ギフトセット"></div></div>
+    <div class="lane"><div class="track"><img src="img/sapporo-yef3d.png" width="352" height="500" alt="サッポロ ヱビス 飲み比べセット"><img src="img/asahi-as3n.png" width="320" height="500" alt="アサヒ スーパードライ セット"><img src="img/kirin-kipf3.png" width="313" height="500" alt="キリン 一番搾り 3種セット"><img src="img/suntory-vm3s.png" width="500" height="321" alt="サントリー プレモル 5種セット"><img src="img/sapporo-yef5dt.png" width="500" height="354" alt="サッポロ ヱビス 飲み比べセット"><img src="img/asahi-avg5.png" width="500" height="499" alt="アサヒ 飲み比べセット"><img src="img/kirin-kis5.png" width="500" height="312" alt="キリン 一番搾り セット"><img src="img/suntory-bp5ag.png" width="500" height="406" alt="サントリー 7種飲み比べセット"><img src="img/sapporo-yev3dec.png" width="364" height="500" alt="サッポロ ヱビス 5種飲み比べセット"><img src="img/asahi-avg4.png" width="392" height="500" alt="アサヒ 飲み比べセット"><img src="img/kirin-knrl3.png" width="310" height="500" alt="キリンラガービール セット"><img src="img/suntory-bpf4s.png" width="500" height="422" alt="ザ・プレミアム・モルツ ギフトセット"></div></div>
   </div>
   <span class="vertical">お歳暮に、うれしい一杯を。</span>
   </div>
@@ -1041,14 +1072,13 @@ Object.keys(makers).forEach(k=>{
 });
 
 /* ===== ご予算で選ぶ =====
-   金額の区切りはここで変更できます（max：その金額以下／null＝上限なし）。ボタンと該当商品は makerProducts の price から自動で作成
+   金額の区切りはここで変更できます（label：ボタンの表示／min〜max：対象にする価格。max は「その金額以下」、null＝上限なし）。ボタンと該当商品は makerProducts の price から自動で作成
 */
 const bands=[
  {key:'b2500',label:'2,500円以下',min:0,max:2500,scene:'ちょっとしたお礼に'},
- {key:'b3000',label:'2,501〜3,000円',min:2501,max:3000,scene:'定番のご挨拶に'},
- {key:'b4000',label:'3,001〜4,000円',min:3001,max:4000,scene:'お世話になった方へ'},
- {key:'b5000',label:'4,001〜5,000円',min:4001,max:5000,scene:'特にお世話になった方へ'},
- {key:'b5001',label:'5,001円以上',min:5001,max:null,scene:'ご家族・職場でたっぷり'}
+ {key:'b3000',label:'2,500〜3,000円',min:2501,max:3000,scene:'定番のご挨拶に'},
+ {key:'b4000',label:'3,000〜4,000円',min:3001,max:4000,scene:'お世話になった方へ'},
+ {key:'b5000',label:'4,000〜5,000円',min:4001,max:5000,scene:'特にお世話になった方へ'}
 ];
 const mkOrder=Object.keys(makers);
 const inBand=(p,b)=>p.price&&p.price>=b.min&&(b.max==null||p.price<=b.max);

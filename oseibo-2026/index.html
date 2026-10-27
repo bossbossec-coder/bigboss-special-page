@@ -477,15 +477,15 @@ html.js .hero.loaded .ld{opacity:1;transform:none}
 .product:hover .ph img,.choice:hover img,.eto-item:hover .ph img{transform:translateY(-6px) scale(1.03)}
 .parallax{will-change:transform}
 @media(prefers-reduced-motion:reduce){html.js .rv,html.js .hero .ld{opacity:1!important;transform:none!important;filter:none!important}.track,.shine::before,.hero-stage::before{animation:none}.sweep::after{transform:scaleX(1)}}
-/* FV：4メーカー共通のHTML版（赤背景＋流れる商品）。商品画像は白背景の写真なので白い台紙に載せる */
-.track img{background:#fff;border-radius:8px;padding:8px;box-shadow:0 10px 24px #4a000040}
+/* FV：4メーカー共通のHTML版（赤背景＋流れる商品）。商品画像は背景透過PNG */
+.track img{filter:drop-shadow(0 12px 14px #3a000066)}
 @media(min-width:761px){
   .hero-art{right:110px;width:260px}
   .track img{margin-bottom:28px}
   .hero-en{font-size:64px}
 }
 @media(max-width:760px){
-  .track img{height:140px;padding:6px}
+  .track img{height:140px}
 }
 .fv-makers{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 0;padding:0;list-style:none}
 .fv-makers li{font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;font-weight:500;font-size:15px;letter-spacing:.08em;background:#fff;color:#a80000;border-radius:999px;padding:3px 16px;line-height:1.6}
@@ -690,7 +690,7 @@ h2 .po{margin-left:-.5em}
 .maker-more a{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-width:300px;min-height:52px;padding:10px 32px;border-radius:999px;border:1.5px solid var(--blue);color:var(--blue);font-weight:700;text-decoration:none;transition:background .2s}
 .maker-more a::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg)}
 .maker-more a:hover{background:#1024430d}
-.product .ph.shot img{object-fit:contain;filter:none}
+.product .ph.shot img{object-fit:contain;filter:drop-shadow(0 10px 10px #10244326)}
 .product .per{font-size:12px;color:var(--sub);margin-top:-2px}
 .tag.mk{border-color:var(--blue);color:#fff;background:var(--blue)}
 .tag.mk.sapporo{background:#2a2316;border-color:#2a2316}
@@ -760,7 +760,7 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
     <ul class="fv-makers" aria-label="掲載メーカー"><li>サッポロ</li><li>アサヒ</li><li>キリン</li><li>サントリー</li></ul>
   </div>
   <div class="hero-art" aria-label="お歳暮・お年賀のギフトセット">
-    <div class="lane"><div class="track"><img src="img/sapporo-yef3d.jpg" width="600" height="600" alt="サッポロ ヱビス 飲み比べセット"><img src="img/asahi-as3n.jpg" width="600" height="600" alt="アサヒ スーパードライ セット"><img src="img/kirin-kipf3.jpg" width="600" height="600" alt="キリン 一番搾り 3種セット"><img src="img/suntory-vm3s.jpg" width="600" height="600" alt="サントリー プレモル 5種セット"><img src="img/sapporo-yef5dt.jpg" width="600" height="600" alt="サッポロ ヱビス 飲み比べセット"><img src="img/asahi-avg5.jpg" width="600" height="600" alt="アサヒ 飲み比べセット"><img src="img/kirin-kis5.jpg" width="600" height="600" alt="キリン 一番搾り セット"><img src="img/suntory-bp5ag.jpg" width="600" height="600" alt="サントリー 7種飲み比べセット"><img src="img/sapporo-ks3d.jpg" width="600" height="600" alt="サッポロ生ビール黒ラベル セット"><img src="img/asahi-avg4.jpg" width="600" height="600" alt="アサヒ 飲み比べセット"><img src="img/kirin-knrl3.jpg" width="600" height="600" alt="キリンラガービール セット"><img src="img/suntory-bpf4s.jpg" width="600" height="600" alt="ザ・プレミアム・モルツ ギフトセット"></div></div>
+    <div class="lane"><div class="track"><img src="img/sapporo-yef3d.png" width="413" height="587" alt="サッポロ ヱビス 飲み比べセット"><img src="img/asahi-as3n.png" width="377" height="589" alt="アサヒ スーパードライ セット"><img src="img/kirin-kipf3.png" width="367" height="587" alt="キリン 一番搾り 3種セット"><img src="img/suntory-vm3s.png" width="584" height="375" alt="サントリー プレモル 5種セット"><img src="img/sapporo-yef5dt.png" width="588" height="416" alt="サッポロ ヱビス 飲み比べセット"><img src="img/asahi-avg5.png" width="576" height="575" alt="アサヒ 飲み比べセット"><img src="img/kirin-kis5.png" width="582" height="363" alt="キリン 一番搾り セット"><img src="img/suntory-bp5ag.png" width="580" height="471" alt="サントリー 7種飲み比べセット"><img src="img/sapporo-ks3d.jpg" width="600" height="600" alt="サッポロ生ビール黒ラベル セット"><img src="img/asahi-avg4.png" width="470" height="599" alt="アサヒ 飲み比べセット"><img src="img/kirin-knrl3.png" width="362" height="583" alt="キリンラガービール セット"><img src="img/suntory-bpf4s.png" width="585" height="494" alt="ザ・プレミアム・モルツ ギフトセット"></div></div>
   </div>
   <span class="vertical">お歳暮に、うれしい一杯を。</span>
   </div>
@@ -841,7 +841,7 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
   <!-- ▼ PICK UP 1：サッポロ ヱビス YEF3D -->
   <div class="pickup">
     <span class="ribbon">ヱビスの味わいを、<br class="sp-br">4種類で飲み比べ</span>
-    <div class="ph cut"><span class="rv-badge"><small>レビュー</small><b>★4.71</b><i>310件</i></span><img src="img/sapporo-yef3d.jpg" width="600" height="600" alt="サッポロ ヱビス 4種飲み比べセット YEF3D" loading="lazy"></div>
+    <div class="ph cut"><span class="rv-badge"><small>レビュー</small><b>★4.71</b><i>310件</i></span><img src="img/sapporo-yef3d.png" width="413" height="587" alt="サッポロ ヱビス 4種飲み比べセット YEF3D" loading="lazy"></div>
     <div>
       <span class="mklabel">SAPPORO</span>
       <span class="lead">ヱビスを4種類で飲み比べ</span>
@@ -858,7 +858,7 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
   <!-- ▼ PICK UP 2：アサヒ 5種セット -->
   <div class="pickup">
     <span class="ribbon">スーパードライを中心に、<br class="sp-br">アサヒの人気5種を飲み比べ</span>
-    <div class="ph cut"><span class="rv-badge"><small>レビュー</small><b>★4.65</b><i>191件</i></span><img src="img/asahi-5shu.png" width="418" height="613" alt="アサヒ 5種セット（スーパードライ・生ジョッキ缶・ドライクリスタル・ゴールド・マルエフ）" loading="lazy"></div>
+    <div class="ph cut"><span class="rv-badge"><small>レビュー</small><b>★4.65</b><i>191件</i></span><img src="img/asahi-5shu.png" width="379" height="590" alt="アサヒ 5種セット（スーパードライ・生ジョッキ缶・ドライクリスタル・ゴールド・マルエフ）" loading="lazy"></div>
     <div>
       <span class="mklabel">ASAHI</span>
       <span class="lead">アサヒの人気5種を飲み比べ</span>
@@ -875,7 +875,7 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
   <!-- ▼ PICK UP 3：キリン 3種セット -->
   <div class="pickup">
     <span class="ribbon">一番搾り・晴れ風・グッドエール。<br class="sp-br">キリンの人気3種を飲み比べ</span>
-    <div class="ph cut"><img src="img/kirin-3shu.png" width="605" height="612" alt="キリン 3種セット（一番搾り・晴れ風・グッドエール）" loading="lazy"></div>
+    <div class="ph cut"><img src="img/kirin-3shu.png" width="364" height="587" alt="キリン 3種セット（一番搾り・晴れ風・グッドエール）" loading="lazy"></div>
     <div>
       <span class="mklabel">KIRIN</span>
       <span class="lead">キリンの人気3種を飲み比べ</span>
@@ -900,10 +900,10 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
   <p>ビールが好きなあの人へ。お世話になったあの方へ。<br>サッポロ・アサヒ・キリン・サントリー。<br>贈る相手の好きなメーカーから選べます。</p>
 </section>
 <div class="choices makers">
-  <a class="choice" href="#sapporo"><span class="number">01 / SAPPORO</span><h3>サッポロ<br>ヱビス・黒ラベル</h3><p>ちょっと贅沢なヱビスの飲み比べ。</p><img src="img/sapporo-yef3d.jpg" width="600" height="600" alt="サッポロ ヱビス 飲み比べセット" loading="lazy"><span class="linktext">サッポロのギフトを見る</span></a>
-  <a class="choice" href="#asahi"><span class="number">02 / ASAHI</span><h3>アサヒ<br>スーパードライ</h3><p>キレのある辛口の、うれしい定番。</p><img src="img/asahi-as3n.jpg" width="600" height="600" alt="アサヒ スーパードライ セット" loading="lazy"><span class="linktext">アサヒのギフトを見る</span></a>
-  <a class="choice" href="#kirin"><span class="number">03 / KIRIN</span><h3>キリン<br>一番搾り・ラガー</h3><p>麦のうまみの一番搾りを贈る。</p><img src="img/kirin-kipf3.jpg" width="600" height="600" alt="キリン 一番搾り 3種セット" loading="lazy"><span class="linktext">キリンのギフトを見る</span></a>
-  <a class="choice" href="#suntory"><span class="number">04 / SUNTORY</span><h3>サントリー<br>プレモル</h3><p>限定醸造や干支デザイン缶も。</p><img src="img/suntory-vm3s.jpg" width="600" height="600" alt="サントリー プレモル 5種セット" loading="lazy"><span class="linktext">サントリーのギフトを見る</span></a>
+  <a class="choice" href="#sapporo"><span class="number">01 / SAPPORO</span><h3>サッポロ<br>ヱビス・黒ラベル</h3><p>ちょっと贅沢なヱビスの飲み比べ。</p><img src="img/sapporo-yef3d.png" width="413" height="587" alt="サッポロ ヱビス 飲み比べセット" loading="lazy"><span class="linktext">サッポロのギフトを見る</span></a>
+  <a class="choice" href="#asahi"><span class="number">02 / ASAHI</span><h3>アサヒ<br>スーパードライ</h3><p>キレのある辛口の、うれしい定番。</p><img src="img/asahi-as3n.png" width="377" height="589" alt="アサヒ スーパードライ セット" loading="lazy"><span class="linktext">アサヒのギフトを見る</span></a>
+  <a class="choice" href="#kirin"><span class="number">03 / KIRIN</span><h3>キリン<br>一番搾り・ラガー</h3><p>麦のうまみの一番搾りを贈る。</p><img src="img/kirin-kipf3.png" width="367" height="587" alt="キリン 一番搾り 3種セット" loading="lazy"><span class="linktext">キリンのギフトを見る</span></a>
+  <a class="choice" href="#suntory"><span class="number">04 / SUNTORY</span><h3>サントリー<br>プレモル</h3><p>限定醸造や干支デザイン缶も。</p><img src="img/suntory-vm3s.png" width="584" height="375" alt="サントリー プレモル 5種セット" loading="lazy"><span class="linktext">サントリーのギフトを見る</span></a>
 </div>
 <!-- ===== ご予算で選ぶ（4メーカーの商品を金額別に表示。ボタンは下部のJSで自動作成） ===== -->
 <div class="budget" id="budget">
@@ -980,45 +980,45 @@ const makers={
  suntory:{name:'サントリー',cat:'https://item.rakuten.co.jp/bigbossshibazaki/c/0000003653/'}
 };
 const makerProducts=[
- {mk:'sapporo',rid:'10023585',id:'YEF3D',name:'ヱビス 4種飲み比べセット',cans:12,inside:'ヱビス3・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:2966,rv:{s:4.71,n:310},tag:'飲み比べ',img:'sapporo-yef3d.jpg',w:600,h:600,url:'4901880884147-nsi'},
- {mk:'sapporo',rid:'10016311',id:'YEF5DT',name:'ヱビス 4種飲み比べセット',cans:20,inside:'ヱビス8・プレミアムエール6・プレミアムブラック3・麦紡ぐ3',price:4899,rv:{s:4.59,n:265},tag:'飲み比べ',img:'sapporo-yef5dt.jpg',w:600,h:600,url:'4901880884123-asu'},
- {mk:'sapporo',rid:'10023601',id:'YEF4D',name:'ヱビス 4種飲み比べセット',cans:15,inside:'ヱビス6・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:3899,rv:{s:4.55,n:92},tag:'飲み比べ',img:'sapporo-yef4d.jpg',w:600,h:600,url:'4901880884130-nsi'},
- {mk:'sapporo',rid:'10016148',id:'YE4DN',name:'ヱビスビール セット',cans:15,inside:'ヱビスビール15',price:3899,rv:{s:3.86,n:28},tag:'定番',img:'sapporo-ye4dn.jpg',w:600,h:600,url:'4901880879952'},
- {mk:'sapporo',rid:'10000967',id:'YE5DT',name:'ヱビスビール セット',cans:20,inside:'ヱビスビール20',price:4899,rv:{s:4.69,n:212},tag:'定番',img:'sapporo-ye5dt.jpg',w:600,h:600,url:'10000981'},
+ {mk:'sapporo',rid:'10023585',id:'YEF3D',name:'ヱビス 4種飲み比べセット',cans:12,inside:'ヱビス3・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:2966,rv:{s:4.71,n:310},tag:'飲み比べ',img:'sapporo-yef3d.png',w:413,h:587,url:'4901880884147-nsi'},
+ {mk:'sapporo',rid:'10016311',id:'YEF5DT',name:'ヱビス 4種飲み比べセット',cans:20,inside:'ヱビス8・プレミアムエール6・プレミアムブラック3・麦紡ぐ3',price:4899,rv:{s:4.59,n:265},tag:'飲み比べ',img:'sapporo-yef5dt.png',w:588,h:416,url:'4901880884123-asu'},
+ {mk:'sapporo',rid:'10023601',id:'YEF4D',name:'ヱビス 4種飲み比べセット',cans:15,inside:'ヱビス6・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:3899,rv:{s:4.55,n:92},tag:'飲み比べ',img:'sapporo-yef4d.png',w:510,h:587,url:'4901880884130-nsi'},
+ {mk:'sapporo',rid:'10016148',id:'YE4DN',name:'ヱビスビール セット',cans:15,inside:'ヱビスビール15',price:3899,rv:{s:3.86,n:28},tag:'定番',img:'sapporo-ye4dn.png',w:539,h:585,url:'4901880879952'},
+ {mk:'sapporo',rid:'10000967',id:'YE5DT',name:'ヱビスビール セット',cans:20,inside:'ヱビスビール20',price:4899,rv:{s:4.69,n:212},tag:'定番',img:'sapporo-ye5dt.png',w:590,h:482,url:'10000981'},
  {mk:'sapporo',rid:'10016845',id:'KS3D',name:'サッポロ生ビール黒ラベル セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'黒ラベル12',price:2968,rv:{s:4.24,n:34},tag:'定番',img:'sapporo-ks3d.jpg',w:600,h:600,url:'4901880859725'},
- {mk:'sapporo',rid:'10023325',id:'YEV3DEC',name:'ヱビス 5種飲み比べセット（EC限定）',cans:11,inside:'ヱビス2・プレミアムエール2・プレミアムブラック2・<b>星月夜2</b>・麦紡ぐ3',price:2966,rv:{s:4.61,n:49},tag:'数量限定',img:'sapporo-yev3dec.jpg',w:600,h:600,url:'4901880897581-ec',when:'2026年11月25日発売'},
- {mk:'sapporo',rid:'10005090',id:'YE3D',name:'ヱビスビール セット',cans:12,inside:'ヱビスビール12',price:2998,rv:{s:4.69,n:303},tag:'定番',img:'sapporo-ye3d.jpg',w:600,h:600,url:'10005090'},
- {mk:'asahi',rid:'10018562',id:'AVG-3',name:'アサヒビール 5種セット',cans:12,spec:'350ml×8缶・340ml×2缶・500ml×2缶',inside:'スーパードライ4（うち500ml2）・生ジョッキ缶2・ドライクリスタル2・マルエフ2・ゴールド2',price:2966,rv:{s:4.65,n:191},tag:'飲み比べ',img:'asahi-avg3.jpg',w:600,h:600,url:'4901004045874'},
- {mk:'asahi',rid:'10000980',id:'AS-3N',name:'スーパードライ セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'スーパードライ12',price:2966,rv:{s:4.6,n:477},tag:'定番',img:'asahi-as3n.jpg',w:600,h:600,url:'10000983'},
- {mk:'asahi',rid:'10029488',id:'AVG-5',name:'アサヒビール 5種セット',cans:21,spec:'350ml×17缶・340ml×4缶',inside:'スーパードライ7・生ジョッキ缶4・ドライクリスタル3・マルエフ4・ゴールド3',price:4899,rv:{s:4.78,n:36},tag:'飲み比べ',img:'asahi-avg5.jpg',w:600,h:600,url:'4901004059345'},
- {mk:'asahi',name:'アサヒ 飲み比べセット',cans:8,price:2398,rv:{s:4.45,n:11},tag:'飲み比べ',img:'asahi-04.jpg',w:199,h:198,url:null},
- {mk:'asahi',rid:'10030861',id:'FS-5G',name:'スーパードライ＆ウェルチ ファミリーセット',cans:26,spec:'ビール14缶＋ジュース12本',inside:'スーパードライ14・ウェルチ100%（グレープ・マスカット・マンゴー）各4',price:4899,rv:{s:4.25,n:20},tag:'ファミリー',img:'asahi-fs5g.jpg',w:600,h:600,url:'4901004061713'},
- {mk:'asahi',rid:'10017347',id:'FS-3G',name:'スーパードライ＆ウェルチ ファミリーセット',cans:14,spec:'ビール8缶＋ジュース6本',inside:'スーパードライ8（うち500ml4）・ウェルチ100%（グレープ・マスカット・マンゴー）各2',price:2966,rv:{s:4.66,n:68},tag:'ファミリー',img:'asahi-fs3g.jpg',w:600,h:600,url:'4901004038975'},
- {mk:'asahi',rid:'10017346',id:'AS-4G',name:'スーパードライ セット',cans:15,spec:'350ml×10缶・500ml×5缶',inside:'スーパードライ15',price:3899,rv:{s:4.71,n:86},tag:'定番',img:'asahi-as4g.jpg',w:600,h:600,url:'4901004008350-g'},
- {mk:'asahi',rid:'10010679',id:'AS-5N',name:'スーパードライ セット',cans:21,inside:'スーパードライ21',price:4899,tag:'定番',img:'asahi-as5n.jpg',w:600,h:600,url:'10010679'},
- {mk:'asahi',rid:'10029487',id:'SJ-3N',name:'スーパードライ 生ジョッキ缶セット',cans:12,spec:'340ml×10缶・485ml×2缶',inside:'生ジョッキ缶12',price:2966,tag:'生ジョッキ缶',img:'asahi-sj3n.jpg',w:600,h:600,url:'4901004057426'},
- {mk:'asahi',rid:'10030862',id:'AS-NK',name:'スーパードライ 大容量セット',cans:42,inside:'スーパードライ42',price:8999,tag:'たっぷり42本',img:'asahi-asnk.jpg',w:600,h:600,url:'4901004062222'},
- {mk:'asahi',rid:'10034766',id:'AVG-4',name:'アサヒビール 5種セット',cans:15,spec:'350ml×8缶・340ml×2缶・500ml×5缶',inside:'スーパードライ7（うち500ml5）・生ジョッキ缶2・ドライクリスタル2・マルエフ2・ゴールド2',price:3899,tag:'飲み比べ',img:'asahi-avg4.jpg',w:600,h:600,url:'4901004068293'},
- {mk:'kirin',rid:'10029892',id:'K-PI3',name:'一番搾り プレミアム セット',cans:12,inside:'一番搾り プレミアム12',price:2966,rv:{s:4.44,n:9},tag:'ちょっと贅沢',img:'kirin-kpi3.jpg',w:600,h:600,url:'4901411056227'},
- {mk:'kirin',rid:'10030908',id:'K-IHG3',name:'キリン 3種飲み比べセット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'一番搾り6（うち500ml2）・晴れ風3・グッドエール3',price:2966,rv:{s:4.53,n:15},tag:'飲み比べ',img:'kirin-kihg3.jpg',w:600,h:600,url:'4901411132389'},
- {mk:'kirin',rid:'10023447',id:'K-IS5',name:'一番搾り セット',cans:21,inside:'一番搾り21',price:4899,rv:{s:4.83,n:18},tag:'定番',img:'kirin-kis5.jpg',w:600,h:600,url:'4901411080338'},
- {mk:'kirin',rid:'10016850',id:'K-IPF5',name:'一番搾り 3種飲み比べセット',cans:20,inside:'一番搾り11・黒生3・プレミアム6',price:4899,rv:{s:4.33,n:12},tag:'飲み比べ',img:'kirin-kipf5.jpg',w:600,h:600,url:'4901411040875'},
- {mk:'kirin',rid:'10017350',id:'K-IPF3',name:'一番搾り 3種飲み比べセット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'一番搾り6（うち500ml2）・黒生3・プレミアム3',price:2966,rv:{s:4.62,n:39},tag:'飲み比べ',img:'kirin-kipf3.jpg',w:600,h:600,url:'4901411089706'},
- {mk:'kirin',rid:'10015371',id:'K-IS3',name:'一番搾り セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'一番搾り12',price:2966,rv:{s:4.33,n:15},tag:'定番',img:'kirin-kis3.jpg',w:600,h:600,url:'4901411040493'},
- {mk:'kirin',rid:'10030934',id:'K-NRL3',name:'キリンラガービール セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'ラガービール12',price:2966,rv:{s:5,n:4},tag:'定番',img:'kirin-knrl3.jpg',w:600,h:600,url:'2101900000508'},
- {mk:'kirin',rid:'10011979',id:'K-FM3B',name:'一番搾り＆トロピカーナ ファミリーセット',cans:15,spec:'ビール10缶＋ジュース5缶',inside:'一番搾り10・トロピカーナ100%（アップル3・グレープ2）',price:2966,tag:'ファミリー',img:'kirin-kfm3b.jpg',w:600,h:600,url:'10011979'},
- {mk:'suntory',rid:'10013845',id:'VM3S',name:'プレモル 5種セット',cans:11,inside:'プレモル4・香るエール3・黒2・マスターズドリーム1・<b>水泉動1</b>',price:2839,rv:{s:4.59,n:625},tag:'限定醸造入り',img:'suntory-vm3s.jpg',w:600,h:600,url:'4901777297517'},
- {mk:'suntory',rid:'10015074',id:'VM4S',name:'プレモル 5種セット',cans:14,inside:'プレモル4・香るエール3・黒3・マスターズドリーム2・<b>水泉動2</b>',price:3677,rv:{s:4.59,n:97},tag:'限定醸造入り',img:'suntory-vm4s.jpg',w:600,h:600,url:'4901777302709'},
- {mk:'suntory',rid:'10013846',id:'VM5S',name:'プレモル 5種セット',cans:18,inside:'プレモル4・香るエール4・黒4・マスターズドリーム3・<b>水泉動3</b>',price:4633,rv:{s:4.69,n:127},tag:'限定醸造入り',img:'suntory-vm5s.jpg',w:600,h:600,url:'4901777297494'},
- {mk:'suntory',rid:'10016846',id:'DMD3S',name:'「夢」マスターズドリーム ダブルセット',cans:10,inside:'マスターズドリーム5・<b>水泉動5</b>',price:2899,rv:{s:4.56,n:36},tag:'限定醸造入り',img:'suntory-dmd3s.jpg',w:600,h:600,url:'4901777319035'},
- {mk:'suntory',rid:'10011006',id:'BPF3S',name:'ザ・プレミアム・モルツ ギフトセット',cans:12,inside:'プレモル12',price:2839,rv:{s:4.67,n:141},tag:'定番',img:'suntory-bpf3s.jpg',w:600,h:600,url:'10011006'},
- {mk:'suntory',rid:'10033072',id:'BPF4S',name:'ザ・プレミアム・モルツ ギフトセット',cans:15,inside:'プレモル15',price:3659,tag:'定番',img:'suntory-bpf4s.jpg',w:600,h:600,url:'4901777394346'},
- {mk:'suntory',rid:'10005886',id:'BPF5S',name:'ザ・プレミアム・モルツ ギフトセット',cans:19,inside:'プレモル19',price:4497,rv:{s:4.68,n:47},tag:'定番',img:'suntory-bpf5s.jpg',w:600,h:600,url:'10005886'},
- {mk:'suntory',rid:'10031645',id:'BPCK3S',name:'プレモル 干支デザインセット',cans:12,inside:'<b>干支デザイン缶12</b>',price:2798,tag:'干支デザイン',img:'suntory-bpck3s.jpg',w:600,h:600,url:'4901777423923'},
- {mk:'suntory',rid:'10030886',id:'BP5AG',name:'サントリー 7種飲み比べセット',cans:18,inside:'<b>干支デザイン8</b>・香るエール2・黒2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:4899,rv:{s:4.98,n:49},tag:'干支デザイン',img:'suntory-bp5ag.jpg',w:600,h:600,url:'4901777419131'},
- {mk:'suntory',rid:'10018694',id:'BP3AG',name:'サントリー 6種飲み比べセット',cans:11,inside:'<b>干支デザイン3</b>・香るエール2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:2966,rv:{s:4.7,n:320},tag:'干支デザイン',img:'suntory-bp3ag.jpg',w:600,h:600,url:'4901777323834'},
+ {mk:'sapporo',rid:'10023325',id:'YEV3DEC',name:'ヱビス 5種飲み比べセット（EC限定）',cans:11,inside:'ヱビス2・プレミアムエール2・プレミアムブラック2・<b>星月夜2</b>・麦紡ぐ3',price:2966,rv:{s:4.61,n:49},tag:'数量限定',img:'sapporo-yev3dec.png',w:422,h:580,url:'4901880897581-ec',when:'2026年11月25日発売'},
+ {mk:'sapporo',rid:'10005090',id:'YE3D',name:'ヱビスビール セット',cans:12,inside:'ヱビスビール12',price:2998,rv:{s:4.69,n:303},tag:'定番',img:'sapporo-ye3d.png',w:493,h:588,url:'10005090'},
+ {mk:'asahi',rid:'10018562',id:'AVG-3',name:'アサヒビール 5種セット',cans:12,spec:'350ml×8缶・340ml×2缶・500ml×2缶',inside:'スーパードライ4（うち500ml2）・生ジョッキ缶2・ドライクリスタル2・マルエフ2・ゴールド2',price:2966,rv:{s:4.65,n:191},tag:'飲み比べ',img:'asahi-avg3.png',w:379,h:593,url:'4901004045874'},
+ {mk:'asahi',rid:'10000980',id:'AS-3N',name:'スーパードライ セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'スーパードライ12',price:2966,rv:{s:4.6,n:477},tag:'定番',img:'asahi-as3n.png',w:377,h:589,url:'10000983'},
+ {mk:'asahi',rid:'10029488',id:'AVG-5',name:'アサヒビール 5種セット',cans:21,spec:'350ml×17缶・340ml×4缶',inside:'スーパードライ7・生ジョッキ缶4・ドライクリスタル3・マルエフ4・ゴールド3',price:4899,rv:{s:4.78,n:36},tag:'飲み比べ',img:'asahi-avg5.png',w:576,h:575,url:'4901004059345'},
+ {mk:'asahi',rid:'10026566',id:'AVG-2',name:'アサヒビール 4種セット',cans:8,inside:'スーパードライ2・ドライクリスタル2・マルエフ2・ゴールド2',price:2398,rv:{s:4.45,n:11},tag:'飲み比べ',img:'asahi-avg2.png',w:581,h:558,url:'4901004056122'},
+ {mk:'asahi',rid:'10030861',id:'FS-5G',name:'スーパードライ＆ウェルチ ファミリーセット',cans:26,spec:'ビール14缶＋ジュース12本',inside:'スーパードライ14・ウェルチ100%（グレープ・マスカット・マンゴー）各4',price:4899,rv:{s:4.25,n:20},tag:'ファミリー',img:'asahi-fs5g.png',w:581,h:479,url:'4901004061713'},
+ {mk:'asahi',rid:'10017347',id:'FS-3G',name:'スーパードライ＆ウェルチ ファミリーセット',cans:14,spec:'ビール8缶＋ジュース6本',inside:'スーパードライ8（うち500ml4）・ウェルチ100%（グレープ・マスカット・マンゴー）各2',price:2966,rv:{s:4.66,n:68},tag:'ファミリー',img:'asahi-fs3g.png',w:587,h:494,url:'4901004038975'},
+ {mk:'asahi',rid:'10017346',id:'AS-4G',name:'スーパードライ セット',cans:15,spec:'350ml×10缶・500ml×5缶',inside:'スーパードライ15',price:3899,rv:{s:4.71,n:86},tag:'定番',img:'asahi-as4g.png',w:468,h:587,url:'4901004008350-g'},
+ {mk:'asahi',rid:'10010679',id:'AS-5N',name:'スーパードライ セット',cans:21,inside:'スーパードライ21',price:4899,tag:'定番',img:'asahi-as5n.png',w:577,h:564,url:'10010679'},
+ {mk:'asahi',rid:'10029487',id:'SJ-3N',name:'スーパードライ 生ジョッキ缶セット',cans:12,spec:'340ml×10缶・485ml×2缶',inside:'生ジョッキ缶12',price:2966,tag:'生ジョッキ缶',img:'asahi-sj3n.png',w:376,h:585,url:'4901004057426'},
+ {mk:'asahi',rid:'10030862',id:'AS-NK',name:'スーパードライ 大容量セット',cans:42,inside:'スーパードライ42',price:8999,tag:'たっぷり42本',img:'asahi-asnk.png',w:589,h:475,url:'4901004062222'},
+ {mk:'asahi',rid:'10034766',id:'AVG-4',name:'アサヒビール 5種セット',cans:15,spec:'350ml×8缶・340ml×2缶・500ml×5缶',inside:'スーパードライ7（うち500ml5）・生ジョッキ缶2・ドライクリスタル2・マルエフ2・ゴールド2',price:3899,tag:'飲み比べ',img:'asahi-avg4.png',w:470,h:599,url:'4901004068293'},
+ {mk:'kirin',rid:'10029892',id:'K-PI3',name:'一番搾り プレミアム セット',cans:12,inside:'一番搾り プレミアム12',price:2966,rv:{s:4.44,n:9},tag:'ちょっと贅沢',img:'kirin-kpi3.png',w:410,h:587,url:'4901411056227'},
+ {mk:'kirin',rid:'10030908',id:'K-IHG3',name:'キリン 3種飲み比べセット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'一番搾り6（うち500ml2）・晴れ風3・グッドエール3',price:2966,rv:{s:4.53,n:15},tag:'飲み比べ',img:'kirin-kihg3.png',w:365,h:591,url:'4901411132389'},
+ {mk:'kirin',rid:'10023447',id:'K-IS5',name:'一番搾り セット',cans:21,inside:'一番搾り21',price:4899,rv:{s:4.83,n:18},tag:'定番',img:'kirin-kis5.png',w:582,h:363,url:'4901411080338'},
+ {mk:'kirin',rid:'10016850',id:'K-IPF5',name:'一番搾り 3種飲み比べセット',cans:20,inside:'一番搾り11・黒生3・プレミアム6',price:4899,rv:{s:4.33,n:12},tag:'飲み比べ',img:'kirin-kipf5.png',w:592,h:434,url:'4901411040875'},
+ {mk:'kirin',rid:'10017350',id:'K-IPF3',name:'一番搾り 3種飲み比べセット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'一番搾り6（うち500ml2）・黒生3・プレミアム3',price:2966,rv:{s:4.62,n:39},tag:'飲み比べ',img:'kirin-kipf3.png',w:367,h:587,url:'4901411089706'},
+ {mk:'kirin',rid:'10015371',id:'K-IS3',name:'一番搾り セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'一番搾り12',price:2966,rv:{s:4.33,n:15},tag:'定番',img:'kirin-kis3.png',w:364,h:585,url:'4901411040493'},
+ {mk:'kirin',rid:'10030934',id:'K-NRL3',name:'キリンラガービール セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'ラガービール12',price:2966,rv:{s:5,n:4},tag:'定番',img:'kirin-knrl3.png',w:362,h:583,url:'2101900000508'},
+ {mk:'kirin',rid:'10011979',id:'K-FM3B',name:'一番搾り＆トロピカーナ ファミリーセット',cans:15,spec:'ビール10缶＋ジュース5缶',inside:'一番搾り10・トロピカーナ100%（アップル3・グレープ2）',price:2966,tag:'ファミリー',img:'kirin-kfm3b.png',w:493,h:579,url:'10011979'},
+ {mk:'suntory',rid:'10013845',id:'VM3S',name:'プレモル 5種セット',cans:11,inside:'プレモル4・香るエール3・黒2・マスターズドリーム1・<b>水泉動1</b>',price:2839,rv:{s:4.59,n:625},tag:'限定醸造入り',img:'suntory-vm3s.png',w:584,h:375,url:'4901777297517'},
+ {mk:'suntory',rid:'10015074',id:'VM4S',name:'プレモル 5種セット',cans:14,inside:'プレモル4・香るエール3・黒3・マスターズドリーム2・<b>水泉動2</b>',price:3677,rv:{s:4.59,n:97},tag:'限定醸造入り',img:'suntory-vm4s.png',w:587,h:428,url:'4901777302709'},
+ {mk:'suntory',rid:'10013846',id:'VM5S',name:'プレモル 5種セット',cans:18,inside:'プレモル4・香るエール4・黒4・マスターズドリーム3・<b>水泉動3</b>',price:4633,rv:{s:4.69,n:127},tag:'限定醸造入り',img:'suntory-vm5s.png',w:585,h:524,url:'4901777297494'},
+ {mk:'suntory',rid:'10016846',id:'DMD3S',name:'「夢」マスターズドリーム ダブルセット',cans:10,inside:'マスターズドリーム5・<b>水泉動5</b>',price:2899,rv:{s:4.56,n:36},tag:'限定醸造入り',img:'suntory-dmd3s.png',w:466,h:578,url:'4901777319035'},
+ {mk:'suntory',rid:'10011006',id:'BPF3S',name:'ザ・プレミアム・モルツ ギフトセット',cans:12,inside:'プレモル12',price:2839,rv:{s:4.67,n:141},tag:'定番',img:'suntory-bpf3s.png',w:583,h:380,url:'10011006'},
+ {mk:'suntory',rid:'10033072',id:'BPF4S',name:'ザ・プレミアム・モルツ ギフトセット',cans:15,inside:'プレモル15',price:3659,tag:'定番',img:'suntory-bpf4s.png',w:585,h:494,url:'4901777394346'},
+ {mk:'suntory',rid:'10005886',id:'BPF5S',name:'ザ・プレミアム・モルツ ギフトセット',cans:19,inside:'プレモル19',price:4497,rv:{s:4.68,n:47},tag:'定番',img:'suntory-bpf5s.png',w:593,h:367,url:'10005886'},
+ {mk:'suntory',rid:'10031645',id:'BPCK3S',name:'プレモル 干支デザインセット',cans:12,inside:'<b>干支デザイン缶12</b>',price:2798,tag:'干支デザイン',img:'suntory-bpck3s.png',w:585,h:385,url:'4901777423923'},
+ {mk:'suntory',rid:'10030886',id:'BP5AG',name:'サントリー 7種飲み比べセット',cans:18,inside:'<b>干支デザイン8</b>・香るエール2・黒2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:4899,rv:{s:4.98,n:49},tag:'干支デザイン',img:'suntory-bp5ag.png',w:580,h:471,url:'4901777419131'},
+ {mk:'suntory',rid:'10018694',id:'BP3AG',name:'サントリー 6種飲み比べセット',cans:11,inside:'<b>干支デザイン3</b>・香るエール2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:2966,rv:{s:4.7,n:320},tag:'干支デザイン',img:'suntory-bp3ag.png',w:579,h:412,url:'4901777323834'},
  {mk:'suntory',rid:'10034294',id:'PM6B',name:'プレモル 2種6缶セット',cans:6,inside:'<b>干支デザイン3・香るエール 干支デザイン3</b>（ビッグボスのオリジナル箱）',price:2398,tag:'干支デザイン',img:'set-pm6b.jpg',w:600,h:600,url:'2180000000410',when:'2026年11月25日発売'},
- {mk:'suntory',rid:'10027543',id:'FJ3S',name:'プレモル ファミリーセット',cans:15,spec:'ビール9缶＋ジュース6缶',inside:'プレモル5・香るエール4・なっちゃんプレミアム100（オレンジ・りんご・白ぶどう）各2',price:2966,rv:{s:4.51,n:41},tag:'ファミリー',img:'suntory-fj3s.jpg',w:600,h:600,url:'4901777271487'}
+ {mk:'suntory',rid:'10027543',id:'FJ3S',name:'プレモル ファミリーセット',cans:15,spec:'ビール9缶＋ジュース6缶',inside:'プレモル5・香るエール4・なっちゃんプレミアム100（オレンジ・りんご・白ぶどう）各2',price:2966,rv:{s:4.51,n:41},tag:'ファミリー',img:'suntory-fj3s.png',w:587,h:399,url:'4901777271487'}
 ];
 function makerCard(p){
   const m=makers[p.mk];

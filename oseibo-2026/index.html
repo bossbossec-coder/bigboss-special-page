@@ -777,6 +777,28 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
   .maker-more a{min-width:0;width:100%;max-width:340px}
   .choices.makers{grid-template-columns:1fr}
 }
+
+/* ---------- スマホのみ：PICK UPは左右に和柄が見えるよう少し縮め、間隔を広く／メーカー別の商品は1列2コマ ---------- */
+@media(max-width:760px){
+  .pickup-sec{padding-left:30px;padding-right:30px}
+  .pickup-sec .pickup{margin-bottom:68px}
+  .pickup-sec .pickup:last-child{margin-bottom:0}
+  .maker .grid,.budget-results .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .maker .chapter{padding-left:12px;padding-right:12px}
+  .maker .product,.budget-results .product{display:flex;flex-direction:column;padding:10px 9px 12px}
+  .maker .product .tags,.budget-results .product .tags{margin-bottom:0;gap:4px}
+  .maker .product .tag,.budget-results .product .tag{font-size:10px;padding:0 5px}
+  .maker .product .ph,.budget-results .product .ph{margin:8px 0 8px;align-self:stretch}
+  .maker .product h3,.budget-results .product h3{font-size:13.5px;line-height:1.45}
+  .maker .product .spec,.maker .product .inside,.budget-results .product .spec,.budget-results .product .inside{font-size:11px;line-height:1.55}
+  .maker .product .price,.budget-results .product .price{font-size:21px;margin-top:6px}
+  .maker .product .price small,.budget-results .product .price small{font-size:11px}
+  .maker .product .per,.maker .product .ship,.budget-results .product .per,.budget-results .product .ship{font-size:10px}
+  .maker .product .btn-row,.budget-results .product .btn-row{margin-top:auto;padding-top:10px;gap:6px}
+  .maker .product .btn-row .buy,.budget-results .product .btn-row .buy{font-size:11.5px;padding:6px 4px;min-height:38px;letter-spacing:0}
+  .maker .product .btn-row .btn.fav,.budget-results .product .btn-row .btn.fav{width:34px!important;min-width:34px!important;height:34px;min-height:34px!important}
+  .maker .product .btn-row .btn.fav::before,.budget-results .product .btn-row .btn.fav::before{font-size:17px}
+}
 </style>
 </head>
 <body>

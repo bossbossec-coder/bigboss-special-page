@@ -1078,7 +1078,7 @@ const bands=[
  {key:'b2500',label:'2,500円以下',min:0,max:2500,scene:'ちょっとしたお礼に'},
  {key:'b3000',label:'2,500〜3,000円',min:2501,max:3000,scene:'定番のご挨拶に'},
  {key:'b4000',label:'3,000〜4,000円',min:3001,max:4000,scene:'お世話になった方へ'},
- {key:'b5000',label:'4,000〜5,000円',min:4001,max:5000,scene:'特にお世話になった方へ'}
+ {key:'b5000',label:'4,000円以上',min:4001,max:null,scene:'特にお世話になった方へ'}
 ];
 const mkOrder=Object.keys(makers);
 const inBand=(p,b)=>p.price&&p.price>=b.min&&(b.max==null||p.price<=b.max);

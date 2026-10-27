@@ -697,10 +697,6 @@ h2 .po{margin-left:-.5em}
 .tag.mk.asahi{background:#0b3a8c;border-color:#0b3a8c}
 .tag.mk.kirin{background:#a3121a;border-color:#a3121a}
 .tag.out{border-color:#bbb;color:#666;background:#f2f2f2}
-/* PICK UP：画像がまだ無い商品の仮パネル */
-.pickup .ph.brandph{display:flex;flex-direction:column;align-items:center;justify-content:center;aspect-ratio:1/1;background:linear-gradient(160deg,#6e0a0e,#b3141b 55%,#6e0a0e);color:#fff;text-align:center;box-shadow:0 12px 28px #10244333}
-.pickup .ph.brandph b{font-family:Jost,Futura,sans-serif;font-weight:600;font-size:clamp(28px,3.4vw,44px);letter-spacing:.12em;line-height:1.2}
-.pickup .ph.brandph small{font-size:15px;letter-spacing:.2em;margin-top:10px;color:#f2d38a}
 .pickup .price.tbd{white-space:normal}
 .pickup .mklabel{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;color:#fff;background:var(--blue);padding:2px 12px;margin-bottom:8px}
 /* メーカーから選ぶ：4枚 */
@@ -714,7 +710,6 @@ h2 .po{margin-left:-.5em}
   .maker .grid{grid-template-columns:1fr;gap:12px}
   .maker-more a{min-width:0;width:100%;max-width:340px}
   .choices.makers{grid-template-columns:1fr}
-  .pickup .ph.brandph{aspect-ratio:4/3}
 }
 </style>
 </head>
@@ -814,7 +809,7 @@ h2 .po{margin-left:-.5em}
     <div class="pickup-head">
       <div class="eyebrow">PICK UP</div>
       <h2>いま、イチオシの3セット。</h2>
-      <p>ヱビスの飲み比べ、アサヒ スーパードライ、キリン スプリングバレー。<br class="pc-br">ビッグボスがおすすめする、各メーカーの人気セットです。</p>
+      <p>ヱビスの飲み比べ、アサヒ スーパードライ、キリンの3種セット。<br class="pc-br">ビッグボスがおすすめする、各メーカーの人気セットです。</p>
     </div>
   <!-- ▼ PICK UP 1：サッポロ ヱビス -->
   <div class="pickup">
@@ -848,18 +843,19 @@ h2 .po{margin-left:-.5em}
     </div>
   </div>
 
-  <!-- ▼ PICK UP 3：キリン スプリングバレー -->
+  <!-- ▼ PICK UP 3：キリン 3種セット -->
   <div class="pickup">
-    <span class="ribbon">クラフトビールの<br class="sp-br">飲み比べを贈る</span>
-    <div class="ph brandph" role="img" aria-label="キリン スプリングバレー 3種セット"><b>SPRING<br>VALLEY</b><small>KIRIN ・ 3種セット</small></div>
+    <span class="ribbon">一番搾り・晴れ風・グッドエール。<br class="sp-br">キリンの人気3種を飲み比べ</span>
+    <div class="ph cut"><img src="img/kirin-3shu.png" width="605" height="612" alt="キリン 3種セット（一番搾り・晴れ風・グッドエール）" loading="lazy"></div>
     <div>
       <span class="mklabel">KIRIN</span>
-      <span class="lead">クラフトビール 3種の飲み比べ</span>
-      <h3>キリン スプリングバレー 3種セット</h3>
-      <div class="tags"><span class="tag">350ml缶</span><span class="tag">本州送料無料</span></div>
-      <p class="note">キリンのクラフトビール「SPRING VALLEY（スプリングバレー）」を3種類詰め合わせ。いつもと違うビールを楽しみたい方へ。</p>
-      <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>クラフトビールの飲み比べは、ちょっと気の利いた贈り物に。食事に合わせて選ぶ楽しさもありますよ。</p></div>
-      <p class="price tbd">価格・セット内容は商品ページでご確認ください</p>
+      <span class="lead">キリンの人気3種を飲み比べ</span>
+      <h3>キリン 3種セット</h3>
+      <div class="tags"><span class="tag">3種飲み比べ</span><span class="tag">本州送料無料</span></div>
+      <ul><li>350ml × 12缶</li><li>一番搾り6・晴れ風3・グッドエール3</li></ul>
+      <p class="note">麦のうまみの一番搾りに、すっきり爽やかな晴れ風、フルーティーなグッドエール。味わいの違う3種類を楽しめるセットです。</p>
+      <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>定番の一番搾りに、晴れ風とグッドエールも入った飲み比べ。好みが分かれる方にも喜ばれますよ。</p></div>
+      <p class="price">2,966<small>円（税込）</small></p>
       <div class="btn-row"><a class="btn dark buy" href="https://item.rakuten.co.jp/bigbossshibazaki/4901411132389/" target="_blank" rel="noopener">購入はこちら</a></div>
     </div>
   </div>
@@ -1058,6 +1054,8 @@ const makerProducts=[
  {mk:'sapporo',name:'ヱビス 飲み比べセット',cans:12,price:2966,rv:{s:4.71,n:310},tag:'飲み比べ',img:'sapporo-01.jpg',w:170,h:203,url:null},
  {mk:'sapporo',name:'ヱビス 飲み比べセット',cans:20,price:4899,rv:{s:4.59,n:265},tag:'飲み比べ',img:'sapporo-02.jpg',w:201,h:174,url:null},
  {mk:'sapporo',name:'ヱビス 飲み比べセット',cans:15,price:3899,rv:{s:4.55,n:92},tag:'飲み比べ',img:'sapporo-03.jpg',w:187,h:203,url:null},
+ {mk:'sapporo',name:'ヱビスビール セット',cans:15,price:3899,rv:{s:3.86,n:28},tag:'定番',img:'sapporo-04.jpg',w:185,h:202,url:null},
+ {mk:'sapporo',name:'ヱビスビール セット',cans:20,price:4899,rv:{s:4.69,n:212},tag:'定番',img:'sapporo-05.jpg',w:202,h:174,url:null},
  {mk:'sapporo',name:'サッポロ生ビール黒ラベル セット',cans:12,price:2968,rv:{s:4.24,n:34},tag:'定番',img:'sapporo-06.jpg',w:205,h:205,url:null},
  {mk:'sapporo',name:'ヱビス 限定デザイン 飲み比べセット',cans:11,price:2966,rv:{s:4.61,n:49},tag:'数量限定',img:'sapporo-07.jpg',w:200,h:190,url:null,when:'2026年11月25日発売'},
  {mk:'sapporo',name:'ヱビスビール セット',cans:12,price:2998,rv:{s:4.69,n:303},tag:'定番',img:'sapporo-08.jpg',w:170,h:203,url:null},
@@ -1073,7 +1071,7 @@ const makerProducts=[
  {mk:'asahi',name:'アサヒ スーパードライ 大容量セット',cans:42,price:8999,tag:'たっぷり42本',img:'asahi-10.jpg',w:203,h:184,url:null},
  {mk:'asahi',name:'アサヒ 飲み比べセット',cans:15,price:3899,tag:'飲み比べ',img:'asahi-11.jpg',w:178,h:203,url:null},
  {mk:'kirin',name:'一番搾り プレミアム セット',cans:12,price:2966,rv:{s:4.44,n:9},tag:'ちょっと贅沢',img:'kirin-01.jpg',w:200,h:202,url:null},
- {mk:'kirin',name:'キリン 飲み比べセット',cans:12,price:2966,rv:{s:4.53,n:15},tag:'飲み比べ',img:'kirin-02.jpg',w:199,h:202,url:null},
+ {mk:'kirin',name:'キリン 3種セット',cans:12,inside:'一番搾り6・晴れ風3・グッドエール3',price:2966,rv:{s:4.53,n:15},tag:'飲み比べ',img:'kirin-3shu.png',w:605,h:612,url:'4901411132389'},
  {mk:'kirin',name:'一番搾り セット',cans:21,price:4899,rv:{s:4.83,n:18},tag:'定番',img:'kirin-03.jpg',w:201,h:201,url:null},
  {mk:'kirin',name:'一番搾り 3種セット',cans:20,price:4899,rv:{s:4.33,n:12},tag:'飲み比べ',img:'kirin-04.jpg',w:202,h:201,url:null},
  {mk:'kirin',name:'一番搾り 3種セット',cans:12,price:2966,rv:{s:4.62,n:39},tag:'飲み比べ',img:'kirin-05.jpg',w:200,h:202,url:null},
@@ -1091,6 +1089,7 @@ function makerCard(p){
     <div class="ph shot">${p.rv&&p.rv.n>=30?`<span class="rv-badge"><small>レビュー</small><b>★${p.rv.s}</b><i>${p.rv.n}件</i></span>`:''}<img src="img/${p.img}" width="${p.w}" height="${p.h}" alt="${m.name} ${p.name}" loading="lazy"></div>
     <h3>${p.name}</h3>
     <p class="spec">${spec}</p>
+    ${p.inside?`<p class="inside">${p.inside}</p>`:''}
     ${p.price?`<p class="price">${yen(p.price)}<small>円（税込）</small></p>${per}<p class="ship">本州送料無料</p>`:`<p class="price tbd">価格は商品ページで</p><p class="ship">本州送料無料</p>`}
     <div class="btn-row"><a class="btn dark buy" href="${href}" target="_blank" rel="noopener">${p.url?'購入はこちら':'商品ページを見る'}</a></div>
   </article>`;

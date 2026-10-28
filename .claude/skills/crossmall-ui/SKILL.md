@@ -6,6 +6,7 @@ description: クロスモール(crossmall.jp)の商品一括処理画面のボ�
 # クロスモール 画面部品メモ
 
 ユーザーから提供された実HTMLにもとづく記録。**ここにない画面・ボタンは推測せず、ユーザーにHTML(右クリック→検証→outerHTML)をもらって、このファイルに追記する。**
+運用で分かったこと・ハマりどころは `crossmall-reservation-cleanup/crossmall_knowhow.md` を参照。
 動作確認済みの実装は `crossmall-reservation-cleanup/reservation_cleanup.py`(確認済みの欄は ✔)。
 
 ## 共通の操作方針

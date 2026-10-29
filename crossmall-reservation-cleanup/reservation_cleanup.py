@@ -176,10 +176,15 @@ SHIP_SHOPS = [("5257", "Yahoo"), ("8581", "wine.com")]  # 出荷日表記の削�
 
 
 # ---------------------------------------------------------------- 画面操作
+_PAGE = None  # 操作中のクロスモールのタブ(終了時の後始末に使う)
+
+
 def find_crossmall_page():
+    global _PAGE
     for t in list_pages():
         if "crossmall.jp" in t.get("url", ""):
-            return Page(t)
+            _PAGE = Page(t)
+            return _PAGE
     raise RuntimeError("クロスモールのタブが見つかりません(自動化用Chromeを起動・ログインしてください)")
 
 
@@ -572,7 +577,32 @@ def shipping_job(page, dates, dry_run, errors, only=None):
     return total
 
 
+def reset_search_form():
+    """終了時に、このスクリプトが入れた検索条件を空に戻す。
+    同じChrome・同じ画面を他の自動化(低在庫予約など)も使うため、Mark有・商品登録有 などが残ると、
+    他の自動化の検索が0件になる(2026/10/29 低在庫予約の失敗の原因)。空の条件で検索まで実行して確定させる。"""
+    if _PAGE is None:
+        return
+    try:
+        if not _PAGE.ev("!!document.getElementById('shop_id')"):
+            return
+        _PAGE.ev("""(()=>{const set=(id,v)=>{const e=document.getElementById(id); if(e){e.value=v;
+            e.dispatchEvent(new Event('change',{bubbles:true}));}};
+          ['item_cd1','item_cd2','item_cd_plural','item_name','stc_flag','mark_set%s'].forEach(i=>set(i,''));})()""" % MARK_ID)
+        search(_PAGE, zero_wait=8)
+        logging.info("検索条件を初期状態に戻しました")
+    except Exception as e:
+        logging.warning("検索条件のリセットに失敗: %s", e)
+
+
 def main():
+    try:
+        return _main()
+    finally:
+        reset_search_form()
+
+
+def _main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=1)
     ap.add_argument("--date", help="基準日(YYYY-MM-DD)。省略時は今日")

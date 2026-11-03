@@ -769,6 +769,24 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 @media(max-width:760px){.cp-banners{grid-template-columns:repeat(2,1fr);gap:8px;padding:20px 12px 0}}
 /* ---------- ヘッダー：濃い緑 ---------- */
 header{background:#0f3b2a;border-bottom-color:#d3ab5840}
+/* ---------- メーカーのクーポンバナー：画面に入ったら左右に5回揺れて止まる ---------- */
+.mk-coupon{background:#fff;padding:48px max(24px,calc(50% - var(--cw) / 2)) 40px;text-align:center}
+.mk-coupon a{display:block;max-width:800px;margin:auto;border-radius:10px;overflow:hidden;box-shadow:0 12px 28px #10244326;transition:box-shadow .2s}
+.mk-coupon a:hover{box-shadow:0 18px 36px #10244340}
+.mk-coupon img{display:block;width:100%;height:auto}
+.mk-coupon p{margin:14px 0 0;font-size:12px;color:#6b7180}
+.mk-coupon a.shake{animation:coupon-shake 2.4s ease-in-out 1}
+@keyframes coupon-shake{
+  0%,100%{transform:translateX(0) rotate(0)}
+  5%{transform:translateX(-10px) rotate(-1.6deg)}10%{transform:translateX(10px) rotate(1.6deg)}
+  15%{transform:translateX(-9px) rotate(-1.4deg)}20%{transform:translateX(9px) rotate(1.4deg)}
+  25%{transform:translateX(-8px) rotate(-1.2deg)}30%{transform:translateX(8px) rotate(1.2deg)}
+  35%{transform:translateX(-6px) rotate(-.9deg)}40%{transform:translateX(6px) rotate(.9deg)}
+  45%{transform:translateX(-4px) rotate(-.6deg)}50%{transform:translateX(4px) rotate(.6deg)}
+  55%{transform:translateX(0) rotate(0)}
+}
+@media(prefers-reduced-motion:reduce){.mk-coupon a.shake{animation:none}}
+@media(max-width:760px){.mk-coupon{padding:28px 16px 24px}.mk-coupon p{font-size:11px}}
 /* 商品カードの「商品ページを見る」は緑 */
 .product .btn.dark{background:linear-gradient(180deg,#2f7a4c 0%,#1b5a35 55%,#0f4024 100%);border-color:#1b5a35}
 .product .btn.dark:hover{background:linear-gradient(180deg,#378a57,#1f6a3f 55%,#124d2c);border-color:#1f6a3f}
@@ -996,6 +1014,8 @@ header{background:#0f3b2a;border-bottom-color:#d3ab5840}
 </div>
 
 <!-- ===== メーカー別：サッポロ → アサヒ → キリン → サントリー（商品は下部の makerProducts から自動で表示） ===== -->
+<!-- ===== サッポロのクーポン（リンク先は href を差し替え） ===== -->
+<div class="mk-coupon"><a href="#" data-coupon-url="" target="_blank" rel="noopener"><img src="img/coupon-sapporo.jpg" width="1200" height="400" alt="サッポロのギフトに使える5%OFFクーポン（条件あり）" loading="lazy"></a><p>※クーポンの獲得・利用条件は、リンク先のページでご確認ください。</p></div>
 <section class="maker" id="sapporo" aria-labelledby="sapporo-h">
   <div class="maker-head mk-sapporo" data-en="SAPPORO"><span class="no">01</span><div class="eyebrow">SAPPORO · YEBISU</div><h2 id="sapporo-h">ヱビスで、<br>ちょっと贅沢なご挨拶を。</h2><p>ヱビスの飲み比べセットや、限定デザインのセット、サッポロ生ビール黒ラベルまで。</p></div>
   <div class="chapter"><div class="grid" id="grid-sapporo"></div><div class="maker-more"><a href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000003654/" data-search="sapporo" target="_blank" rel="noopener">サッポロのギフトをもっと見る</a></div></div>
@@ -1011,6 +1031,8 @@ header{background:#0f3b2a;border-bottom-color:#d3ab5840}
   <div class="chapter"><div class="grid" id="grid-kirin"></div><div class="maker-more"><a href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000003655/" data-search="kirin" target="_blank" rel="noopener">キリンのギフトをもっと見る</a></div></div>
 </section>
 
+<!-- ===== サントリーのクーポン ===== -->
+<div class="mk-coupon"><a href="https://maker-showroom.rakuten.co.jp/suntory/beer/?l-id=adsol_2481_shop_bigbossshibazaki#section5" target="_blank" rel="noopener"><img src="img/coupon-suntory.jpg" width="1200" height="480" alt="サントリー 対象の歳暮ギフトアイテムに使える5%OFFクーポン（獲得・利用条件あり）" loading="lazy"></a><p>※クーポンの獲得・利用条件は、リンク先のページでご確認ください。</p></div>
 <section class="maker" id="suntory" aria-labelledby="suntory-h">
   <div class="maker-head mk-suntory" data-en="SUNTORY"><span class="no">04</span><div class="eyebrow">SUNTORY · THE PREMIUM MALT'S</div><h2 id="suntory-h">いつもより、<br>少しいいビールを。</h2><p>プレモルの定番セットから、限定醸造 水泉動入りの5種セット、2027年の干支デザイン缶入りまで。</p></div>
   <div class="chapter"><div class="grid" id="grid-suntory"></div><div class="maker-more"><a href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000003653/" data-search="suntory" target="_blank" rel="noopener">サントリーのギフトをもっと見る</a></div></div>
@@ -1228,6 +1250,12 @@ ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.scale(1,Math.cos(p.flip)
 frame=requestAnimationFrame(draw)}
 function resume(){if(!frame&&!mq.matches&&!document.hidden&&visible)frame=requestAnimationFrame(draw)}
 new ResizeObserver(()=>{resize();resume()}).observe(hero);new IntersectionObserver(e=>{visible=e[0].isIntersecting;resume()}).observe(hero);document.addEventListener('visibilitychange',resume);mq.addEventListener('change',()=>{ctx.clearRect(0,0,w,h);resume()});resize();resume()})();
+/* メーカーのクーポン：半分以上見えてから0.4秒後に1回だけ5回揺らす。リンク先が未設定（data-coupon-url=""）ならクリックしても移動しない */
+(()=>{const as=[...document.querySelectorAll('.mk-coupon a')];
+  as.forEach(a=>{if(a.dataset.couponUrl==='')a.addEventListener('click',e=>e.preventDefault())});
+  if(!('IntersectionObserver' in window))return;
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);setTimeout(()=>e.target.classList.add('shake'),400)}}),{threshold:.5});
+  as.forEach(a=>io.observe(a))})();
 /* 右下のページトップボタン：少しスクロールしたら表示、スクロール中は薄く・止まったら濃く */
 (()=>{const t=document.createElement('a');t.href='#top';t.className='pagetop';t.setAttribute('aria-label','ページの最上部へ戻る');document.body.appendChild(t);
   let timer;addEventListener('scroll',()=>{t.classList.toggle('show',scrollY>600);t.classList.add('moving');clearTimeout(timer);timer=setTimeout(()=>t.classList.remove('moving'),250)},{passive:true});

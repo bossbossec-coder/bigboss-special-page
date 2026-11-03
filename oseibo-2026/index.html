@@ -787,6 +787,29 @@ header{background:#0f3b2a;border-bottom-color:#d3ab5840}
 }
 @media(prefers-reduced-motion:reduce){.mk-coupon a.shake{animation:none}}
 @media(max-width:760px){.mk-coupon{padding:24px 16px 0}.mk-coupon p{font-size:11px}}
+/* ---------- 酒のビッグボス オリジナルギフト（背景は高級和柄） ---------- */
+.original{position:relative;overflow:hidden;padding:84px 24px}
+.original-inner{position:relative;z-index:1;max-width:var(--cw);margin:auto}
+.original-head{text-align:center;margin-bottom:28px}
+.original-head .eyebrow{letter-spacing:.3em}
+.original-head h2{font-size:clamp(28px,3.2vw,44px);line-height:1.55;margin:12px 0 14px}
+.original-head p{font-size:15px;line-height:1.95}
+.original .filters{justify-content:center;margin-bottom:22px}
+.original .filters button:not([aria-pressed=true]){background:#fff}
+.original .grid{grid-template-columns:repeat(4,1fr);gap:16px}
+.original .product{box-shadow:0 10px 26px #00000024}
+.original .product .ph.photo img{object-fit:cover}
+.original .stocknote{text-align:center}
+.tag.mk.orig{background:#b3121b;border-color:#b3121b}
+@media(max-width:1080px){.original .grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.original{padding:52px 12px}.original-head h2{font-size:24px}.original-head p{font-size:13px}.original .grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .original .product{display:flex;flex-direction:column;padding:10px 9px 12px}
+  .original .product .tags{margin-bottom:0;gap:4px}.original .product .tag{font-size:10px;padding:0 5px}
+  .original .product .ph{margin:8px 0;align-self:stretch}.original .product h3{font-size:13.5px}
+  .original .product .spec,.original .product .inside{font-size:11px;line-height:1.55}
+  .original .product .price{font-size:21px;margin-top:6px}.original .product .price small{font-size:11px}.original .product .ship{font-size:10px}
+  .original .product .btn-row{margin-top:auto;padding-top:10px;gap:6px}.original .product .btn-row .buy{font-size:11.5px;padding:6px 4px;min-height:38px}
+  .original .product .btn-row .btn.fav{width:34px!important;min-width:34px!important;height:34px;min-height:34px!important}}
 /* 商品カードの「商品ページを見る」は緑 */
 .product .btn.dark{background:linear-gradient(180deg,#2f7a4c 0%,#1b5a35 55%,#0f4024 100%);border-color:#1b5a35}
 .product .btn.dark:hover{background:linear-gradient(180deg,#378a57,#1f6a3f 55%,#124d2c);border-color:#1f6a3f}
@@ -1070,6 +1093,22 @@ header{background:#0f3b2a;border-bottom-color:#d3ab5840}
   <div class="chapter"><div class="grid" id="grid-suntory"></div><div class="maker-more"><a href="https://item.rakuten.co.jp/bigbossshibazaki/c/0000003653/" data-search="suntory" target="_blank" rel="noopener">サントリーのギフトをもっと見る</a></div></div>
 </section>
 
+<!-- ===== 酒のビッグボス オリジナルギフト（商品は下部の originals から自動で表示） ===== -->
+<section class="original" id="original">
+  <div class="original-inner">
+    <div class="original-head"><div class="eyebrow">BIGBOSS ORIGINAL GIFT</div><h2>酒のビッグボスの<br>オリジナルギフト</h2><p>他のお店にはない、喜ばれる究極の飲み比べセット。<br>お酒が好きな方には、大変喜ばれるギフトとして好評いただいています。</p></div>
+    <div class="filters orig-f" role="group" aria-label="オリジナルギフトを種類で絞り込む">
+      <button type="button" aria-pressed="true" data-orig="all">すべて</button>
+      <button type="button" aria-pressed="false" data-orig="beer">ビール</button>
+      <button type="button" aria-pressed="false" data-orig="light">ノンアル・ハイボール</button>
+      <button type="button" aria-pressed="false" data-orig="whisky">ウイスキー</button>
+      <button type="button" aria-pressed="false" data-orig="sake">日本酒</button>
+    </div>
+    <div class="grid" id="orig-grid"></div>
+    <p class="stocknote">予約商品は発売日以降の発送です。くわしくは各商品ページでご確認ください。</p>
+  </div>
+</section>
+
 <!-- ===== 7. 締め ===== -->
 <section class="closing">
   <div class="eyebrow">THANK YOU, WITH A GOOD BEER.</div>
@@ -1172,6 +1211,42 @@ Object.keys(makers).forEach(k=>{
   document.querySelector('#grid-'+k).innerHTML=makerProducts.filter(p=>p.mk===k).map(makerCard).join('');
   const more=document.querySelector(`[data-search="${k}"]`);if(more)more.href=makers[k].cat;
 });
+
+/* ===== 酒のビッグボス オリジナルギフト =====
+   掲載順＝この並び順。url：楽天の商品ページID／rid：お気に入り登録用の番号／when：'now'＝発売中、日付＝予約（発売日の0時から自動で「発売中」）
+*/
+const ORIG_CAT={beer:'ビール',light:'ノンアル・ハイボール',whisky:'ウイスキー',sake:'日本酒'};
+const originals=[
+ {cat:'beer',rid:'10014234',id:'Dセット',name:'糖質ゼロ・糖質オフ 12種セット',spec:'350ml × 12缶',inside:'一番搾り 糖質ゼロ・パーフェクトサントリービール・極ZEROなど12種',price:3980,url:'2140110000694',img:'gft-d.jpg',tag:'健康志向の方へ',when:'now'},
+ {cat:'beer',rid:'10016816',id:'Zセット',name:'国産ビール 12種飲み比べセット',spec:'350ml × 12缶',inside:'スーパードライ・黒ラベル・一番搾り・晴れ風・金麦など4社12種',price:3998,url:'2101900000157',img:'gft-z.jpg',tag:'4社の味を少しずつ',when:'2026年11月4日発売'},
+ {cat:'beer',rid:'10016815',id:'Hセット',name:'究極12種 ビールセット',spec:'350ml × 12缶',inside:'スーパードライ・ヱビス4種・プレモル3種などプレミアムビール12種',price:4280,url:'2101900000140',img:'gft-h.jpg',tag:'プレミアムビール中心',when:'2026年11月6日発売'},
+ {cat:'beer',rid:'10028242',id:'Sセット',name:'サッポロ ビールセット',spec:'350ml × 12缶＋おつまみ2個',inside:'ラガー2・黒ラベル2・ヱビス4種など12本＋チーズスナック2個',price:4380,url:'2101900000300',img:'gft-s.jpg',tag:'おつまみ付き',when:'2026年10月30日発売'},
+ {cat:'beer',rid:'10017359',id:'Gセット',name:'究極15種 ビールセット',spec:'350ml × 15缶',inside:'<b>マスターズドリーム 水泉動</b>・干支デザイン缶・オリオンビールなど15種',price:5380,url:'2101900000171',img:'gft-g.jpg',tag:'限定醸造・クラフト入り',when:'2026年11月6日発売'},
+ {cat:'light',rid:'10032354',id:'Qセット',name:'ハイボール 6種セット',spec:'350ml × 6缶',inside:'角ハイボール・濃いめ・大山・山陰・三郎丸・ジャックダニエル＆コカ・コーラ',price:2780,url:'2114900000553',img:'gft-q.jpg',tag:'ハイボール好きの方へ',when:'now'},
+ {cat:'light',rid:'10023516',id:'Fセット',name:'ノンアルコールビール 12種セット',spec:'350ml × 12缶',inside:'オールフリー・ドライゼロ・パーフェクトフリー・ラガーゼロなど12種',price:3398,url:'2140110000779',img:'gft-f.jpg',tag:'お酒を飲まない方へ',when:'now',ship:'送料無料',nonalc:true},
+ {cat:'whisky',rid:'10022467',id:'5種',name:'世界のウイスキー 5種セット',spec:'180ml・200ml × 5本＋干支コースター',inside:'角瓶・ジムビーム・ブラック＆ホワイト・ホワイトホース・デュワーズ',price:4690,url:'2108120000431',img:'gft-whisky5.jpg',tag:'干支コースター付き',when:'now'},
+ {cat:'sake',rid:'10029771',id:'5選 vol.2',name:'金賞受賞酒 5選',spec:'300ml × 5本',inside:'北秋田 大吟醸・奥の松・蓬莱・仁勇・七賢',price:3488,url:'2180010000745',img:'gft-sake5-2.jpg',tag:'金賞受賞酒の飲み比べ',when:'now'},
+ {cat:'sake',rid:'10025329',id:'8選 vol.1',name:'辛口 王道飲み比べ 8選',spec:'180ml × 8本',inside:'八海山・初孫・高清水・梅一輪・土佐鶴など辛口8種',price:3698,url:'2180010000332',img:'gft-sake8-1.jpg',tag:'辛口好きの方へ',when:'now'},
+ {cat:'sake',rid:'10029700',id:'5選 vol.3',name:'大吟醸 5選',spec:'300ml × 5本',inside:'会津ほまれ・千曲錦・北秋田・京姫・千姫',price:3788,url:'2180010000752',img:'gft-sake5-3.jpg',tag:'大吟醸だけの5本',when:'now'},
+ {cat:'sake',rid:'10024247',id:'7選 vol.1',name:'日本酒 7選',spec:'180ml × 7本＋冷酒グラス2個',inside:'八海山・一ノ蔵・玉乃光・賀茂鶴など7県の地酒',price:3980,url:'2180010000271',img:'gft-sake7-1.jpg',tag:'冷酒グラス付き',when:'now'},
+ {cat:'sake',rid:'10032797',id:'香雅 3選',name:'香雅 -Koga- 大吟醸 3本セット',spec:'300ml × 3本＋グラス・枡',inside:'幻の瀧・高清水・玉乃光 の大吟醸、日本酒グラス2個・枡2個',price:3980,url:'2180010000790',img:'gft-koga3.jpg',tag:'グラス・枡付き',when:'now'},
+ {cat:'sake',rid:'10029759',id:'5選 vol.1',name:'全国酒どころ5県代表 5選',spec:'300ml × 5本',inside:'八海山・千曲錦・喜多屋・結芽の奏・日本盛 の純米大吟醸など',price:4287,url:'2180010000738',img:'gft-sake5-1.jpg',tag:'5県の銘酒を飲み比べ',when:'now'},
+ {cat:'sake',rid:'10027545',id:'8選 vol.2',name:'旨飲み 8選（純米大吟醸 八海山入り）',spec:'180ml × 8本',inside:'八海山 純米大吟醸・五橋・雪の茅舎・澤乃井など8種',price:4387,url:'2180010000325',img:'gft-sake8-2.jpg',tag:'八海山入り',when:'now'}
+];
+(()=>{
+  const g=document.querySelector('#orig-grid');
+  g.innerHTML=originals.map(o=>`<article class="product" data-orig="${o.cat}">
+    <div class="tags"><span class="tag mk orig">オリジナル</span><span class="tag">${o.tag}</span>${whenTag(o.when)}</div>
+    <div class="ph photo"><img src="img/${o.img}" width="500" height="500" alt="${o.name} ${o.id}" loading="lazy"></div>
+    <h3>${o.name}</h3>
+    <p class="spec">${o.id} ｜ ${o.spec}</p>
+    <p class="inside">${o.inside}</p>
+    <p class="price">${yen(o.price)}<small>円（税込）</small></p><p class="ship">${o.ship||'本州送料無料'}</p>
+    <div class="btn-row"><a class="btn dark buy" href="${ITEM+o.url}/" target="_blank" rel="noopener">商品ページを見る</a><a class="btn fav" href="${FAV(o.rid)}" target="_blank" rel="noopener" aria-label="${o.name}をお気に入りに登録" title="お気に入りに登録"></a></div>
+  </article>`).join('');
+  const cs=[...g.children],bs=[...document.querySelectorAll('.orig-f button')];
+  bs.forEach(b=>b.addEventListener('click',()=>{cs.forEach(c=>{c.hidden=!(b.dataset.orig==='all'||c.dataset.orig===b.dataset.orig);c.classList.add('in')});bs.forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'))}));
+})();
 
 /* ===== ご予算で選ぶ =====
    金額の区切りはここで変更できます（label：ボタンの表示／min〜max：対象にする価格。max は「その金額以下」、null＝上限なし）。ボタンと該当商品は makerProducts の price から自動で作成

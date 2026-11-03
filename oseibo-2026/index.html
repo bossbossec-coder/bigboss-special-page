@@ -826,6 +826,37 @@ header{background:#0f3b2a;border-bottom-color:#d3ab5840}
   .maker .product .btn-row .btn.fav,.budget-results .product .btn-row .btn.fav{width:34px!important;min-width:34px!important;height:34px;min-height:34px!important}
   .maker .product .btn-row .btn.fav::before,.budget-results .product .btn-row .btn.fav::before{font-size:17px}
 }
+
+/* ---------- のし：縦書きの見出し＋2デザイン横並び／名入れ（色は従来のまま） ---------- */
+.noshi-columns.nx{--nw:auto;grid-template-columns:1fr 1fr;gap:24px}
+.nx .noshi-block{text-align:left;align-items:stretch;padding:30px 30px 26px}
+.nx-head{display:flex;gap:22px;align-items:flex-start}
+.nx-head .noshi-kind{display:block;width:calc(1em + 18px);font-size:34px;line-height:1.18;letter-spacing:0;text-align:left;word-break:break-all;overflow-wrap:anywhere;padding-right:18px;border-right:2px solid var(--gold);flex:none}
+.nx-head .noshi-kind.sweep::after{display:none}
+.nx-head h3{margin:4px 0 12px;font-size:18px}
+.nx-head p{font-size:14.5px;color:#4a4f5c}
+.nx .noshi-pair{grid-template-columns:1fr 1fr;gap:16px;margin-top:24px;padding-top:0}
+.nx .noshi-pair img{aspect-ratio:600/423;object-fit:cover}
+.nx-ph{aspect-ratio:600/423;display:flex;align-items:center;justify-content:center;text-align:center;border:1.5px dashed #c9b88f;background:#fff;color:#9a8a68;font-size:13px;line-height:1.6}
+.nx .noshi-block.nx-name{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:40px;align-items:center;justify-content:center;padding:28px 40px}
+.nx-name figure{margin:0}
+.nx-name img{width:100%;border:1px solid #e8decd;box-shadow:0 8px 20px #1024430f;background:#fff}
+.nx-name .eyebrow{color:#a07831;letter-spacing:.2em}
+.nx-name h3{font-family:"Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;color:var(--red);font-size:26px;margin:6px 0 10px}
+.nx-name p{font-size:14.5px;color:#4a4f5c}
+@media(max-width:760px){
+  .noshi-columns.nx{grid-template-columns:1fr;gap:14px}
+  .nx .noshi-block{padding:20px 16px}
+  .nx-head{gap:14px}
+  .nx-head .noshi-kind{font-size:28px;width:calc(1em + 12px);padding-right:12px}
+  .nx-head h3{font-size:15px;margin-bottom:8px}
+  .nx-head p{font-size:13px}
+  .nx .noshi-pair{grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;width:auto}
+  .nx .noshi-pair figcaption{font-size:12px}
+  .nx .noshi-block.nx-name{grid-template-columns:1fr;gap:14px;padding:20px 16px;text-align:center}
+  .nx-name h3{font-size:21px}
+  .nx-name p{font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -872,24 +903,27 @@ header{background:#0f3b2a;border-bottom-color:#d3ab5840}
       <div class="eyebrow">BIGBOSS ORIGINAL NOSHI</div>
       <h2>おいしい一箱に、<br>ご挨拶の気持ちを添えて。</h2>
       <p>酒のビッグボスのオリジナルのしで、<br>一年の感謝も、新年のご挨拶も。</p>
-      <div class="noshi-badges"><span class="fill">のし無料</span><span>お歳暮2種</span><span>お年賀1種</span></div>
+      <div class="noshi-badges"><span class="fill">のし無料</span><span>お歳暮2種</span><span>お年賀2種</span></div>
       <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="239" alt="" loading="lazy"><p>のしはご注文時に選ぶだけ。御歳暮も御年賀も、無料でお付けします。贈り先に合わせて選んでくださいね。</p></div>
     </div>
-    <div class="noshi-columns">
+    <div class="noshi-columns nx">
       <div class="noshi-block">
-        <div class="noshi-kind">御歳暮</div>
-        <h3>「今年も、ありがとうございました。」</h3>
-        <p>一年の感謝を、華やかな花柄か、端正な水引で。<br>贈る相手に合わせて選べる、2つのデザイン。</p>
+        <div class="nx-head"><div class="noshi-kind">御歳暮</div><div><h3>「今年も、ありがとうございました。」</h3><p>華やかな花柄と、端正な水引。<br>贈る相手に合わせて選べる2デザイン。</p></div></div>
         <div class="noshi-pair">
           <figure><img src="img/noshi-oseibo-hana.jpg" width="600" height="423" alt="ビッグボス オリジナルお歳暮のし 華やかな花柄" loading="lazy"><figcaption>華やかな花柄</figcaption></figure>
           <figure><img src="img/noshi-oseibo-formal.jpg" width="600" height="423" alt="ビッグボス オリジナル御歳暮のし 水引の蝶結び" loading="lazy"><figcaption>端正な水引</figcaption></figure>
         </div>
       </div>
       <div class="noshi-block">
-        <div class="noshi-kind">御年賀</div>
-        <h3>「今年も、よろしくお願いします。」</h3>
-        <p>2027年の干支「未」をあしらったオリジナルのし。<br>干支ラベルと合わせて、晴れやかな新年のご挨拶に。</p>
-        <figure class="noshi-one"><img src="img/noshi-onenga.jpg" width="600" height="424" alt="ビッグボス お年賀のし 2027年 未年の羊と梅・和柄" loading="lazy"><figcaption>2027年 未年のお年賀デザイン</figcaption></figure>
+        <div class="nx-head"><div class="noshi-kind">御年賀</div><div><h3>「今年も、よろしくお願いします。」</h3><p>干支「未」と梅の晴れやかなデザインと、端正な水引。<br>贈る相手に合わせて選べる2デザイン。</p></div></div>
+        <div class="noshi-pair">
+          <figure><img src="img/noshi-onenga.jpg" width="600" height="424" alt="ビッグボス お年賀のし 2027年 未年の羊と梅・和柄" loading="lazy"><figcaption>2027年 未年デザイン</figcaption></figure>
+          <figure><img src="img/noshi-onenga-formal.jpg" width="600" height="423" alt="ビッグボス 御年賀のし 水引の蝶結び" loading="lazy"><figcaption>端正な水引</figcaption></figure>
+        </div>
+      </div>
+      <div class="noshi-block nx-name">
+        <figure><img src="img/noshi-name.jpg" width="600" height="423" alt="名入れのしのイメージ（御歳暮・柴崎）" loading="lazy"><figcaption>名入れのイメージ</figcaption></figure>
+        <div><div class="eyebrow">NAME ON NOSHI</div><h3>のしに名入れができます</h3><p>水引の下に贈り主のお名前を入れて、<br>よりていねいなご挨拶に。</p></div>
       </div>
     </div>
     <ul class="noshi-notes">

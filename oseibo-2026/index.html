@@ -760,6 +760,15 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 .pickup:hover{box-shadow:0 0 0 6px #ffffffcc,0 24px 48px #79552938}
 .pickup .ph.cut{background:radial-gradient(circle at 50% 55%,#fbf7ee 0,#fbf7ee 55%,#fff 72%)}
 @media(max-width:760px){.pickup-sec::before,.pickup-sec::after{width:36vw;height:36vw}}
+/* ---------- 楽天のキャンペーン・クーポンバナー ---------- */
+.cp-banners{padding:36px max(24px,calc(50% - var(--cw) / 2)) 0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;background:#fff}
+.cp-banners figure{margin:0}
+.cp-banners img,.cp-banners a{display:block;width:100%;height:auto;border-radius:4px}
+.cp-banners a{transition:opacity .2s}
+.cp-banners a:hover{opacity:.85}
+@media(max-width:760px){.cp-banners{grid-template-columns:repeat(2,1fr);gap:8px;padding:20px 12px 0}}
+/* ---------- ヘッダー：濃い緑 ---------- */
+header{background:#0f3b2a;border-bottom-color:#d3ab5840}
 /* 商品カードの「商品ページを見る」は緑 */
 .product .btn.dark{background:linear-gradient(180deg,#2f7a4c 0%,#1b5a35 55%,#0f4024 100%);border-color:#1b5a35}
 .product .btn.dark:hover{background:linear-gradient(180deg,#378a57,#1f6a3f 55%,#124d2c);border-color:#1f6a3f}
@@ -780,7 +789,7 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 
 /* ---------- スマホのみ：PICK UPは左右に和柄が見えるよう少し縮め、間隔を広く／メーカー別の商品は1列2コマ ---------- */
 @media(max-width:760px){
-  .pickup-sec{padding-left:30px;padding-right:30px}
+  .pickup-sec{padding-left:7.5%;padding-right:7.5%}
   .pickup-sec .pickup{margin-bottom:68px}
   .pickup-sec .pickup:last-child{margin-bottom:0}
   .maker .grid,.budget-results .grid{grid-template-columns:repeat(2,1fr);gap:10px}
@@ -831,6 +840,14 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 <nav class="nav" aria-label="メーカーから選ぶ"><a href="#sapporo">サッポロ</a><a href="#asahi">アサヒ</a><a href="#kirin">キリン</a><a href="#suntory">サントリー</a></nav>
 
 <!-- ===== 2. オリジナルのし（ビッグボスの強み：上部に配置） ===== -->
+<!-- ===== 楽天のキャンペーン・クーポン（PC：横4列／スマホ：2列×2行）。リンクを付ける場合は <figure> を <a href="〇〇" target="_blank" rel="noopener"> で囲む ===== -->
+<section class="cp-banners" aria-label="開催中のキャンペーン・クーポン">
+  <figure><img src="img/campaign-1.jpg" width="1080" height="210" alt="お歳暮・冬ギフト 対象ショップ限定 最大200円OFFクーポン 2026年11月1日(日)10:00〜12月1日(火)09:59"></figure>
+  <figure><img src="img/campaign-2.jpg" width="1080" height="210" alt="お歳暮・冬ギフトキャンペーン エントリー＆条件達成で3,900ポイントプレゼント 2026年11月1日(日)10:00〜12月29日(火)09:59"></figure>
+  <figure><img src="img/campaign-3.jpg" width="1232" height="240" alt="対象ショップ限定 3,980円以上の購入で使える100円OFFクーポン 2026年11月1日(日)10:00〜11月30日(月)23:59"></figure>
+  <figure><img src="img/campaign-4.jpg" width="616" height="120" alt="エントリー＆掲載ショップ限定 対象ショップ ポイント5倍 2026年11月4日(水)20:00〜11月11日(水)01:59"></figure>
+</section>
+
 <section class="noshi" id="noshi">
   <div class="noshi-inner">
     <div class="noshi-top">

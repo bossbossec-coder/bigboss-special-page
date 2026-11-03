@@ -72,8 +72,8 @@ header{position:relative;height:calc(72px * var(--s,1));background:var(--black);
 .hero-lead{margin:0 0 4px;font-family:"Noto Serif JP",serif;font-weight:600;font-size:31px;letter-spacing:.08em;line-height:1.5;background:linear-gradient(180deg,#f6e3a9,#d4ae5a 60%,#a9832f);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero h1{font-size:112px;font-weight:900;letter-spacing:.06em;line-height:1.25;color:#fff;text-shadow:0 6px 30px #0009}
 .hero-sub{margin-top:14px;font-size:16px;line-height:1.9;color:#e6dfd0}
-.hero-badges{display:flex;gap:10px;margin-top:22px}
-.hero-badges span{font-size:15px;font-weight:700;letter-spacing:.08em;padding:6px 18px;border:1px solid var(--gold);color:var(--gold-l)}
+.hero-badges{display:flex;gap:14px;margin-top:24px}
+.hero-badges span{font-size:22px;font-weight:700;letter-spacing:.1em;padding:8px 30px;border:1px solid var(--gold);color:var(--gold-l)}
 .hero-badges span.fill{background:var(--red);border-color:var(--red);color:#fff}
 .hero-copy .btn{margin-top:22px;min-width:260px;font-size:17px}
 /* 右側：限定醸造の缶とグラス＋干支缶 */
@@ -239,14 +239,23 @@ header{position:relative;height:calc(72px * var(--s,1));background:var(--black);
 .eto-item .go{display:inline-block;margin-top:6px;font-size:13px;font-weight:700;color:var(--red);border-bottom:1px solid currentColor}
 
 /* ---------- のし ---------- */
-.noshi{background:#fff;padding:84px 24px}
+/* ---------- 楽天キャンペーンバナー（data-endを過ぎると自動で非表示） ---------- */
+.camp{background:#fff;padding:24px}
+.camp-inner{display:flex;justify-content:center;gap:16px;max-width:var(--cw);margin:auto}
+.camp a{flex:0 1 calc(50% - 8px);display:block;transition:opacity .2s}
+.camp a:only-child{flex-basis:720px}
+.camp a:hover{opacity:.85}
+.camp img{display:block;width:100%;height:auto}
+.noshi{background:linear-gradient(135deg,#9c0f17,#b3121b 50%,#8a0b12);padding:84px 24px}
 .noshi-inner{max-width:var(--cw);margin:auto}
-.noshi .shead .eyebrow{color:var(--red)}
+.noshi .shead .eyebrow{color:var(--gold-l)}
+.noshi .shead h2{color:#fff}
+.noshi .shead p{color:#fff}
 .noshi-badges{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:20px}
-.noshi-badges span{border:1px solid var(--ink);font-weight:700;font-size:14px;padding:4px 16px}
-.noshi-badges span.fill{background:var(--red);border-color:var(--red);color:#fff}
+.noshi-badges span{border:1px solid #fff;color:#fff;font-weight:700;font-size:14px;padding:4px 16px}
+.noshi-badges span.fill{background:#fff;border-color:#fff;color:var(--red)}
 .noshi .shead .bb-say{max-width:560px;margin:24px auto 0}
-.noshi-columns{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;align-items:stretch;--nw:200px}
+.noshi-columns{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch;--nw:200px}
 .noshi-block{display:grid;grid-template-columns:auto 1fr;gap:6px 24px;padding:30px 28px;background:var(--ivory);border:1px solid var(--line);position:relative}
 .noshi-block::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--red),var(--gold))}
 .noshi-kind{grid-row:1/3;writing-mode:vertical-rl;font-size:34px;font-weight:900;color:var(--red);letter-spacing:.2em;line-height:1;border-left:1px solid var(--gold);padding-left:14px}
@@ -256,6 +265,12 @@ header{position:relative;height:calc(72px * var(--s,1));background:var(--black);
 .noshi-figs figure{width:var(--nw)}
 .noshi-block img{width:100%;border:1px solid #e8decd;box-shadow:0 8px 20px #0c0b0914;background:#fff}
 .noshi-block figcaption{text-align:center;font-size:13px;color:#6c5a3a;margin-top:8px}
+.noshi-naire{display:grid;grid-template-columns:300px auto;justify-content:center;gap:40px;align-items:center;margin-top:24px;padding:24px 32px;background:var(--ivory);border:1px solid var(--gold)}
+.noshi-naire img{width:100%;border:1px solid #e8decd;box-shadow:0 8px 20px #0c0b0914;background:#fff}
+.noshi-naire figcaption{text-align:center;font-size:13px;color:#6c5a3a;margin-top:8px}
+.noshi-naire .tagline{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:14px;letter-spacing:.2em;color:var(--gold-d)}
+.noshi-naire h3{font-family:"Noto Serif JP",serif;font-weight:600;font-size:26px;line-height:1.5;margin:4px 0 8px;color:var(--red)}
+.noshi-naire p{font-size:15px;color:#4d483f}
 .noshi-notes{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .noshi-notes li{font-size:13px;line-height:1.7;color:#4d483f;padding:12px 14px;background:var(--ivory);border-top:2px solid var(--gold)}
 .noshi-notes b{display:block;color:var(--ink);font-size:14px}
@@ -304,7 +319,11 @@ header{position:relative;height:calc(72px * var(--s,1));background:var(--black);
 .brand-card[aria-pressed=true] small{font-size:0}
 
 /* ---------- オリジナルギフト ---------- */
-.original{background:#fff;padding:84px 24px;position:relative}
+.original{background:linear-gradient(135deg,#9c0f17,#b3121b 50%,#8a0b12);padding:84px 24px;position:relative}
+.original .shead .eyebrow{color:var(--gold-l)}
+.original .shead h2{color:#fff}
+.original .shead p{color:#fff}
+.original .stocknote{color:#fff}
 .original::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
 .original-inner{max-width:var(--cw);margin:auto}
 .original .filters{justify-content:center;margin-bottom:22px}
@@ -414,7 +433,7 @@ a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #e48
   .hero h1{font-size:min(12.6vw,48px);white-space:nowrap;letter-spacing:.02em}
   .hero-sub{font-size:13px;margin-top:8px}
   .hero-badges{flex-wrap:wrap;gap:6px;margin-top:16px}
-  .hero-badges span{font-size:12px;padding:3px 10px}
+  .hero-badges span{font-size:16px;padding:5px 18px}
   .hero-copy .btn{display:none}
   .hero-art{position:relative;left:auto;top:auto;width:100%;height:auto;aspect-ratio:620/560;margin:6px auto 0;max-width:420px}
   .hero-art .halo{left:18%;top:8%;width:64%;height:auto;aspect-ratio:1}
@@ -500,14 +519,22 @@ a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #e48
   .eto-item{grid-template-columns:44% 1fr;gap:12px;padding:12px}
   .eto-item b{font-size:14px}
   .eto-item .pr{font-size:23px}
+  .camp{padding:16px}
+  .camp-inner{flex-direction:column;gap:10px}
+  .camp a,.camp a:only-child{flex:none;width:100%}
   .noshi{padding:52px 16px}
   .noshi-badges span{font-size:13px;padding:3px 12px}
   .noshi-block{grid-template-columns:auto 1fr;padding:22px 16px 20px 20px;gap:4px 16px}
   .noshi-kind{font-size:26px}
   .noshi-block h3{font-size:15px}
   .noshi-block p{font-size:13px}
-  .noshi-figs{flex-direction:column;align-items:center}
-  .noshi-figs figure{width:100%;max-width:300px}
+  .noshi-figs{flex-direction:row;align-items:flex-start;gap:10px}
+  .noshi-figs figure{flex:1 1 0;width:auto;min-width:0;max-width:none}
+  .noshi-block figcaption{font-size:12px;margin-top:6px}
+  .noshi-naire{grid-template-columns:1fr;gap:14px;padding:20px 16px;text-align:center}
+  .noshi-naire figure{max-width:300px;margin:0 auto}
+  .noshi-naire h3{font-size:23px}
+  .noshi-naire p{font-size:15px}
   .noshi-notes{grid-template-columns:1fr;gap:10px}
   .chapter{padding:52px 16px}
   .filters button{flex:1 0 30%;padding:6px 8px;font-size:13px;min-height:42px}
@@ -576,7 +603,7 @@ h2 .po{margin-left:-.5em}
   .hero h1{font-size:min(19vw,76px);letter-spacing:0;margin:30px -8px 0}
   .hero-badges{justify-content:center}
   .hero-sub{font-size:14.5px;line-height:1.85}
-  .hero-badges span{font-size:12.5px;padding:4px 8px;letter-spacing:.04em}
+  .hero-badges span{font-size:18px;padding:6px 22px;letter-spacing:.08em}
   .nav a{font-size:13px}
   .eyebrow{font-size:13px}
   .shead h2{font-size:27px;line-height:1.55}
@@ -668,7 +695,7 @@ h2 .po{margin-left:-.5em}
       <p class="hero-lead">今年の「ありがとう」は、<br class="sp-br">金色の一杯で。</p>
       <h1>お歳暮特集</h1>
       <p class="hero-sub">サントリー・アサヒ・キリン・サッポロのビールギフトに、<br class="pc-br">限定醸造や干支デザイン缶、ハムギフトまで。冬のご挨拶をそろえました。</p>
-      <div class="hero-badges"><span class="fill">のし無料</span><span>本州送料無料</span><span>お年賀にも</span></div>
+      <div class="hero-badges"><span class="fill">のし無料</span><span>お年賀にも</span></div>
       <a class="btn arrow" href="#gifts">ギフトを選ぶ</a>
     </div>
     <div class="hero-art" aria-hidden="true">
@@ -683,18 +710,28 @@ h2 .po{margin-left:-.5em}
 <nav class="nav" aria-label="特集メニュー"><a class="nav-title" href="https://www.rakuten.co.jp/d-craft/" target="_blank" rel="noopener" aria-label="ドリームクラフト＆ビッグボス 楽天市場店 トップページへ">DREAM CRAFT</a><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">MENU</span></button><div class="nav-links" id="nav-links"><a href="#noshi">のし・ご挨拶</a><a href="#pickup">イチオシ</a><a href="#limited">限定醸造</a><a href="#eto">干支デザイン</a><a href="#gifts">ビール一覧</a><a href="#original">オリジナルギフト</a><a href="#ham">ハムギフト</a></div></nav>
 
 <!-- ===== 2. のし（上部に配置） ===== -->
+<section class="camp" id="camp" aria-label="楽天のキャンペーン">
+  <div class="camp-inner">
+    <a href="https://event.rakuten.co.jp/oseibo/coupon/" target="_blank" rel="noopener" data-end="2026-12-01T09:59:59+09:00"><img src="img/1101_m20_1080210.jpg" width="1080" height="210" alt="お歳暮・冬ギフト 対象ショップ限定 最大200円OFFクーポン 2026年11月1日10:00〜12月1日09:59"></a>
+    <a href="https://event.rakuten.co.jp/oseibo/special/point/" target="_blank" rel="noopener" data-end="2026-12-29T09:59:59+09:00"><img src="img/special_point_1080x210.jpg" width="1080" height="210" alt="お歳暮・冬ギフトキャンペーン エントリー＆条件達成で3,900ポイントプレゼント 2026年11月1日10:00〜12月29日09:59"></a>
+  </div>
+</section>
+<script>
+(()=>{const box=document.getElementById('camp');box.querySelectorAll('a[data-end]').forEach(a=>{if(Date.now()>new Date(a.dataset.end).getTime())a.remove()});if(!box.querySelector('a'))box.remove()})();
+</script>
+
 <section class="noshi" id="noshi">
   <div class="noshi-inner">
     <div class="shead">
       <div class="eyebrow orn">Noshi &amp; Greeting</div>
       <h2>ご挨拶の気持ちは<br>のしに込めて</h2>
       <p>のしはご注文時に選ぶだけ。<br class="sp-br">一年の感謝にも、新年のご挨拶にも。</p>
-      <div class="noshi-badges"><span class="fill">のし無料</span><span>御歳暮 2種</span><span>御年賀 1種</span></div>
+      <div class="noshi-badges"><span class="fill">のし無料</span><span>御歳暮 2種</span><span>御年賀 2種</span><span>名入れ対応</span></div>
     </div>
     <div class="noshi-columns">
       <div class="noshi-block">
         <div class="noshi-kind">御歳暮</div>
-        <h3>「今年も、ありがとうございました。」</h3>
+        <h3>「今年も、<br class="sp-br">ありがとうございました。」</h3>
         <p>華やかな花柄と、端正な水引。<br class="pc-br">贈る相手に合わせて選べる2デザイン。</p>
         <div class="noshi-figs">
           <figure><img src="img/noshi-oseibo-hana.jpg" width="826" height="583" alt="お歳暮のし 華やかな花柄" loading="lazy"><figcaption>華やかな花柄</figcaption></figure>
@@ -703,12 +740,17 @@ h2 .po{margin-left:-.5em}
       </div>
       <div class="noshi-block">
         <div class="noshi-kind">御年賀</div>
-        <h3>「今年も、よろしくお願いします。」</h3>
-        <p>2027年の干支「未」と梅をあしらった、晴れやかなデザイン。</p>
+        <h3>「今年も、<br class="sp-br">よろしくお願いします。」</h3>
+        <p>干支「未」と梅の晴れやかなデザインと、端正な水引。<br class="pc-br">贈る相手に合わせて選べる2デザイン。</p>
         <div class="noshi-figs">
           <figure><img src="img/noshi-onenga.jpg" width="826" height="584" alt="お年賀のし 2027年 未年の羊と梅・和柄" loading="lazy"><figcaption>2027年 未年デザイン</figcaption></figure>
+          <figure><img src="img/noshi-onenga-mizuhiki.jpg" width="826" height="584" alt="御年賀のし 水引の蝶結び" loading="lazy"><figcaption>端正な水引</figcaption></figure>
         </div>
       </div>
+    </div>
+    <div class="noshi-naire">
+      <figure><img src="img/noshi-naire.jpg" width="826" height="583" alt="名入れをした御歳暮のしのイメージ" loading="lazy"><figcaption>名入れのイメージ</figcaption></figure>
+      <div><div class="tagline">NAME ON NOSHI</div><h3>のしに名入れができます</h3><p>水引の下に贈り主のお名前を入れて、<br class="pc-br">よりていねいなご挨拶に。</p></div>
     </div>
     <ul class="noshi-notes">
       <li><b>ご注文時に選ぶだけ</b>商品ページの選択肢から、のしの種類をお選びください。</li>
@@ -884,7 +926,7 @@ h2 .po{margin-left:-.5em}
     <label>並び替え <select id="sort"><option value="default">おすすめ順</option><option value="price-asc">価格の安い順</option><option value="price-desc">価格の高い順</option><option value="cans-desc">本数の多い順</option></select></label>
   </div>
   <div class="grid" id="all-grid"></div>
-  <p class="stocknote center">価格は税込・2026年10月27日時点です。<br class="sp-br">ビールギフトは本州送料無料、北海道・九州・四国・離島・沖縄は別途送料がかかります。<br>価格・在庫・お届け予定は各商品ページでご確認ください。</p>
+  <p class="stocknote center">価格は税込です。<br class="sp-br">ビールギフトは本州送料無料、北海道・九州・四国・離島・沖縄は別途送料がかかります。<br>価格・在庫・お届け予定は各商品ページでご確認ください。</p>
 </section>
 
 <!-- ===== 7-2. ドリームクラフト オリジナルギフト ===== -->
@@ -924,7 +966,7 @@ h2 .po{margin-left:-.5em}
       <button type="button" aria-pressed="false" data-ham="伊藤ハム">伊藤ハム</button>
     </div>
     <div class="grid" id="ham-grid"></div>
-    <p class="stocknote center">価格は税込・送料無料（2026年10月27日時点）。<br>ハムギフトは要冷蔵のため、<br class="sp-br">冷蔵便でのお届けです。<br>発送開始日は商品ごとに異なります。<br class="sp-br">くわしくは各商品ページでご確認ください。</p>
+    <p class="stocknote center">価格は税込・送料無料です。<br>ハムギフトは要冷蔵のため、<br class="sp-br">冷蔵便でのお届けです。<br>発送開始日は商品ごとに異なります。<br>価格・在庫・お届け予定は各商品ページでご確認ください。</p>
   </div>
 </section>
 
@@ -997,19 +1039,19 @@ const products=[
  {brand:'asahi',rid:'10026214',id:'AVG-4',cat:'eto',name:'アサヒビール 5種セット',cans:15,spec:'15缶（350ml・340ml・500ml）',inside:'スーパードライ7・ジョッキ缶2・クリスタル2・マルエフ2・アサヒゴールド2',price:3899,url:'4901004068293',img:'avg4.jpg',w:600,h:600,photo:true,tag:'5種の飲み比べ',when:'now'},
  {brand:'asahi',rid:'10008889',id:'FS-3G',cat:'family',name:'スーパードライ＆ウェルチ ファミリーセット',cans:14,spec:'ビール8缶＋果汁6本',inside:'スーパードライ 350ml×4・500ml×4、ウェルチ（グレープ・マスカット・マンゴー）各2',price:2966,url:'4901004038975',img:'fs3g.jpg',w:600,h:600,photo:true,tag:'ご家族への贈り物に',when:'now'},
  {brand:'asahi',rid:'10022422',id:'FS-5G',cat:'family',name:'スーパードライ＆ウェルチ ファミリーセット',cans:26,spec:'ビール14缶＋果汁12本',inside:'スーパードライ14、ウェルチ（グレープ・マスカット・マンゴー）各4',price:4899,url:'4901004061713',img:'fs5g.jpg',w:600,h:600,photo:true,tag:'ご家族への贈り物に',when:'now'},
- {brand:'kirin',rid:'10004863',id:'K-FM3B',cat:'family',name:'一番搾り＆トロピカーナ ファミリーセット',cans:15,spec:'ビール10缶＋果汁5缶',inside:'一番搾り10、トロピカーナ100%（アップル3・グレープ2）',price:2966,url:'4901411041070',img:'k-fm3b.jpg',w:600,h:600,photo:true,tag:'ご家族への贈り物に',when:'now'},
+ {brand:'kirin',rid:'10004863',id:'K-FM3B',cat:'family',name:'一番搾り＆トロピカーナ ファミリーセット',cans:15,spec:'ビール10缶＋果汁5缶',inside:'一番搾り10、トロピカーナ100%（アップル3・グレープ2）',price:3069,url:'4901411041070',img:'k-fm3b.jpg',w:600,h:600,photo:true,tag:'ご家族への贈り物に',when:'now'},
  {brand:'kirin',rid:'10004864',id:'K-IS3',cat:'classic',name:'キリン 一番搾り ギフトセット',cans:12,spec:'350ml × 10缶・500ml × 2缶',inside:'一番搾り12本',price:2966,url:'4901411040493',img:'k-is3.jpg',w:600,h:600,photo:true,tag:'麦のうまみの定番',when:'now'},
  {brand:'kirin',rid:'10015028',id:'K-IS5',cat:'classic',name:'キリン 一番搾り ギフトセット',cans:21,spec:'350ml × 21缶',inside:'一番搾り21本',price:4899,url:'4901411080338',img:'k-is5.jpg',w:600,h:600,photo:true,tag:'たっぷり21本',when:'now'},
- {brand:'kirin',rid:'10021423',id:'K-PI3',cat:'classic',name:'キリン 一番搾り プレミアム ギフトセット',cans:12,spec:'350ml × 12缶',inside:'<b>一番搾り プレミアム12本</b>',price:2966,url:'4901411056227',img:'k-pi3.jpg',w:600,h:600,photo:true,tag:'ちょっと贅沢な一番搾り',when:'now'},
+ {brand:'kirin',rid:'10021423',id:'K-PI3',cat:'classic',name:'キリン 一番搾り プレミアム ギフトセット',cans:12,spec:'350ml × 12缶',inside:'<b>一番搾り プレミアム12本</b>',price:3097,url:'4901411056227',img:'k-pi3.jpg',w:600,h:600,photo:true,tag:'ちょっと贅沢な一番搾り',when:'now'},
  {brand:'kirin',rid:'10022468',id:'K-IPF3',cat:'eto',name:'キリン 一番搾り 3種飲み比べセット',cans:12,spec:'350ml × 10缶・500ml × 2缶',inside:'一番搾り6・黒生3・プレミアム3',price:2966,url:'4901411089706',img:'k-ipf3.jpg',w:600,h:600,photo:true,tag:'3種の飲み比べ',when:'now'},
- {brand:'kirin',rid:'10022493',id:'K-NRL3',cat:'classic',name:'キリン ラガービール ギフトセット',cans:12,spec:'350ml × 10缶・500ml × 2缶',inside:'ラガービール12本',price:2966,url:'2101900000508',img:'k-nrl3.jpg',w:600,h:600,photo:true,tag:'苦みのきいた王道',when:'now'},
+ {brand:'kirin',rid:'10022493',id:'K-NRL3',cat:'classic',name:'キリン ラガービール ギフトセット',cans:12,spec:'350ml × 10缶・500ml × 2缶',inside:'ラガービール12本',price:3097,url:'2101900000508',img:'k-nrl3.jpg',w:600,h:600,photo:true,tag:'苦みのきいた王道',when:'now'},
  {brand:'sapporo',rid:'10008212',id:'KS3D',cat:'classic',name:'サッポロ 黒ラベル ギフトセット',cans:10,spec:'350ml × 10缶',inside:'黒ラベル10本',price:2968,url:'4901880859725',img:'ks3d.jpg',w:600,h:600,photo:true,tag:'生ビールの定番',when:'now'},
  {brand:'sapporo',rid:'10008195',id:'YE3D',cat:'classic',name:'ヱビスビール ギフトセット',cans:12,spec:'350ml × 12缶',inside:'ヱビスビール12本',price:2998,url:'4901880879976',img:'ye3d.jpg',w:600,h:600,photo:true,tag:'贈り物の定番ヱビス',when:'now'},
  {brand:'sapporo',rid:'10007585',id:'YE4DN',cat:'classic',name:'ヱビスビール ギフトセット',cans:15,spec:'350ml × 15缶',inside:'ヱビスビール15本',price:3899,url:'4901880879952',img:'ye4dn.jpg',w:600,h:600,photo:true,tag:'贈り物の定番ヱビス',when:'now'},
- {brand:'sapporo',rid:'10008194',id:'YE5DT',cat:'classic',name:'ヱビスビール ギフトセット',cans:20,spec:'350ml × 20缶',inside:'ヱビスビール20本',price:4899,url:'4901880879943',img:'ye5dt.jpg',w:600,h:600,photo:true,tag:'たっぷり20本',when:'now'},
+ {brand:'sapporo',rid:'10008194',id:'YE5DT',cat:'classic',name:'ヱビスビール ギフトセット',cans:20,spec:'350ml × 20缶',inside:'ヱビスビール20本',price:4469,url:'4901880879943',img:'ye5dt.jpg',w:600,h:600,photo:true,tag:'たっぷり20本',when:'now'},
  {brand:'sapporo',rid:'10015136',id:'YEF3D',cat:'eto',name:'ヱビス 4種飲み比べセット',cans:12,spec:'350ml × 12缶',inside:'ヱビス3・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:2966,url:'4901880884147-nsi',img:'yef3d.jpg',w:600,h:600,photo:true,tag:'4種の飲み比べ',when:'now'},
- {brand:'sapporo',rid:'10015141',id:'YEF4D',cat:'eto',name:'ヱビス 4種飲み比べセット',cans:15,spec:'350ml × 15缶',inside:'ヱビス6・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:3899,url:'4901880884130-nsi',img:'yef4d.jpg',w:600,h:600,photo:true,tag:'4種の飲み比べ',when:'now'},
- {brand:'sapporo',rid:'10007641',id:'YEF5DT',cat:'eto',name:'ヱビス 4種飲み比べセット',cans:20,spec:'350ml × 20缶',inside:'ヱビス8・プレミアムエール6・プレミアムブラック3・麦紡ぐ3',price:4899,url:'4901880884123-asu',img:'yef5dt.jpg',w:600,h:600,photo:true,tag:'4種の飲み比べ',when:'now'},
+ {brand:'sapporo',rid:'10015141',id:'YEF4D',cat:'eto',name:'ヱビス 4種飲み比べセット',cans:15,spec:'350ml × 15缶',inside:'ヱビス6・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:3639,url:'4901880884130-nsi',img:'yef4d.jpg',w:600,h:600,photo:true,tag:'4種の飲み比べ',when:'now'},
+ {brand:'sapporo',rid:'10007641',id:'YEF5DT',cat:'eto',name:'ヱビス 4種飲み比べセット',cans:20,spec:'350ml × 20缶',inside:'ヱビス8・プレミアムエール6・プレミアムブラック3・麦紡ぐ3',price:4522,url:'4901880884123-asu',img:'yef5dt.jpg',w:600,h:600,photo:true,tag:'4種の飲み比べ',when:'now'},
  {brand:'sapporo',rid:'10014955',id:'YEV3DEC',cat:'limited',name:'ヱビス 5種セット（EC限定）',cans:11,spec:'350ml × 11缶',inside:'ヱビス2・プレミアムエール2・プレミアムブラック2・<b>星月夜2</b>・麦紡ぐ3',price:2966,url:'4901880897581-ec',img:'yev3dec.jpg',w:600,h:600,photo:true,tag:'EC限定の5種',when:'2026年11月25日発売'}
 ];
 const BRANDS={suntory:{name:'サントリー',en:'SUNTORY',c:'#1f3d8a'},asahi:{name:'アサヒ',en:'ASAHI',c:'#5f6b78'},kirin:{name:'キリン',en:'KIRIN',c:'#b3121b'},sapporo:{name:'サッポロ',en:'SAPPORO',c:'#c9a24a'}};
@@ -1170,7 +1212,7 @@ applyFilter('all');
     ['.shead > *','up',.1],['.choice','up',.12],['.budget-card','up',.08],
     ['.pickup','up',0],['.feature-img','left zoom',0],['.feature > div:last-child > *','up',.1],
     ['.mini','up',.08],['.eto-main > div:first-child > *','up',.1],['.eto-cans','right zoom',0],['.eto-item','up',.1],
-    ['.noshi-block','up',.15],['.noshi-notes li','left',.12],['.product','up',.08],
+    ['.noshi-block','up',.15],['.noshi-naire','up',0],['.noshi-notes li','left',.12],['.product','up',.08],
     ['.flow-steps li','up',.12],['.deliv > div','up',.08],['.closing > *','up',.12]
   ];
   const targets=[];

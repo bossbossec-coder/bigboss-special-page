@@ -761,14 +761,15 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 .pickup .ph.cut{background:radial-gradient(circle at 50% 55%,#fbf7ee 0,#fbf7ee 55%,#fff 72%)}
 @media(max-width:760px){.pickup-sec::before,.pickup-sec::after{width:36vw;height:36vw}}
 /* ---------- 楽天のキャンペーン・クーポンバナー ---------- */
-.cp-banners{padding:36px max(24px,calc(50% - var(--cw) / 2)) 0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;background:#fff}
+.cp-banners{padding:36px max(24px,calc(50% - var(--cw) / 2)) 0;display:grid;grid-template-columns:repeat(2,1fr);gap:16px;background:#fff}
 .cp-banners figure{margin:0}
 .cp-banners img,.cp-banners a{display:block;width:100%;height:auto;border-radius:4px}
 .cp-banners a{transition:opacity .2s}
 .cp-banners a:hover{opacity:.85}
 @media(max-width:760px){.cp-banners{grid-template-columns:repeat(2,1fr);gap:8px;padding:20px 12px 0}}
-/* ---------- ヘッダー：濃い緑 ---------- */
+/* ---------- ヘッダー・フッター：濃い緑 ---------- */
 header{background:#0f3b2a;border-bottom-color:#d3ab5840}
+footer{background:#0f3b2a;color:#cfe0d6}
 /* ---------- メーカーのクーポンバナー：画面に入ったら左右に5回揺れて止まる ---------- */
 .mk-coupon{background:#fff;padding:44px max(24px,calc(50% - var(--cw) / 2)) 0;text-align:center}
 .mk-coupon a{display:block;max-width:800px;margin:auto;border-radius:10px;overflow:hidden;box-shadow:0 12px 28px #10244326;transition:box-shadow .2s}
@@ -919,12 +920,12 @@ header{background:#0f3b2a;border-bottom-color:#d3ab5840}
 <nav class="nav" aria-label="メーカーから選ぶ"><a href="#sapporo">サッポロ</a><a href="#asahi">アサヒ</a><a href="#kirin">キリン</a><a href="#suntory">サントリー</a></nav>
 
 <!-- ===== 2. オリジナルのし（ビッグボスの強み：上部に配置） ===== -->
-<!-- ===== 楽天のキャンペーン・クーポン（PC：横4列／スマホ：2列×2行）。リンクを付ける場合は <figure> を <a href="〇〇" target="_blank" rel="noopener"> で囲む ===== -->
+<!-- ===== 楽天のキャンペーン・クーポン（PC・スマホとも2列×2行） ===== -->
 <section class="cp-banners" aria-label="開催中のキャンペーン・クーポン">
-  <figure><img src="img/campaign-1.jpg" width="1080" height="210" alt="お歳暮・冬ギフト 対象ショップ限定 最大200円OFFクーポン 2026年11月1日(日)10:00〜12月1日(火)09:59"></figure>
-  <figure><img src="img/campaign-2.jpg" width="1080" height="210" alt="お歳暮・冬ギフトキャンペーン エントリー＆条件達成で3,900ポイントプレゼント 2026年11月1日(日)10:00〜12月29日(火)09:59"></figure>
-  <figure><img src="img/campaign-3.jpg" width="1232" height="240" alt="対象ショップ限定 3,980円以上の購入で使える100円OFFクーポン 2026年11月1日(日)10:00〜11月30日(月)23:59"></figure>
-  <figure><img src="img/campaign-4.jpg" width="616" height="120" alt="エントリー＆掲載ショップ限定 対象ショップ ポイント5倍 2026年11月4日(水)20:00〜11月11日(水)01:59"></figure>
+  <a href="https://event.rakuten.co.jp/oseibo/coupon/" target="_blank" rel="noopener"><img src="img/campaign-1.jpg" width="1080" height="210" alt="お歳暮・冬ギフト 対象ショップ限定 最大200円OFFクーポン 2026年11月1日(日)10:00〜12月1日(火)09:59"></a>
+  <a href="https://event.rakuten.co.jp/oseibo/special/point/" target="_blank" rel="noopener"><img src="img/campaign-2.jpg" width="1080" height="210" alt="お歳暮・冬ギフトキャンペーン エントリー＆条件達成で3,900ポイントプレゼント 2026年11月1日(日)10:00〜12月29日(火)09:59"></a>
+  <a href="https://coupon.rakuten.co.jp/getCoupon?getkey=NkxDUS1PUldaLUtHSkstS09OWA--" target="_blank" rel="noopener"><img src="img/campaign-3.jpg" width="1232" height="240" alt="対象ショップ限定 3,980円以上の購入で使える100円OFFクーポン 2026年11月1日(日)10:00〜11月30日(月)23:59"></a>
+  <a href="https://event.rakuten.co.jp/incentive/ichiba/henbai/event/202611045x/" target="_blank" rel="noopener"><img src="img/campaign-4.jpg" width="616" height="120" alt="エントリー＆掲載ショップ限定 対象ショップ ポイント5倍 2026年11月4日(水)20:00〜11月11日(水)01:59"></a>
 </section>
 
 <section class="noshi" id="noshi">

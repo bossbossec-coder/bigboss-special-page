@@ -1,0 +1,1224 @@
+<!doctype html>
+<html lang="ja">
+<script>document.documentElement.classList.add('js')</script>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>お歳暮特集 2026｜ドリームクラフト＆ビッグボス お歳暮・お年賀ビールギフト</title>
+<meta name="description" content="今年の「ありがとう」は、金色の一杯で。サントリー・アサヒ・キリン・サッポロのビールギフトと、日本ハム・丸大食品・伊藤ハムのハムギフト。ドリームクラフト＆ビッグボスのお歳暮・お年賀特集。">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Jost:wght@500&family=Noto+Serif+JP:wght@600;900&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%230c0b09'/%3E%3Ctext x='20' y='29' text-anchor='middle' font-size='26' font-family='serif' fill='%23d4ae5a'%3ED%3C/text%3E%3C/svg%3E">
+<style>
+/* ドリームクラフト版：黒・金・赤 */
+:root{--cw:1000px;--black:#0c0b09;--black2:#17140f;--char:#24201a;--gold:#c9a24a;--gold-l:#ecd49a;--gold-d:#8a6a26;--red:#b3121b;--red-d:#7d0a10;--ivory:#f7f3ea;--ink:#1d1a15;--sub:#6c665c;--line:#e2d8c3}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;color:var(--ink);background:var(--ivory);font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic","YuGothic",Meiryo,sans-serif;line-height:1.85;overflow-x:hidden}
+h1,h2,h3,p{margin:0}
+h1,h2,h3,p,li,figcaption{word-break:auto-phrase;text-wrap:pretty}
+a{color:inherit}
+button,a{-webkit-tap-highlight-color:transparent}
+button,select{font:inherit}
+img{max-width:100%;height:auto;display:block}
+figure{margin:0}
+h1,h2,.serif,.noshi-kind{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho","YuMincho",serif;font-weight:600}
+.en{font-family:"Cormorant Garamond","Times New Roman",serif;font-weight:600}
+.nobr{display:inline-block;white-space:nowrap}
+.sp-only,.sp-br{display:none}
+@media(max-width:760px){.pc-br,.pc-only{display:none}.sp-only,.sp-br{display:inline}}
+.eyebrow{font-family:"Cormorant Garamond","Times New Roman",serif;font-weight:600;font-size:15px;letter-spacing:.24em;text-transform:uppercase}
+[hidden]{display:none!important}
+/* 金のひし形つき見出し飾り */
+.orn{display:flex;align-items:center;justify-content:center;gap:14px}
+.orn::before,.orn::after{content:"";width:46px;height:1px;background:linear-gradient(90deg,transparent,currentColor)}
+.orn::after{transform:scaleX(-1)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;min-height:52px;padding:12px 32px;background:linear-gradient(180deg,#e6c878,#c9a24a 55%,#a9832f);color:var(--black);font-weight:700;border:0;border-radius:4px;line-height:1.5;cursor:pointer;transition:filter .2s,transform .2s}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn.red{background:linear-gradient(180deg,#d01f29,#b3121b 55%,#8e0c13);color:#fff}
+.btn.arrow::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg)}
+.btn-row{display:flex;gap:8px;margin-top:auto;align-items:center}
+.btn-row .buy{flex:1;min-height:42px}
+.btn.fav{flex:none;width:42px;min-width:42px;height:42px;min-height:42px;padding:0;border-radius:50%;background:#fff;color:var(--red);border:1.5px solid var(--red)}
+.btn.fav::before{content:"\2661";font-size:20px;line-height:1}
+.btn.fav:hover,.btn.fav:focus-visible{background:var(--red);color:#fff;border-color:var(--red);filter:none}
+.btn.fav:hover::before,.btn.fav:focus-visible::before{content:"\2665"}
+
+/* ---------- header ---------- */
+header{position:relative;height:calc(72px * var(--s,1));background:var(--black);color:#fff;border-bottom:1px solid #c9a24a55;overflow:hidden}
+.header-stage{position:absolute;left:0;top:0;width:1400px;height:72px;transform:scale(var(--s,1));transform-origin:0 0;display:flex;justify-content:space-between;align-items:center;padding:0 70px}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none;line-height:1.1}
+.brand img{width:46px;height:46px;border-radius:6px}
+.brand b{display:block;font-family:Jost,Futura,"Century Gothic",sans-serif;font-size:25px;letter-spacing:.16em;color:var(--gold-l);font-weight:500}
+.brand small{display:block;font-size:11px;letter-spacing:.2em;color:#cfc6b4;margin-top:2px}
+.season{font-size:13px;letter-spacing:.14em;color:var(--gold-l);border:1px solid #c9a24a80;padding:4px 16px}
+
+/* ---------- hero（PC：1400×620 の1枚の絵として画面幅に合わせて拡大縮小） ---------- */
+.hero{position:relative;overflow:hidden;background:var(--black);color:#fff;height:calc(620px * var(--s,1))}
+.hero-stage{position:absolute;left:0;top:0;width:1400px;height:620px;transform:scale(var(--s,1));transform-origin:0 0;
+  background:radial-gradient(circle at 74% 52%,#6a4f1c 0,#2a200f 30%,#0f0d0a 58%,#0a0907 100%)}
+.gold-dust{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:4}
+/* 細い金の額縁 */
+.hero-frame{position:absolute;inset:24px;border:1px solid #c9a24a66;pointer-events:none;z-index:1}
+.hero-frame::before,.hero-frame::after{content:"";position:absolute;width:28px;height:28px;border:2px solid var(--gold)}
+.hero-frame::before{left:-6px;top:-6px;border-right:0;border-bottom:0}
+.hero-frame::after{right:-6px;bottom:-6px;border-left:0;border-top:0}
+/* 右端の赤い帯（縦書き） */
+.hero-band{position:absolute;right:64px;top:0;width:60px;background:linear-gradient(180deg,#8e0c13,#b3121b);z-index:3;display:flex;justify-content:center;padding:24px 0 44px;clip-path:polygon(0 0,100% 0,100% 100%,50% calc(100% - 22px),0 100%)}
+.hero-band span{writing-mode:vertical-rl;font-family:"Noto Serif JP",serif;font-weight:600;font-size:16px;letter-spacing:.18em;line-height:1.7;color:#fff}
+.hero-copy{position:absolute;left:110px;top:118px;width:640px;z-index:3}
+.hero-copy .eyebrow{color:var(--gold);font-size:17px;letter-spacing:.32em}
+.hero-lead{margin:0 0 4px;font-family:"Noto Serif JP",serif;font-weight:600;font-size:31px;letter-spacing:.08em;line-height:1.5;background:linear-gradient(180deg,#f6e3a9,#d4ae5a 60%,#a9832f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero h1{font-size:112px;font-weight:900;letter-spacing:.06em;line-height:1.25;color:#fff;text-shadow:0 6px 30px #0009}
+.hero-sub{margin-top:14px;font-size:16px;line-height:1.9;color:#e6dfd0}
+.hero-badges{display:flex;gap:10px;margin-top:22px}
+.hero-badges span{font-size:15px;font-weight:700;letter-spacing:.08em;padding:6px 18px;border:1px solid var(--gold);color:var(--gold-l)}
+.hero-badges span.fill{background:var(--red);border-color:var(--red);color:#fff}
+.hero-copy .btn{margin-top:22px;min-width:260px;font-size:17px}
+/* 右側：限定醸造の缶とグラス＋干支缶 */
+.hero-art{position:absolute;left:690px;top:0;width:660px;height:620px;z-index:2;pointer-events:none}
+.hero-art .halo{position:absolute;left:90px;top:70px;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,#f1d48a66 0,#c9a24a33 40%,transparent 70%)}
+.hero-art .ring{position:absolute;left:110px;top:90px;width:390px;height:390px;border-radius:50%;border:1px solid #c9a24a80}
+.hero-art .main{position:absolute;left:148px;bottom:44px;height:480px;width:auto;max-width:none;filter:drop-shadow(0 24px 30px #000a)}
+.hero-art .can{position:absolute;bottom:56px;height:300px;width:auto;max-width:none;filter:drop-shadow(0 18px 22px #000b)}
+.hero-art .can.l{left:16px}
+.hero-art .can.r{left:450px}
+.hero-art .floor{position:absolute;left:0;right:20px;bottom:30px;height:40px;background:radial-gradient(ellipse at 50% 50%,#c9a24a55 0,transparent 70%)}
+
+/* ---------- nav ---------- */
+.nav{display:flex;justify-content:flex-start;align-items:stretch;gap:0;padding:0 28px;background:var(--black2);border-top:1px solid #c9a24a40;border-bottom:3px solid var(--red);position:sticky;top:0;z-index:10}
+.nav-toggle{display:none}
+/* 左端：DREAM CRAFT（店舗トップへ） */
+.nav .nav-title{display:flex;align-items:center;flex:none;min-width:0;padding:0 28px 0 0;border:0;background:none;font-family:Jost,Futura,"Century Gothic",sans-serif;font-weight:500;font-size:20px;letter-spacing:.16em;color:var(--gold-l)}
+.nav .nav-title::after{content:none}
+.nav .nav-title:hover,.nav .nav-title:focus-visible{background:none;color:#fff}
+.nav-links{display:flex;flex:1;min-width:0;justify-content:center}
+.nav-links a{flex:1 1 auto;min-width:max-content;max-width:190px;white-space:nowrap}
+/* PCでも画面が狭いときは、メニューの文字・余白を詰めて1行に収める */
+@media(min-width:761px) and (max-width:1439px){
+  .nav{padding:0 16px}
+  .nav .nav-title{font-size:16px;letter-spacing:.1em;padding-right:14px}
+  .nav-links a{flex:1 1 auto;min-width:0;max-width:none;padding:14px 8px;font-size:13px;letter-spacing:.02em;gap:4px}
+  .nav-links a::after{display:none}
+}
+.nav a{display:flex;align-items:center;justify-content:center;gap:8px;min-width:0;padding:16px 22px;font-size:15px;font-weight:700;letter-spacing:.1em;text-decoration:none;color:var(--gold-l);border-left:1px solid #c9a24a33;transition:background .2s,color .2s}
+.nav a:last-child{border-right:1px solid #c9a24a33}
+.nav a::after{content:"";width:6px;height:6px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.nav a:hover,.nav a:focus-visible{background:var(--red);color:#fff}
+
+/* ---------- section head（共通） ---------- */
+.shead{text-align:center;margin-bottom:40px}
+.shead .eyebrow{color:var(--gold-d)}
+.shead h2{font-size:clamp(26px,3vw,42px);line-height:1.6;margin-top:12px}
+.shead p{max-width:620px;margin:14px auto 0;font-size:15px;color:#4d483f}
+.dark .shead .eyebrow{color:var(--gold)}
+.dark .shead h2{color:#fff}
+.dark .shead p{color:#d8d0c0}
+
+/* ---------- 贈る相手から選ぶ ---------- */
+.choose{padding:84px 24px 40px;background:var(--ivory)}
+.choices{max-width:calc(var(--cw) + 80px);margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.choice{position:relative;text-decoration:none;display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);transition:transform .2s,box-shadow .2s;overflow:hidden}
+.choice:hover{transform:translateY(-5px);box-shadow:0 16px 30px #0c0b0918}
+.choice .top{background:var(--black);color:var(--gold-l);padding:16px 16px 14px}
+.choice .number{display:block;font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;font-weight:900;font-variant-numeric:lining-nums tabular-nums;font-size:28px;line-height:1;color:var(--gold)}
+.choice h3{font-family:"Noto Serif JP",serif;font-weight:600;font-size:16px;line-height:1.55;margin-top:8px;color:#fff}
+.choice img{height:170px;width:100%;object-fit:contain;padding:16px 14px 0;filter:drop-shadow(0 10px 10px #0c0b0920)}
+.choice p{font-size:13.5px;color:#4d483f;padding:12px 16px 0}
+.choice .linktext{margin:auto 14px 18px;display:flex;align-items:center;justify-content:center;gap:4px;padding:9px 6px;font-size:13px;letter-spacing:0;white-space:nowrap;font-weight:700;color:var(--red);border:1.5px solid var(--red);border-radius:999px}
+.choice .linktext::after{content:"›"}
+.budget{max-width:var(--cw);margin:0 auto;padding:64px 0 44px}
+.budget-head{text-align:center;margin-bottom:22px}
+.budget-head h3{font-family:"Noto Serif JP",serif;font-weight:600;font-size:clamp(22px,2.4vw,30px);line-height:1.5}
+.budget-head p{font-size:14px;color:#4d483f}
+.budget-list{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.budget-card{display:flex;flex-direction:column;align-items:center;text-align:center;text-decoration:none;color:var(--ink);background:#fff;border:1px solid var(--line);border-top:4px solid var(--gold);padding:18px 14px 14px;transition:transform .2s,box-shadow .2s}
+.budget-card:hover{transform:translateY(-4px);box-shadow:0 12px 24px #0c0b0918}
+.budget-card .band{font-size:13px;font-weight:700;letter-spacing:.08em;color:#fff;background:var(--black);padding:2px 14px}
+.budget-card .scene{font-size:13px;font-weight:700;color:var(--red);margin-top:10px}
+.budget-card .yen{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:32px;line-height:1.2;margin-top:4px;font-variant-numeric:tabular-nums}
+.budget-card .yen small{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:15px;margin-left:2px}
+.budget-card .sub{font-size:12px;color:var(--sub)}
+.budget-card .thumbs{display:block;height:104px;margin:10px 0 12px;width:100%}
+.budget-card .thumbs img{height:100%;width:100%;object-fit:contain;filter:drop-shadow(0 6px 6px #0c0b0920)}
+.budget-card .thumbs img.photo{object-fit:cover;filter:none;width:auto;aspect-ratio:1;margin:0 auto}
+.budget-card .count{margin-top:auto;width:100%;border-top:1px solid #eee4d1;padding-top:10px;font-size:14px;font-weight:700}
+.budget-card .count::after{content:" ›"}
+
+/* ---------- PICK UP ---------- */
+.pickup-sec{background:linear-gradient(180deg,#0c0b09,#1c1711 50%,#0c0b09);padding:84px 24px 76px;position:relative}
+.pickup-sec::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.pickup-inner{max-width:var(--cw);margin:auto}
+.pickup{position:relative;display:grid;grid-template-columns:1fr 1.1fr;align-items:center;gap:40px;margin-top:52px;padding:46px 40px 36px;background:#fbf8f1;border:1px solid var(--gold);outline:1px solid #c9a24a66;outline-offset:6px}
+.pickup.rev{grid-template-columns:1.1fr 1fr}
+.pickup.rev .ph{order:2}
+.pickup .no{position:absolute;top:-30px;left:32px;font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;font-weight:900;font-variant-numeric:lining-nums tabular-nums;font-size:56px;letter-spacing:.02em;line-height:1;color:var(--gold);text-shadow:0 2px 0 #0c0b09}
+.pickup .ribbon{position:absolute;top:-17px;left:50%;transform:translateX(-50%);width:max-content;max-width:80%;background:var(--red);color:#fff;font-weight:700;font-size:16px;letter-spacing:.08em;padding:6px 26px;text-align:center;line-height:1.5}
+.pickup .ribbon::before,.pickup .ribbon::after{content:"";position:absolute;top:0;bottom:0;width:14px;background:var(--red)}
+.pickup .ribbon::before{left:-12px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,50% 50%)}
+.pickup .ribbon::after{right:-12px;clip-path:polygon(0 0,100% 0,50% 50%,100% 100%,0 100%)}
+.pickup .ph{display:flex;justify-content:center;align-items:center;aspect-ratio:1/1;background:radial-gradient(circle at 50% 55%,#fff 0,#f4ead2 58%,transparent 72%)}
+.pickup a.ph{transition:opacity .2s}
+.pickup a.ph:hover{opacity:.85}
+.pickup .ph img{width:92%;height:auto;filter:drop-shadow(0 16px 18px #0c0b0940)}
+.pickup .ph.photo{background:none}
+.pickup .ph.photo img{width:86%;filter:none;box-shadow:0 12px 28px #0c0b0926}
+.pickup .lead{font-size:13px;font-weight:700;color:var(--red);letter-spacing:.1em}
+.pickup h3{font-family:"Noto Serif JP",serif;font-weight:600;font-size:clamp(22px,2.2vw,30px);line-height:1.45;margin:6px 0 12px}
+.pickup .tags{margin-bottom:14px}
+.pickup ul{margin:0 0 12px;padding-left:1.2em;font-size:14px;line-height:1.8}
+.pickup .note{font-size:14px;line-height:1.85;color:#4d483f}
+.pickup .price{margin:16px 0 0;font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:40px;line-height:1.2;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pickup .price small{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-size:16px;font-weight:500;margin-left:3px}
+.pickup .btn-row{margin-top:14px}
+.pickup .btn-row .buy{flex:0 1 260px}
+
+/* ---------- tags ---------- */
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;color:#6d5320;border:1px solid #cdb06b;padding:1px 9px;line-height:1.6;background:#fff}
+.tag.when{border-color:#e0b7a0;color:#9b2c12;background:#fff4ee}
+.tag.now{border-color:#b9dcc4;color:#1d6b3a;background:#eef7f1}
+.tag.nonalc{border-color:#1d6fa5;color:#fff;background:#1d6fa5;font-weight:700}
+
+/* ---------- ボスの吹き出し（金の縁） ---------- */
+.bb-say{display:flex;gap:12px;align-items:center;margin-top:18px;text-align:left}
+.bb-say img{width:58px;height:58px;flex:none;border-radius:50%;background:#fff;border:2px solid var(--gold)}
+.bb-say p{position:relative;margin:0;background:#fff;color:#222!important;border:1.5px solid var(--gold);border-radius:6px;padding:10px 16px 11px;font-size:13.5px!important;line-height:1.8;font-weight:500}
+.bb-say p::before,.bb-say p::after{content:"";position:absolute;top:50%;width:0;height:0;border-style:solid}
+.bb-say p::before{left:-11px;margin-top:-9px;border-width:9px 11px 9px 0;border-color:transparent var(--gold) transparent transparent}
+.bb-say p::after{left:-8px;margin-top:-8px;border-width:8px 9px 8px 0;border-color:transparent #fff transparent transparent}
+
+/* ---------- 限定醸造 ---------- */
+.feature{position:relative;overflow:hidden;background:radial-gradient(ellipse at 28% 50%,#5a4320 0,transparent 55%),#0c0b09;color:#fff;padding:96px max(24px,calc(50% - var(--cw) / 2));display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.feature .eyebrow{color:var(--gold)}
+.feature h2{font-size:clamp(28px,3.2vw,44px);line-height:1.6;margin:16px 0}
+.feature .reading{display:inline-block;font-size:17px;letter-spacing:.12em;color:var(--gold-l);border-top:1px solid #c9a24a80;border-bottom:1px solid #c9a24a80;padding:6px 0;margin-bottom:20px}
+.feature .reading small{font-size:13px;margin-left:8px;color:#cfc3a6}
+.feature p{font-size:16px;color:#e6e0d3}
+.feature-img img{width:86%;margin:auto;filter:drop-shadow(0 25px 22px #000a)}
+.masters{max-width:calc(var(--cw) + 48px);margin:auto;padding:72px 24px 80px}
+.mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mini{display:flex;flex-direction:column;align-items:center;text-align:center;background:#fff;border:1px solid var(--line);padding:16px 12px 14px;text-decoration:none;color:var(--ink);transition:transform .2s}
+.mini:hover{transform:translateY(-3px)}
+.mini img{height:110px;width:100%;object-fit:contain}
+.mini .q{font-size:13px;font-weight:700;color:#fff;background:var(--black);padding:1px 12px;margin-top:10px}
+.mini .q b{color:var(--gold-l)}
+.mini .nm{font-size:13px;color:#4d483f;margin-top:4px}
+.mini .pr{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:24px;line-height:1.3}
+.mini .pr small{font-size:12px;font-weight:500}
+.mini .go{font-size:13px;font-weight:700;margin-top:6px;color:var(--red);border-bottom:1px solid currentColor}
+.mini-more{text-align:center;margin-top:22px}
+.mini-more a{display:inline-flex;align-items:center;min-height:48px;padding:10px 32px;border:1px solid var(--ink);font-weight:700;text-decoration:none}
+.stocknote{font-size:13px;margin-top:22px;color:#77716a}
+.stocknote.center{text-align:center;margin-top:28px}
+
+/* ---------- 干支（赤×金） ---------- */
+.eto{position:relative;background:linear-gradient(135deg,#9c0f17,#b3121b 50%,#8a0b12);padding:88px 24px 76px;color:#fff;overflow:hidden}
+/* 金の七宝柄（円が重なった花びら部分を塗る） */
+.eto::before{content:"";position:absolute;inset:0;opacity:.12;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath fill='%23f1d48a' fill-rule='evenodd' d='M0 0h100v100H0zM-50 0a50 50 0 1 0 100 0a50 50 0 1 0 -100 0M50 0a50 50 0 1 0 100 0a50 50 0 1 0 -100 0M-50 100a50 50 0 1 0 100 0a50 50 0 1 0 -100 0M50 100a50 50 0 1 0 100 0a50 50 0 1 0 -100 0M0 50a50 50 0 1 0 100 0a50 50 0 1 0 -100 0'/%3E%3C/svg%3E") 0 0/88px 88px}
+.eto > *{position:relative}
+.eto-main{display:grid;grid-template-columns:1.05fr 1fr;align-items:center;gap:48px;max-width:var(--cw);margin:auto}
+.eto .eyebrow{color:var(--gold-l)}
+.eto h2{font-size:clamp(26px,2.8vw,40px);line-height:1.6;margin:14px 0 18px}
+.eto p{font-size:16px}
+.eto .bb-say p::before{border-color:transparent var(--gold) transparent transparent}
+.eto-cans{display:flex;justify-content:center;align-items:flex-end;gap:4%}
+.eto-cans img{width:36%;height:auto;filter:drop-shadow(0 18px 16px #3a000080)}
+.eto-row{max-width:var(--cw);margin:52px auto 0;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.eto-item{display:grid;grid-template-columns:48% 1fr;gap:20px;align-items:center;background:#fffaf0;color:var(--ink);padding:18px 22px 18px 14px;border:1px solid var(--gold);box-shadow:0 10px 26px #3a000050;text-decoration:none;transition:transform .2s}
+.eto-item:hover{transform:translateY(-3px)}
+.eto-item .ph{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
+.eto-item .ph img{max-height:100%;width:auto;object-fit:contain}
+.eto-item .ph.photo img{width:100%;height:100%;object-fit:cover}
+.eto-item .et{display:inline-block;background:var(--black);color:var(--gold-l);font-size:12px;font-weight:700;padding:2px 10px;letter-spacing:.06em}
+.eto-item b{display:block;font-size:16px;line-height:1.5;margin-top:8px}
+.eto-item small{display:block;font-size:12px;color:#6c5a3a;line-height:1.5;margin-top:2px}
+.eto-item .pr{font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-size:28px;font-variant-numeric:tabular-nums;margin-top:6px;line-height:1.2}
+.eto-item .pr small{display:inline;font-size:13px;font-weight:500;color:var(--ink)}
+.eto-item .go{display:inline-block;margin-top:6px;font-size:13px;font-weight:700;color:var(--red);border-bottom:1px solid currentColor}
+
+/* ---------- のし ---------- */
+.noshi{background:#fff;padding:84px 24px}
+.noshi-inner{max-width:var(--cw);margin:auto}
+.noshi .shead .eyebrow{color:var(--red)}
+.noshi-badges{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:20px}
+.noshi-badges span{border:1px solid var(--ink);font-weight:700;font-size:14px;padding:4px 16px}
+.noshi-badges span.fill{background:var(--red);border-color:var(--red);color:#fff}
+.noshi .shead .bb-say{max-width:560px;margin:24px auto 0}
+.noshi-columns{display:grid;grid-template-columns:1.25fr 1fr;gap:24px;align-items:stretch;--nw:200px}
+.noshi-block{display:grid;grid-template-columns:auto 1fr;gap:6px 24px;padding:30px 28px;background:var(--ivory);border:1px solid var(--line);position:relative}
+.noshi-block::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--red),var(--gold))}
+.noshi-kind{grid-row:1/3;writing-mode:vertical-rl;font-size:34px;font-weight:900;color:var(--red);letter-spacing:.2em;line-height:1;border-left:1px solid var(--gold);padding-left:14px}
+.noshi-block h3{font-size:17px;line-height:1.6}
+.noshi-block p{font-size:14px;color:#4d483f}
+.noshi-figs{grid-column:1/-1;display:flex;gap:14px;justify-content:center;margin-top:18px}
+.noshi-figs figure{width:var(--nw)}
+.noshi-block img{width:100%;border:1px solid #e8decd;box-shadow:0 8px 20px #0c0b0914;background:#fff}
+.noshi-block figcaption{text-align:center;font-size:13px;color:#6c5a3a;margin-top:8px}
+.noshi-notes{list-style:none;margin:28px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.noshi-notes li{font-size:13px;line-height:1.7;color:#4d483f;padding:12px 14px;background:var(--ivory);border-top:2px solid var(--gold)}
+.noshi-notes b{display:block;color:var(--ink);font-size:14px}
+
+/* ---------- 商品一覧 ---------- */
+.chapter{max-width:calc(var(--cw) + 48px);margin:auto;padding:84px 24px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.filters .label{font-size:13px;font-weight:700;color:var(--sub);margin-right:4px}
+.filters button{border:1px solid #bdb3a0;background:#fff;color:var(--ink);padding:8px 18px;cursor:pointer;min-height:44px;font-size:14px}
+.filters button[aria-pressed=true]{background:var(--black);color:var(--gold-l);border-color:var(--black)}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0 18px;font-size:14px}
+.result-wrap{display:flex;align-items:center;flex-wrap:wrap;gap:8px 14px}
+.clear-btn{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:4px 14px;border:1px solid var(--red);border-radius:999px;background:#fff;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.clear-btn::before{content:"×";font-size:15px;line-height:1}
+.clear-btn:hover{background:var(--red);color:#fff}
+.toolbar select{font-size:14px;padding:6px 10px;border:1px solid #bdb3a0;background:#fff;color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.product{background:#fff;border:1px solid var(--line);display:flex;flex-direction:column;padding:20px;transition:box-shadow .2s}
+.product:hover{box-shadow:0 14px 28px #0c0b0914}
+.product .ph{position:relative;display:block;aspect-ratio:4/3;margin:12px 0 14px}
+.product .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 10px #0c0b0922);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.product:hover .ph img{transform:translateY(-6px) scale(1.03)}
+.product .ph.photo img{object-fit:contain;filter:none}
+.product h3{font-size:17px;line-height:1.5}
+.product .maker{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--bc,var(--red));margin-bottom:2px}
+.product .spec{font-size:13px;color:var(--sub);margin-top:4px;line-height:1.6}
+.product .inside{font-size:13px;margin-top:8px;line-height:1.65;color:#3d382f}
+.product .inside b{color:var(--red)}
+.product .price{font-size:30px;font-family:"Helvetica Neue",Arial,sans-serif;font-weight:700;font-variant-numeric:tabular-nums;margin:10px 0 2px;line-height:1.3;white-space:nowrap}
+.product .price small{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;font-weight:500;font-size:14px;margin-left:2px}
+.product .ship{font-size:12px;color:var(--sub);margin-bottom:12px}
+.product .btn{font-size:13px;padding:8px 10px}
+
+/* ---------- メーカーから選ぶ ---------- */
+.brands{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:-8px 0 32px}
+.brand-card{display:flex;flex-direction:column;align-items:center;gap:2px;padding:16px 10px 14px;background:#fff;border:1px solid var(--line);border-bottom:3px solid var(--bc,var(--gold));cursor:pointer;font:inherit;color:var(--ink);transition:transform .2s,box-shadow .2s}
+.brand-card:hover{transform:translateY(-3px);box-shadow:0 12px 24px #0c0b0914}
+.brand-card .en{font-size:22px;letter-spacing:.18em;line-height:1.2;color:var(--bc,var(--gold-d))}
+.brand-card b{font-size:15px}
+.brand-card small{font-size:12px;color:var(--sub)}
+.brand-card small::after{content:" ›"}
+.brand-card[aria-pressed=true]{background:var(--bc);border-color:var(--bc);box-shadow:0 10px 22px #0c0b0926}
+.brand-card[aria-pressed=true] .en,.brand-card[aria-pressed=true] b,.brand-card[aria-pressed=true] small{color:#fff}
+.brand-card[aria-pressed=true] small::after{content:""}
+.brand-card[aria-pressed=true] small::before{content:"✓ 選択中";font-size:12px}
+.brand-card[aria-pressed=true] small{font-size:0}
+
+/* ---------- オリジナルギフト ---------- */
+.original{background:#fff;padding:84px 24px;position:relative}
+.original::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.original-inner{max-width:var(--cw);margin:auto}
+.original .filters{justify-content:center;margin-bottom:22px}
+.original .product{background:var(--ivory)}
+.product .ph.cover img{object-fit:cover;filter:none}
+.product .maker.orig{color:var(--gold-d)}
+
+/* ---------- ハムギフト ---------- */
+.ham{background:linear-gradient(180deg,#17140f,#0c0b09);padding:84px 24px;position:relative}
+.ham::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,transparent,var(--red),transparent)}
+.ham-inner{max-width:var(--cw);margin:auto}
+.ham .shead .bb-say{max-width:560px;margin:24px auto 0}
+.ham .filters{justify-content:center;margin-bottom:22px}
+.ham .filters button{background:transparent;color:var(--gold-l);border-color:#c9a24a80}
+.ham .filters button[aria-pressed=true]{background:var(--gold);color:var(--black);border-color:var(--gold)}
+.ham .product{border-color:#c9a24a66}
+.ham .product .brandname{font-size:12px;font-weight:700;color:var(--red);letter-spacing:.06em}
+.ham .stocknote{color:#a9a191}
+.ham-caution{max-width:820px;margin:0 auto 32px;background:#fff;border:2px solid var(--red);padding:22px 28px}
+.ham-caution .ttl{font-weight:800;color:var(--red);font-size:16px;text-align:center;margin-bottom:12px}
+.ham-caution ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.ham-caution li{font-size:13.5px;line-height:1.7;color:#3d382f;padding-left:16px;position:relative}
+.ham-caution li::before{content:"";position:absolute;left:0;top:.6em;width:7px;height:7px;background:var(--red)}
+.ham-caution b{display:block;font-size:14.5px;color:var(--ink)}
+.noshi-ham{margin:18px auto 0;max-width:820px;text-align:center;font-size:14px;line-height:1.8;background:#fff4ee;border:1px solid #e0b7a0;padding:12px 18px;color:#3d382f}
+.noshi-ham b{color:var(--red);margin-right:10px}
+.noshi-ham em{font-style:normal;font-weight:700;color:var(--red)}
+
+/* 絞り込みで1商品だけのとき（PC）：横長で大きく中央に／2商品のときは少し大きくして中央に */
+@media(min-width:761px){
+  .grid.double{grid-template-columns:repeat(2,minmax(0,400px));justify-content:center;gap:28px}
+  .grid.double .product{padding:26px}
+  .grid.double .product h3{font-size:19px}
+  .grid.double .product .price{font-size:34px}
+  .grid.single{grid-template-columns:minmax(0,780px);justify-content:center}
+  .grid.single .product{display:grid;grid-template-columns:46% 1fr;column-gap:36px;padding:32px 36px;align-items:start;align-content:center}
+  .grid.single .product .tags{grid-column:2;grid-row:1}
+  .grid.single .product .ph{grid-column:1;grid-row:1/9;aspect-ratio:1/1;margin:0;align-self:center}
+  .grid.single .product > :not(.ph):not(.tags){grid-column:2}
+  .grid.single .product .maker{margin-top:14px}
+  .grid.single .product h3{font-size:22px}
+  .grid.single .product .spec,.grid.single .product .inside{font-size:14px}
+  .grid.single .product .price{font-size:40px;margin-top:16px}
+  .grid.single .product .btn-row{margin-top:16px}
+}
+
+/* ---------- ご注文の流れ ---------- */
+.flow{background:var(--black2);padding:76px 24px;color:#fff}
+.flow-inner{max-width:var(--cw);margin:auto}
+.flow-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin:0;padding:0;counter-reset:s}
+.flow-steps li{list-style:none;padding:8px 28px 10px;border-left:1px solid #c9a24a55}
+.flow-steps li:last-child{border-right:1px solid #c9a24a55}
+.flow-steps .no{font-family:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;font-weight:900;font-variant-numeric:lining-nums tabular-nums;font-size:38px;line-height:1;color:var(--gold)}
+.flow-steps h3{font-size:17px;margin:10px 0 6px;color:var(--gold-l)}
+.flow-steps p{font-size:14px;color:#d8d0c0;line-height:1.8}
+.deliv{margin-top:36px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.deliv div{background:#fff;color:var(--ink);text-align:center;padding:16px 10px;border-top:3px solid var(--red)}
+.deliv b{display:block;font-size:13px;color:var(--sub)}
+.deliv span{font-size:19px;font-weight:800}
+.corp{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid var(--gold);padding:20px 28px}
+.corp b{display:block;font-size:17px;color:var(--gold-l)}
+.corp p{font-size:14px;margin-top:4px;color:#d8d0c0}
+.corp .btn{flex:none}
+
+/* ---------- closing / footer ---------- */
+.closing{padding:84px 24px;text-align:center;background:radial-gradient(ellipse at 50% 120%,#5a4320 0,transparent 60%),var(--black);color:#fff}
+.closing .eyebrow{color:var(--gold);margin-bottom:18px}
+.closing h2{font-size:clamp(26px,3.3vw,44px);line-height:1.8}
+.closing .btn{margin-top:30px;min-width:280px}
+footer{background:#070605;color:#a9a191;padding:40px 6% 36px;font-size:12px;text-align:center;border-top:1px solid #c9a24a40}
+footer .brand{justify-content:center;margin-bottom:18px;text-align:center}
+.to-top{display:flex;width:fit-content;align-items:center;justify-content:center;gap:10px;min-width:280px;margin:26px auto 0;padding:12px 28px;border:1px solid var(--gold);color:var(--gold-l);font-size:15px;font-weight:700;letter-spacing:.06em;text-decoration:none;transition:background .2s}
+.to-top::before{content:"";width:8px;height:8px;border-top:2px solid currentColor;border-left:2px solid currentColor;transform:translateY(2px) rotate(45deg)}
+.to-top:hover{background:#c9a24a22}
+.floating{display:none}
+.pagetop{position:fixed;right:18px;bottom:24px;z-index:25;width:54px;height:54px;border-radius:50%;background:var(--black);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s;text-decoration:none}
+.pagetop::before{content:"";width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:13px solid var(--gold);margin-top:-4px}
+.pagetop.show{opacity:1;visibility:visible}
+.pagetop.show.moving{opacity:.35}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #e48722;outline-offset:3px}
+
+/* ---------- tablet ---------- */
+@media(max-width:1080px){
+  .choices{grid-template-columns:repeat(3,1fr)}
+  .noshi-columns{grid-template-columns:1fr}
+  .mini-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+/* ---------- smartphone ---------- */
+@media(max-width:760px){
+  html{scroll-padding-top:64px}
+  header{height:60px}
+  .header-stage{position:static;width:auto;height:100%;transform:none;padding:0 14px}
+  .brand{gap:10px}
+  .brand img{width:36px;height:36px}
+  .brand b{font-size:17px;white-space:nowrap;letter-spacing:.12em}
+  .brand small{display:none}
+  .season{font-size:10px;padding:2px 8px;letter-spacing:.04em;white-space:nowrap}
+  .hero{height:auto}
+  .hero-stage{position:relative;width:auto;height:auto;transform:none;padding:40px 22px 0;background:radial-gradient(circle at 50% 78%,#6a4f1c 0,#2a200f 34%,#0f0d0a 62%,#0a0907 100%)}
+  .hero-frame{inset:10px}
+  .hero-band{right:26px;width:36px;padding:12px 0 26px;clip-path:polygon(0 0,100% 0,100% 100%,50% calc(100% - 13px),0 100%)}
+  .hero-band span{font-size:12px;letter-spacing:.24em}
+  .hero-copy{position:relative;left:auto;top:auto;width:auto;padding-right:52px}
+  .hero-copy .eyebrow{font-size:12px;letter-spacing:.2em}
+  .hero-lead{font-size:clamp(17px,5vw,21px);margin-top:14px}
+  .hero h1{font-size:min(12.6vw,48px);white-space:nowrap;letter-spacing:.02em}
+  .hero-sub{font-size:13px;margin-top:8px}
+  .hero-badges{flex-wrap:wrap;gap:6px;margin-top:16px}
+  .hero-badges span{font-size:12px;padding:3px 10px}
+  .hero-copy .btn{display:none}
+  .hero-art{position:relative;left:auto;top:auto;width:100%;height:auto;aspect-ratio:620/560;margin:6px auto 0;max-width:420px}
+  .hero-art .halo{left:18%;top:8%;width:64%;height:auto;aspect-ratio:1}
+  .hero-art .ring{left:21%;top:11%;width:58%;height:auto;aspect-ratio:1}
+  .hero-art .main{left:24%;bottom:6%;height:80%}
+  .hero-art .can{height:58%;bottom:8%}
+  .hero-art .can.l{left:0}
+  .hero-art .can.r{left:auto;right:0}
+  .hero-art .floor{bottom:3%}
+  /* スマホ：ハンバーガーメニュー */
+  .nav{display:flex;justify-content:space-between;align-items:center;height:54px;padding:0 6px 0 16px}
+  .nav .nav-title{display:block;min-width:0;padding:6px 0;border:0;background:none;font-family:Jost,Futura,"Century Gothic",sans-serif;font-weight:500;font-size:18px;letter-spacing:.14em;color:var(--gold-l)}
+  .nav .nav-title::after{content:none}
+  .nav .nav-title:hover{background:none;color:#fff}
+  .nav-toggle{display:flex;align-items:center;gap:8px;height:46px;padding:0 12px;background:none;border:0;color:var(--gold-l);font-family:Jost,Futura,sans-serif;font-size:13px;letter-spacing:.14em;cursor:pointer}
+  .nav-toggle .bars{position:relative;width:24px;height:16px;display:block}
+  .nav-toggle .bars i{position:absolute;left:0;width:100%;height:2px;background:currentColor;border-radius:2px;transition:transform .25s,opacity .2s,top .25s}
+  .nav-toggle .bars i:nth-child(1){top:0}
+  .nav-toggle .bars i:nth-child(2){top:7px}
+  .nav-toggle .bars i:nth-child(3){top:14px}
+  .nav.open .nav-toggle .bars i:nth-child(1){top:7px;transform:rotate(45deg)}
+  .nav.open .nav-toggle .bars i:nth-child(2){opacity:0}
+  .nav.open .nav-toggle .bars i:nth-child(3){top:7px;transform:rotate(-45deg)}
+  .nav-links{display:none;position:absolute;left:0;right:0;top:100%;background:#17140ff7;border-bottom:3px solid var(--red);box-shadow:0 14px 30px #0008}
+  .nav.open .nav-links{display:block}
+  .nav-links a{justify-content:space-between;min-width:0;padding:16px 22px;font-size:15px;border:0;border-top:1px solid #c9a24a33;max-width:none;width:100%}
+  .nav-links a::after{transform:rotate(-45deg)}
+  .shead{margin-bottom:26px}
+  .shead h2{font-size:24px}
+  .shead p{font-size:14px}
+  .eyebrow{font-size:12px;letter-spacing:.18em}
+  .choose{padding:52px 16px 20px}
+  .choices{grid-template-columns:1fr;gap:12px}
+  .choice{display:grid;grid-template-columns:116px 1fr;align-items:center}
+  .choice .top{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:10px 16px}
+  .choice .number{font-size:24px}
+  .choice h3{font-size:16px;margin:0}
+  .choice h3 br{display:none}
+  .choice img{grid-column:1;height:96px;padding:10px 0 0 12px}
+  .choice p{grid-column:2;padding:10px 14px 0 10px;font-size:13px}
+  .choice .linktext{grid-column:1/-1;margin:12px 14px 14px}
+  .budget{padding:44px 0 28px}
+  .budget-list{grid-template-columns:1fr 1fr;gap:10px}
+  .budget-card{padding:14px 8px 12px}
+  .budget-card .yen{font-size:25px}
+  .budget-card .thumbs{height:78px}
+  .budget-card .scene{font-size:12px}
+  .pickup-sec{padding:52px 16px 48px}
+  .pickup,.pickup.rev{grid-template-columns:1fr;gap:6px;padding:40px 16px 22px;margin-top:44px}
+  .pickup.rev .ph{order:0}
+  .pickup .no{display:none}
+  .pickup,.pickup.rev{padding-top:26px;margin-top:28px}
+  /* スマホ：帯をなくして、キャッチを枠内に大きく */
+  .pickup-sec .pickup .ribbon{position:static;transform:none;width:100%;max-width:none;background:none;padding:0 0 12px;margin:0 0 8px;font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;font-weight:800;font-size:min(5.4vw,21px);line-height:1.4;letter-spacing:.04em;color:var(--red);text-align:center;border-bottom:1px solid var(--gold);white-space:nowrap}
+  .pickup-sec .pickup .ribbon::before,.pickup-sec .pickup .ribbon::after{content:none}
+  .pickup .ribbon{font-size:13px;max-width:72%;width:72%;padding:5px 10px;white-space:normal}
+  .pickup > div{min-width:0}
+  .pickup .ph{aspect-ratio:auto;padding:10px 0}
+  .pickup h3{font-size:22px}
+  .pickup .btn-row .buy{flex:1}
+  .bb-say{flex-direction:column-reverse;align-items:stretch;gap:14px}
+  .bb-say img{align-self:center;width:66px;height:66px}
+  .bb-say p{padding:12px 16px;font-size:14px!important;line-break:strict}
+  .bb-say p::before{left:50%;top:auto;bottom:-12px;margin:0 0 0 -10px;border-width:11px 10px 0 10px;border-color:var(--gold) transparent transparent transparent!important}
+  .bb-say p::after{left:50%;top:auto;bottom:-8px;margin:0 0 0 -8px;border-width:9px 8px 0 8px;border-color:#fff transparent transparent transparent}
+  .feature{grid-template-columns:1fr;padding:52px 20px 60px;gap:16px;text-align:center}
+  .feature-img img{width:auto;max-height:290px;position:relative;left:-6%}
+  .feature h2{font-size:clamp(21px,6vw,25px)}
+  .feature p{font-size:14px;text-align:left}
+  .feature p br{display:none}
+  .masters{padding:48px 16px 56px}
+  .mini-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .mini img{height:82px}
+  .mini .pr{font-size:20px}
+  .eto{padding:52px 20px 48px}
+  .eto-main{grid-template-columns:1fr;gap:20px}
+  .eto-main > div:first-child{text-align:center}
+  .eto h2{font-size:clamp(22px,6.4vw,26px)}
+  .eto p{font-size:14px;text-align:left}
+  .eto p br{display:none}
+  .eto-cans img{width:34%}
+  .eto-row{grid-template-columns:1fr;gap:12px;margin-top:28px}
+  .eto-item{grid-template-columns:44% 1fr;gap:12px;padding:12px}
+  .eto-item b{font-size:14px}
+  .eto-item .pr{font-size:23px}
+  .noshi{padding:52px 16px}
+  .noshi-badges span{font-size:13px;padding:3px 12px}
+  .noshi-block{grid-template-columns:auto 1fr;padding:22px 16px 20px 20px;gap:4px 16px}
+  .noshi-kind{font-size:26px}
+  .noshi-block h3{font-size:15px}
+  .noshi-block p{font-size:13px}
+  .noshi-figs{flex-direction:column;align-items:center}
+  .noshi-figs figure{width:100%;max-width:300px}
+  .noshi-notes{grid-template-columns:1fr;gap:10px}
+  .chapter{padding:52px 16px}
+  .filters button{flex:1 0 30%;padding:6px 8px;font-size:13px;min-height:42px}
+  .filters .label{flex:0 0 100%}
+  .filters.budget-f button{flex:1 0 40%}
+  .grid{grid-template-columns:1fr;gap:12px}
+  .brands{grid-template-columns:1fr 1fr;gap:8px;margin:-4px 0 22px}
+  .brand-card{padding:12px 6px 10px}
+  .brand-card .en{font-size:17px}
+  .ham{padding:52px 16px}
+  .original{padding:52px 16px}
+  .original .filters button{flex:1 0 auto;padding:6px 14px;white-space:nowrap}
+  .ham-caution{padding:18px 16px;margin-bottom:24px}
+  .noshi-ham{text-align:left}
+  .noshi-ham b{display:block;margin:0 0 2px}
+  .ham .filters button{flex:1 0 22%}
+  .product{display:grid;grid-template-columns:40% 1fr;column-gap:12px;padding:14px;align-items:start}
+  .product .tags{grid-column:1/-1;margin-bottom:6px}
+  .product .ph{grid-column:1;grid-row:2/8;margin:0;align-self:center}
+  .product .maker,.product h3,.product .spec,.product .inside,.product .price,.product .ship{grid-column:2}
+  .product h3{font-size:15px}
+  .product .spec,.product .inside{font-size:12px;margin-top:2px}
+  .product .price{font-size:25px;margin-top:6px}
+  .product .ship{font-size:11px;margin-bottom:0}
+  .product .btn-row{grid-column:1/-1;margin-top:12px}
+  .flow{padding:52px 16px}
+  .flow-steps{grid-template-columns:1fr;gap:18px}
+  .flow-steps li,.flow-steps li:last-child{border:0;border-left:2px solid var(--gold);padding:2px 0 2px 18px}
+  .flow-steps .no{font-size:34px}
+  .deliv{grid-template-columns:1fr;gap:8px}
+  .corp{flex-direction:column;align-items:stretch;padding:18px}
+  .closing{padding:56px 20px}
+  .closing h2{font-size:23px}
+  footer{padding-bottom:96px}
+  .to-top{min-width:0;width:100%;max-width:340px}
+  .floating{position:fixed;bottom:0;left:0;right:0;display:flex;background:#0c0b09f0;color:var(--gold-l);backdrop-filter:blur(8px);padding:8px 14px calc(8px + env(safe-area-inset-bottom));z-index:20;justify-content:space-between;align-items:center;font-size:12px;gap:10px;border-top:1px solid #c9a24a66}
+  .floating .btn{min-height:40px;font-size:13px;padding:6px 18px;white-space:nowrap}
+  .pagetop{right:12px;bottom:calc(74px + env(safe-area-inset-bottom));width:46px;height:46px}
+}
+
+/* ---------- スクロール演出 ---------- */
+html.js .rv{opacity:0;transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+html.js .rv.up{transform:translateY(30px)}
+html.js .rv.left{transform:translateX(-44px)}
+html.js .rv.right{transform:translateX(44px)}
+html.js .rv.zoom{transform:scale(.92)}
+html.js .rv.in{opacity:1!important;transform:none!important}
+html.js .hero .ld{opacity:0;transform:translateY(22px);transition:opacity 1s ease,transform 1s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+html.js .hero.loaded .ld{opacity:1;transform:none}
+.shine{position:relative;overflow:hidden}
+.shine::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,#ffffff99,transparent);transform:skewX(-20deg);animation:shine 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,65%{left:-60%}100%{left:130%}}
+/* 金のリングがゆっくり回る光 */
+.hero-art .ring::after{content:"";position:absolute;inset:-1px;border-radius:50%;border:2px solid transparent;border-top-color:var(--gold-l);animation:spin 9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}html.js .rv,html.js .hero .ld{opacity:1!important}.shine::before,.hero-art .ring::after{animation:none}.gold-dust{display:none}}
+/* 見出しの行末「、。」」・行頭「「」のツメ */
+h2 .pt{margin-right:-.5em}
+h2 .po{margin-left:-.5em}
+/* ---------- スマホ：文字を全体的に一回り大きく／商品一覧は縦長カードの2列 ---------- */
+@media(max-width:760px){
+  .hero-band{width:46px;padding:12px 0 24px}
+  .hero-band span{font-size:12px;letter-spacing:.14em;line-height:1.6}
+  .hero-copy{padding-right:0;text-align:center}
+  .hero-lead{font-size:min(5vw,20px);margin-top:0;letter-spacing:.04em;white-space:nowrap}
+  .hero h1{font-size:min(19vw,76px);letter-spacing:0;margin:30px -8px 0}
+  .hero-badges{justify-content:center}
+  .hero-sub{font-size:14.5px;line-height:1.85}
+  .hero-badges span{font-size:12.5px;padding:4px 8px;letter-spacing:.04em}
+  .nav a{font-size:13px}
+  .eyebrow{font-size:13px}
+  .shead h2{font-size:27px;line-height:1.55}
+  .shead p{font-size:15px;line-height:1.9}
+  .noshi-badges span{font-size:14px}
+  .noshi-kind{font-size:28px}
+  .noshi-block h3{font-size:17px}
+  .noshi-block p{font-size:14.5px}
+  .noshi-notes li{font-size:14px}
+  .noshi-notes b{font-size:15px}
+  .choice h3{font-size:17.5px}
+  .choice p{font-size:14px}
+  .choice .linktext{font-size:15px}
+  .budget-head h3{font-size:25px}
+  .budget-head p{font-size:14px}
+  .budget-card .band{font-size:14px}
+  .budget-card .scene{font-size:13px}
+  .budget-card .yen{font-size:27px}
+  .pickup h3{font-size:24px}
+  .pickup .lead{font-size:14px}
+  .pickup ul,.pickup .note{font-size:15px}
+  .pickup .ribbon{font-size:14px}
+  .bb-say p{font-size:15px!important}
+  .feature h2{font-size:clamp(23px,6.6vw,27px)}
+  .feature .reading{font-size:17px}
+  .feature p,.eto p{font-size:15px}
+  .eto h2{font-size:clamp(24px,7vw,28px)}
+  .mini .nm{font-size:13.5px}
+  .mini .pr{font-size:22px}
+  .eto-item b{font-size:15.5px}
+  .eto-item small{font-size:13px}
+  .brand-card .en{font-size:19px}
+  .brand-card b{font-size:16px}
+  .filters button{font-size:14px}
+  .toolbar{font-size:15px}
+  .ham-caution li{font-size:14.5px}
+  .ham-caution b{font-size:15.5px}
+  .ham-caution .ttl{font-size:17px}
+  .stocknote{font-size:13.5px}
+  .closing h2{font-size:26px}
+  /* 商品一覧（ビール・ハム）：縦長カード2列 */
+  .grid,.grid.double{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .grid > .product{min-width:0;max-width:100%}
+  .grid .product .info{max-width:100%}
+  .grid .product .info .spec{word-break:keep-all;overflow-wrap:normal}
+  .grid .product{display:flex;flex-direction:column;align-items:stretch;padding:14px 12px}
+  .grid .product .tags{margin-bottom:4px;gap:4px}
+  .grid .product .tag{font-size:11px;padding:0 6px}
+  .grid .product .ph{aspect-ratio:1/1;margin:8px 0 10px;align-self:stretch;width:100%}
+  .grid .product .maker{font-size:12px}
+  .grid .product h3{font-size:16.5px;line-height:1.45}
+  .grid .product .spec{font-size:12.5px;margin-top:4px}
+  .grid .product .inside{font-size:13px;line-height:1.6;overflow-wrap:anywhere;word-break:normal;line-break:strict}
+  .grid .product h3,.flow-steps p,.feature p,.eto p,.pickup .note,.pickup li{word-break:normal;line-break:strict}
+  /* iPhoneのSafariは text-wrap:pretty で行を早めに折り返し右が空くため、スマホの本文は行末まで詰める */
+  p,li,h3{text-wrap:wrap}
+  .pickup p,.pickup li,.pickup h3,.bb-say p,.grid .product p,.grid .product h3,.flow-steps p,.feature p,.eto p,.noshi-block p,.noshi-notes li,.ham-caution li,.choice p{word-break:normal;line-break:strict;overflow-wrap:anywhere}
+  .feature .reading small{display:block;margin:2px 0 0}
+  .grid .product .price{font-size:26px;margin-top:8px}
+  .grid .product .price small{font-size:12px}
+  .grid .product .ship{font-size:11.5px;margin-bottom:10px}
+  .grid .product .btn-row{margin-top:auto;gap:6px}
+  .grid .product .btn-row{width:100%}
+  .grid .product .btn-row .buy{flex:1;min-width:0;min-height:42px;font-size:13px;padding:6px 4px}
+  .grid .product .btn.fav{width:38px;min-width:38px;height:38px;min-height:38px}
+  .grid .product .btn.fav::before{font-size:18px}
+  /* 1商品だけのときは1列で大きく */
+  .grid.single{grid-template-columns:minmax(0,1fr)}
+  .grid.single .product{padding:18px 16px}
+  .grid.single .product h3{font-size:19px}
+  .grid.single .product .price{font-size:30px}
+}
+</style>
+</head>
+<body>
+<script>
+/* PC：ヘッダーとFVの拡大率 = 画面の横幅 ÷ 1400px（スマホは使わない） */
+(function(){var r=document.documentElement;function fit(){r.style.setProperty('--s',matchMedia('(min-width:761px)').matches?r.clientWidth/1400:1)}fit();addEventListener('resize',fit);addEventListener('DOMContentLoaded',fit);addEventListener('load',fit);if('ResizeObserver' in window)new ResizeObserver(fit).observe(r)})();
+</script>
+<header><div class="header-stage"><a class="brand" href="https://www.rakuten.co.jp/d-craft/" target="_blank" rel="noopener" aria-label="ドリームクラフト＆ビッグボス 楽天市場店 トップページへ"><span><b>DREAM CRAFT</b><small>ドリームクラフト＆ビッグボス 楽天市場店</small></span></a><span class="season">2026 お歳暮・2027 お年賀</span></div></header>
+
+<main id="top">
+<!-- ===== 1. FV（黒×金、右に限定醸造の缶とグラス） ===== -->
+<section class="hero">
+  <div class="hero-stage">
+    <canvas class="gold-dust" aria-hidden="true"></canvas>
+    <div class="hero-band" aria-hidden="true"><span>冬のご挨拶に、<br class="sp-br">うまい一杯を</span></div>
+    <div class="hero-copy">
+      <p class="hero-lead">今年の「ありがとう」は、<br class="sp-br">金色の一杯で。</p>
+      <h1>お歳暮特集</h1>
+      <p class="hero-sub">サントリー・アサヒ・キリン・サッポロのビールギフトに、<br class="pc-br">限定醸造や干支デザイン缶、ハムギフトまで。冬のご挨拶をそろえました。</p>
+      <div class="hero-badges"><span class="fill">のし無料</span><span>本州送料無料</span><span>お年賀にも</span></div>
+      <a class="btn arrow" href="#gifts">ギフトを選ぶ</a>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="halo"></div><div class="ring"></div><div class="floor"></div>
+      <img class="can l" src="img/can-eto-premol.webp" width="631" height="1191" alt="">
+      <img class="can r" src="img/can-eto-kaoru.webp" width="631" height="1188" alt="">
+      <img class="main" src="img/hero-beer.png" width="387" height="527" alt="">
+    </div>
+  </div>
+</section>
+
+<nav class="nav" aria-label="特集メニュー"><a class="nav-title" href="https://www.rakuten.co.jp/d-craft/" target="_blank" rel="noopener" aria-label="ドリームクラフト＆ビッグボス 楽天市場店 トップページへ">DREAM CRAFT</a><button type="button" class="nav-toggle" aria-expanded="false" aria-controls="nav-links"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="lbl">MENU</span></button><div class="nav-links" id="nav-links"><a href="#noshi">のし・ご挨拶</a><a href="#pickup">イチオシ</a><a href="#limited">限定醸造</a><a href="#eto">干支デザイン</a><a href="#gifts">ビール一覧</a><a href="#original">オリジナルギフト</a><a href="#ham">ハムギフト</a></div></nav>
+
+<!-- ===== 2. のし（上部に配置） ===== -->
+<section class="noshi" id="noshi">
+  <div class="noshi-inner">
+    <div class="shead">
+      <div class="eyebrow orn">Noshi &amp; Greeting</div>
+      <h2>ご挨拶の気持ちは<br>のしに込めて</h2>
+      <p>のしはご注文時に選ぶだけ。<br class="sp-br">一年の感謝にも、新年のご挨拶にも。</p>
+      <div class="noshi-badges"><span class="fill">のし無料</span><span>御歳暮 2種</span><span>御年賀 1種</span></div>
+    </div>
+    <div class="noshi-columns">
+      <div class="noshi-block">
+        <div class="noshi-kind">御歳暮</div>
+        <h3>「今年も、ありがとうございました。」</h3>
+        <p>華やかな花柄と、端正な水引。<br class="pc-br">贈る相手に合わせて選べる2デザイン。</p>
+        <div class="noshi-figs">
+          <figure><img src="img/noshi-oseibo-hana.jpg" width="826" height="583" alt="お歳暮のし 華やかな花柄" loading="lazy"><figcaption>華やかな花柄</figcaption></figure>
+          <figure><img src="img/noshi-oseibo-formal.jpg" width="826" height="583" alt="御歳暮のし 水引の蝶結び" loading="lazy"><figcaption>端正な水引</figcaption></figure>
+        </div>
+      </div>
+      <div class="noshi-block">
+        <div class="noshi-kind">御年賀</div>
+        <h3>「今年も、よろしくお願いします。」</h3>
+        <p>2027年の干支「未」と梅をあしらった、晴れやかなデザイン。</p>
+        <div class="noshi-figs">
+          <figure><img src="img/noshi-onenga.jpg" width="826" height="584" alt="お年賀のし 2027年 未年の羊と梅・和柄" loading="lazy"><figcaption>2027年 未年デザイン</figcaption></figure>
+        </div>
+      </div>
+    </div>
+    <ul class="noshi-notes">
+      <li><b>ご注文時に選ぶだけ</b>商品ページの選択肢から、のしの種類をお選びください。</li>
+      <li><b>金額のわかるものは同梱なし</b>領収書など、金額のわかるものは商品に入っておりません。</li>
+      <li><b>ご注文前にご確認を</b>ご注文確定後ののし変更・依頼主変更・キャンセルはお受けできません。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 3. 贈る相手・ご予算から選ぶ ===== -->
+<section class="choose" id="choose">
+  <div class="shead"><div class="eyebrow orn">Find the Perfect Gift</div><h2>あの人の顔を浮かべて<br>選ぶ時間も贈り物に</h2><p>いつもの銘柄が好きな方へ、ビール通の方へ、ご家族へ、新年のご挨拶に。<br class="pc-br">贈る相手に合わせて、5つの選び方をご用意しました。</p></div>
+  <div class="choices">
+    <a class="choice" href="#gifts" data-jump="classic"><div class="top"><span class="number">01</span><h3>いつもの銘柄で、<br>王道の定番セット</h3></div><img src="img/ye3d.jpg" width="600" height="600" alt="ヱビスビール ギフトセット YE3D" loading="lazy"><p>ヱビス、一番搾り、スーパードライ、プレモル。好きな銘柄で迷わず贈れる。</p><span class="linktext">定番セットを見る</span></a>
+    <a class="choice" href="#gifts" data-jump="eto"><div class="top"><span class="number">02</span><h3>ビール通の方へ、<br>飲み比べ・限定醸造</h3></div><img src="img/k-ipf3.jpg" width="600" height="600" alt="キリン 一番搾り 3種飲み比べセット K-IPF3" loading="lazy"><p>一番搾りの3種、ヱビスの4種、水泉動入りの5種まで。</p><span class="linktext">飲み比べセットを見る</span></a>
+    <a class="choice" href="#gifts" data-jump="family"><div class="top"><span class="number">03</span><h3>ご家族みんなへ、<br>ビール＆ジュース</h3></div><img src="img/fs3g.jpg" width="600" height="600" alt="アサヒ スーパードライ ウェルチ ファミリーセット FS-3G" loading="lazy"><p>お酒を飲まない方やお子さまも楽しめる、果汁入りのセット。</p><span class="linktext">ジュース入りを見る</span></a>
+    <a class="choice" href="#eto"><div class="top"><span class="number">04</span><h3>新年のご挨拶に、<br>干支デザイン缶</h3></div><img src="img/item-bpck3s.png" width="540" height="353" alt="未年の干支デザイン缶 BPCK3S" loading="lazy"><p>2027年「未」の缶で、お年賀の手土産にも。</p><span class="linktext">干支デザインを見る</span></a>
+    <a class="choice" href="#original"><div class="top"><span class="number">05</span><h3>お店で組んだ、<br>オリジナルギフト</h3></div><img src="img/gft-g.jpg" width="600" height="600" alt="ドリームクラフト オリジナル 究極15種ビールセット" loading="lazy"><p>ビールも日本酒も、ドリームクラフトが選んだ飲み比べセット。</p><span class="linktext">オリジナルギフトを見る</span></a>
+  </div>
+  <div class="budget" id="budget">
+    <div class="budget-head"><div class="eyebrow">By Budget</div><h3>ご予算から選ぶ</h3><p>すべて税込・本州送料無料です。</p></div>
+    <div class="budget-list" id="budget-list"></div>
+  </div>
+</section>
+
+<!-- ===== 4. PICK UP ===== -->
+<section class="pickup-sec dark" id="pickup">
+  <div class="pickup-inner">
+    <div class="shead"><div class="eyebrow orn">Pick Up</div><h2>メーカーとオリジナルから<br>イチオシの6セット</h2><p>サントリー・アサヒ・サッポロ・キリンから1つずつと、<br class="pc-br">ドリームクラフトのオリジナルギフトから2セットを選びました。</p></div>
+    <div class="pickup">
+      <span class="no" aria-hidden="true">01</span>
+      <span class="ribbon">迷ったら、まずこのセット</span>
+      <a class="ph" href="https://item.rakuten.co.jp/d-craft/4901777297517/" target="_blank" rel="noopener"><img src="img/item-vm3s.png" width="587" height="377" alt="プレモル 5種セット VM3S" loading="lazy"></a>
+      <div>
+        <span class="lead">SUNTORY ｜ 限定醸造 水泉動入り</span>
+        <h3>プレモル 5種セット</h3>
+        <div class="tags"><span class="tag">VM3S</span><span class="tag when" data-when="2026年10月27日発売">予約・2026年10月27日発売</span><span class="tag">本州送料無料</span></div>
+        <ul><li>350ml × 11缶</li><li>プレモル4・香るエール3・黒2・マスターズドリーム1・水泉動1</li></ul>
+        <p class="note">定番のプレモルから香るエール、黒、マスターズドリーム、冬限定の水泉動まで。5つの味を少しずつ楽しめます。</p>
+        <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>5種類の飲み比べは、開けたときの楽しさが段違い。どなたに贈っても外さない、イチオシです。</p></div>
+        <p class="price">2,966<small>円（税込）</small></p>
+        <div class="btn-row"><a class="btn red buy" href="https://item.rakuten.co.jp/d-craft/4901777297517/" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=296346&amp;iid=10004842&amp;itype=1" target="_blank" rel="noopener" aria-label="プレモル 5種セット VM3Sをお気に入りに登録" title="お気に入りに登録"></a></div>
+      </div>
+    </div>
+    <div class="pickup rev">
+      <span class="no" aria-hidden="true">02</span>
+      <span class="ribbon">アサヒの人気5種を飲み比べ</span>
+      <a class="ph photo" href="https://item.rakuten.co.jp/d-craft/4901004045874/" target="_blank" rel="noopener"><img src="img/avg3.jpg" width="600" height="600" alt="アサヒビール 5種セット AVG-3" loading="lazy"></a>
+      <div>
+        <span class="lead">ASAHI ｜ アサヒ5種の飲み比べ</span>
+        <h3>アサヒビール 5種セット</h3>
+        <div class="tags"><span class="tag">AVG-3</span><span class="tag now">発売中</span><span class="tag">本州送料無料</span></div>
+        <ul><li>12缶（350ml・340ml・500ml）</li><li>スーパードライ4（350ml2・500ml2）・ジョッキ缶2・クリスタル2・マルエフ2・アサヒゴールド2</li></ul>
+        <p class="note">定番のスーパードライに、泡が楽しい生ジョッキ缶、すっきりしたクリスタル、まろやかなマルエフ、アサヒゴールド。アサヒの人気の味を一箱で飲み比べられます。</p>
+        <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>スーパードライ好きの方にも、いろいろ試したい方にも。5種類あるので、開けてから選ぶ楽しさがあります。</p></div>
+        <p class="price">2,966<small>円（税込）</small></p>
+        <div class="btn-row"><a class="btn red buy" href="https://item.rakuten.co.jp/d-craft/4901004045874/" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=296346&amp;iid=10010716&amp;itype=1" target="_blank" rel="noopener" aria-label="アサヒビール 5種セット AVG-3をお気に入りに登録" title="お気に入りに登録"></a></div>
+      </div>
+    </div>
+    <div class="pickup">
+      <span class="no" aria-hidden="true">03</span>
+      <span class="ribbon">贈り物の定番ヱビスを4種で</span>
+      <a class="ph photo" href="https://item.rakuten.co.jp/d-craft/4901880884147-nsi/" target="_blank" rel="noopener"><img src="img/yef3d.jpg" width="600" height="600" alt="ヱビス 4種飲み比べセット YEF3D" loading="lazy"></a>
+      <div>
+        <span class="lead">SAPPORO ｜ ヱビス4種の飲み比べ</span>
+        <h3>ヱビス 4種飲み比べセット</h3>
+        <div class="tags"><span class="tag">YEF3D</span><span class="tag now">発売中</span><span class="tag">本州送料無料</span></div>
+        <ul><li>350ml × 12缶</li><li>ヱビス3・プレミアムエール3・プレミアムブラック3・麦紡ぐ3</li></ul>
+        <p class="note">定番のヱビスに、華やかなプレミアムエール、深いコクのプレミアムブラック、麦紡ぐ。ヱビスの魅力を一箱で味わえます。</p>
+        <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>目上の方への贈り物なら、やっぱりヱビス。4種の飲み比べで、特別感もしっかり伝わります。</p></div>
+        <p class="price">2,966<small>円（税込）</small></p>
+        <div class="btn-row"><a class="btn red buy" href="https://item.rakuten.co.jp/d-craft/4901880884147-nsi/" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=296346&amp;iid=10015136&amp;itype=1" target="_blank" rel="noopener" aria-label="ヱビス 4種飲み比べセット YEF3Dをお気に入りに登録" title="お気に入りに登録"></a></div>
+      </div>
+    </div>
+    <div class="pickup rev">
+      <span class="no" aria-hidden="true">04</span>
+      <span class="ribbon">一番搾りを3つの味で</span>
+      <a class="ph photo" href="https://item.rakuten.co.jp/d-craft/4901411089706/" target="_blank" rel="noopener"><img src="img/k-ipf3.jpg" width="600" height="600" alt="キリン 一番搾り 3種飲み比べセット K-IPF3" loading="lazy"></a>
+      <div>
+        <span class="lead">KIRIN ｜ 一番搾り3種の飲み比べ</span>
+        <h3>キリン 一番搾り 3種飲み比べセット</h3>
+        <div class="tags"><span class="tag">K-IPF3</span><span class="tag now">発売中</span><span class="tag">本州送料無料</span></div>
+        <ul><li>350ml × 10缶・500ml × 2缶</li><li>一番搾り6・黒生3・プレミアム3</li></ul>
+        <p class="note">いつもの一番搾りに、黒生とプレミアムを加えた3種のセット。麦のうまみの違いを飲み比べられます。</p>
+        <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>一番搾り好きの方には、この3種セット。いつもの味と、ちょっと贅沢な味を一緒に楽しめます。</p></div>
+        <p class="price">2,966<small>円（税込）</small></p>
+        <div class="btn-row"><a class="btn red buy" href="https://item.rakuten.co.jp/d-craft/4901411089706/" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=296346&amp;iid=10022468&amp;itype=1" target="_blank" rel="noopener" aria-label="キリン 一番搾り 3種飲み比べセット K-IPF3をお気に入りに登録" title="お気に入りに登録"></a></div>
+      </div>
+    </div>
+    <div class="pickup">
+      <span class="no" aria-hidden="true">05</span>
+      <span class="ribbon">限定醸造入りの究極15種</span>
+      <a class="ph photo" href="https://item.rakuten.co.jp/d-craft/2101900000171/" target="_blank" rel="noopener"><img src="img/gft-g.jpg" width="600" height="600" alt="究極15種 ビールセット Gセット" loading="lazy"></a>
+      <div>
+        <span class="lead">DREAM CRAFT ｜ 15種の飲み比べ</span>
+        <h3>究極15種 ビールセット</h3>
+        <div class="tags"><span class="tag">Gセット</span><span class="tag when" data-when="2026年11月6日発売">予約・2026年11月6日発売</span><span class="tag">本州送料無料</span></div>
+        <ul><li>350ml × 15缶</li><li>マスターズドリーム 水泉動・干支デザイン缶・オリオンビールなど15種</li></ul>
+        <p class="note">4大メーカーのプレミアムビールに、限定醸造の水泉動や干支デザイン缶、オリオンビールまで。ドリームクラフトが選んだ15種を一箱に詰めました。</p>
+        <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>お店で組んだ自慢のセットです。ビール好きの方に贈れば、きっと話が弾みますよ。</p></div>
+        <p class="price">5,380<small>円（税込）</small></p>
+        <div class="btn-row"><a class="btn red buy" href="https://item.rakuten.co.jp/d-craft/2101900000171/" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=296346&amp;iid=10008901&amp;itype=1" target="_blank" rel="noopener" aria-label="究極15種 ビールセット Gセットをお気に入りに登録" title="お気に入りに登録"></a></div>
+      </div>
+    </div>
+    <div class="pickup rev">
+      <span class="no" aria-hidden="true">06</span>
+      <span class="ribbon">ノンアルコールビール12種</span>
+      <a class="ph photo" href="https://item.rakuten.co.jp/d-craft/2140110000779/" target="_blank" rel="noopener"><img src="img/gft-f.jpg" width="600" height="600" alt="ノンアルコールビール 12種セット Fセット" loading="lazy"></a>
+      <div>
+        <span class="lead">DREAM CRAFT ｜ ノンアルコール</span>
+        <h3>ノンアルコールビール 12種セット</h3>
+        <div class="tags"><span class="tag">Fセット</span><span class="tag nonalc">ノンアルコール</span><span class="tag now">発売中</span><span class="tag">送料無料</span></div>
+        <ul><li>350ml × 12缶</li><li>オールフリー・ドライゼロ・パーフェクトフリー・ラガーゼロなど4社12種</li></ul>
+        <p class="note">サントリー・アサヒ・キリン・サッポロのノンアルコールビールを12種。お酒を飲まない方や、車を運転される方への贈り物にも安心です。</p>
+        <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>飲めない方にも「ビールの気分」を贈れるセット。ノンアルでも飲み比べが楽しめます。</p></div>
+        <p class="price">3,281<small>円（税込）</small></p>
+        <div class="btn-row"><a class="btn red buy" href="https://item.rakuten.co.jp/d-craft/2140110000779/" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=296346&amp;iid=10015083&amp;itype=1" target="_blank" rel="noopener" aria-label="ノンアルコールビール 12種セット Fセットをお気に入りに登録" title="お気に入りに登録"></a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5. 限定醸造 ===== -->
+<section class="feature" id="limited">
+  <div class="feature-img"><img src="img/hero-limited.png" width="509" height="598" alt="限定醸造マスターズドリーム 水泉動の缶とグラス" loading="lazy"></div>
+  <div>
+    <div class="eyebrow">Limited Brew · Winter</div>
+    <h2>冬だけの限定醸造で<br>ひと味ちがうご挨拶を</h2>
+    <div class="reading">マスターズドリーム 水泉動<small>すいせんうごく</small></div>
+    <p>この季節にしか出会えない、マスターズドリームの限定醸造。<br>いつものプレモルと並べて飲み比べる時間ごと、<br>大切な方へ届けませんか。</p>
+    <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>ビール好きの方への冬ギフトなら、限定醸造入りが喜ばれます。「今しか飲めない」が、うれしいポイントです。</p></div>
+  </div>
+</section>
+<section class="masters" id="masters">
+  <div class="shead"><h2>水泉動の本数で<br class="sp-br">選べるセット</h2><p>5種の飲み比べセットと、マスターズドリームだけを味わうダブルセット。</p></div>
+  <div class="mini-grid" id="masters-grid"></div>
+  <p class="stocknote center">予約商品は発売日以降の発送です。<br class="sp-br">セット内容はサントリー公式サイト・<br class="sp-br">各商品ページの記載にもとづいています。</p>
+</section>
+
+<!-- ===== 6. 干支デザイン ===== -->
+<section class="eto" id="eto">
+  <div class="eto-main">
+    <div>
+      <div class="eyebrow">New Year 2027 · Year of the Sheep</div>
+      <h2>2027年は未年<br>干支缶で華やかな新年を</h2>
+      <p>2027年の干支「未」をあしらった、お正月らしいデザイン缶。<br>年末のお歳暮にも、年始のお年賀にも。<br>受け取った方の食卓を、めでたく彩ります。</p>
+      <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>お歳暮にもお年賀にも使えるのが干支缶のいいところ。贈る時期を選びません。</p></div>
+    </div>
+    <div class="eto-cans"><img src="img/can-eto-premol.webp" width="631" height="1191" alt="ザ・プレミアム・モルツ 干支デザイン缶（2027年 未）" loading="lazy"><img src="img/can-eto-kaoru.webp" width="631" height="1188" alt="ザ・プレミアム・モルツ 香るエール 干支デザイン缶（2027年 未）" loading="lazy"></div>
+  </div>
+  <div class="eto-row" id="eto-row"></div>
+</section>
+
+<!-- ===== 7. 商品一覧 ===== -->
+<section class="chapter" id="gifts">
+  <div class="shead"><div class="eyebrow orn">All Beer Gifts</div><h2>4大メーカーから<br>ぴったりの一箱を</h2><p>サントリー・アサヒ・キリン・サッポロ。<br>いつも飲んでいる銘柄から選ぶのも、<br class="sp-br">贈り物選びのコツです。</p></div>
+  <div class="brands" id="brands"></div>
+  <div class="filters" role="group" aria-label="ギフトを絞り込む">
+    <button type="button" aria-pressed="true" data-filter="all">すべて</button>
+    <button type="button" aria-pressed="false" data-filter="classic">定番の味</button>
+    <button type="button" aria-pressed="false" data-filter="limited">限定醸造入り</button>
+    <button type="button" aria-pressed="false" data-filter="eto">干支・飲み比べ</button>
+    <button type="button" aria-pressed="false" data-filter="family">ファミリー</button>
+  </div>
+  <div class="filters budget-f" role="group" aria-label="ご予算で絞り込む">
+    <span class="label">ご予算</span>
+    <button type="button" aria-pressed="false" data-filter="b2500">2,500円以下</button>
+    <button type="button" aria-pressed="false" data-filter="b3000">3,000円前後</button>
+    <button type="button" aria-pressed="false" data-filter="b4000">4,000円前後</button>
+    <button type="button" aria-pressed="false" data-filter="b5000">5,000円前後</button>
+  </div>
+  <div class="toolbar"><span class="result-wrap"><span id="result" aria-live="polite"></span><button type="button" class="clear-btn" id="clear-filter" hidden>選択をすべてクリア</button></span>
+    <label>並び替え <select id="sort"><option value="default">おすすめ順</option><option value="price-asc">価格の安い順</option><option value="price-desc">価格の高い順</option><option value="cans-desc">本数の多い順</option></select></label>
+  </div>
+  <div class="grid" id="all-grid"></div>
+  <p class="stocknote center">価格は税込・2026年10月27日時点です。<br class="sp-br">ビールギフトは本州送料無料、北海道・九州・四国・離島・沖縄は別途送料がかかります。<br>価格・在庫・お届け予定は各商品ページでご確認ください。</p>
+</section>
+
+<!-- ===== 7-2. ドリームクラフト オリジナルギフト ===== -->
+<section class="original" id="original">
+  <div class="original-inner">
+    <div class="shead"><div class="eyebrow orn">Dream Craft Original</div><h2>ドリームクラフトの<br>オリジナルギフト</h2><p>お店で組んだ飲み比べセット。<br class="sp-br">ビールはもちろん、<br class="pc-br">ノンアル・ハイボール・ウイスキー・日本酒まで。</p></div>
+    <div class="filters orig-f" role="group" aria-label="オリジナルギフトを種類で絞り込む">
+      <button type="button" aria-pressed="true" data-orig="all">すべて</button>
+      <button type="button" aria-pressed="false" data-orig="beer">ビール</button>
+      <button type="button" aria-pressed="false" data-orig="light">ノンアル・ハイボール</button>
+      <button type="button" aria-pressed="false" data-orig="whisky">ウイスキー</button>
+      <button type="button" aria-pressed="false" data-orig="sake">日本酒</button>
+    </div>
+    <div class="grid" id="orig-grid"></div>
+    <p class="stocknote center">予約商品は発売日以降の発送です。<br class="sp-br">くわしくは各商品ページでご確認ください。</p>
+  </div>
+</section>
+
+<!-- ===== 8. ハムギフト ===== -->
+<section class="ham dark" id="ham">
+  <div class="ham-inner">
+    <div class="shead"><div class="eyebrow orn">Ham Gifts</div><h2>お歳暮には<br>ハムギフトもあります</h2><p>日本ハム・丸大食品・伊藤ハムのお歳暮ハムギフト。<br class="pc-br">年末年始の食卓を華やかに彩る、定番の贈り物です。</p>
+      <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="240" alt="" loading="lazy"><p>お酒を飲まない方や、ご家族みんなへの贈り物にはハムギフトが喜ばれます。贈り先に合わせて選んでくださいね。</p></div></div>
+    <div class="ham-caution">
+      <p class="ttl">ハムギフトのご注文前にご確認ください</p>
+      <ul>
+        <li><b>のしは短冊のしのみ</b>ドリームクラフトオリジナルのし・メッセージカードは対応できません。</li>
+        <li><b>他の商品と同時購入はできません</b>ビールギフトなど他の商品と一緒に購入される場合は、ご注文を分けてお手続きください。</li>
+        <li><b>沖縄・離島へはお届けできません</b>ご注文からお届けまで、4日〜14日ほどかかります（メーカーにより異なります）。</li>
+        <li><b>年末のお届け日指定</b>伊藤ハムは12月20日、日本ハムは12月28日以降の日付は指定できません（ギフトセンター閉所のため）。</li>
+      </ul>
+    </div>
+    <div class="filters ham-f" role="group" aria-label="ハムギフトをメーカーで絞り込む">
+      <button type="button" aria-pressed="true" data-ham="all">すべて</button>
+      <button type="button" aria-pressed="false" data-ham="日本ハム">日本ハム</button>
+      <button type="button" aria-pressed="false" data-ham="丸大食品">丸大食品</button>
+      <button type="button" aria-pressed="false" data-ham="伊藤ハム">伊藤ハム</button>
+    </div>
+    <div class="grid" id="ham-grid"></div>
+    <p class="stocknote center">価格は税込・送料無料（2026年10月27日時点）。<br>ハムギフトは要冷蔵のため、<br class="sp-br">冷蔵便でのお届けです。<br>発送開始日は商品ごとに異なります。<br class="sp-br">くわしくは各商品ページでご確認ください。</p>
+  </div>
+</section>
+
+<!-- ===== 9. ご注文の流れ ===== -->
+<section class="flow dark" id="flow">
+  <div class="flow-inner">
+    <div class="shead"><div class="eyebrow orn">How to Order</div><h2>ご注文の流れ</h2></div>
+    <ol class="flow-steps">
+      <li><span class="no">01</span><h3>ギフトを選ぶ</h3><p>いつもの銘柄、限定醸造入り、干支デザイン、ハムギフト。贈る相手に合わせてお選びください。</p></li>
+      <li><span class="no">02</span><h3>のしを選ぶ</h3><p>年内なら「御歳暮」、年明けなら「御年賀」。商品ページの選択肢から指定できます。</p></li>
+      <li><span class="no">03</span><h3>お届け日を指定</h3><p>ご希望のお届け日を商品ページでご指定ください。指定がない場合は準備でき次第の発送です。</p></li>
+    </ol>
+    <div class="deliv">
+      <div><b>土日祝も</b><span>休まず発送</span></div>
+      <div><b>お届け日</b><span>指定できます</span></div>
+      <div><b>予約商品</b><span>発売日以降に発送</span></div>
+    </div>
+    <div class="corp">
+      <div><b>会社・団体でまとめて贈りたい方へ</b><p>複数のお届け先・大口のご注文も、お気軽にご相談ください。</p></div>
+      <a class="btn arrow" href="https://www.rakuten.co.jp/d-craft/info.html" target="_blank" rel="noopener">お問い合わせ先を見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10. 締め ===== -->
+<section class="closing">
+  <div class="eyebrow">Thank You for This Year</div>
+  <h2><span class="nobr">一年分の「ありがとう」を</span><br><span class="nobr">金色の一杯にこめて</span></h2>
+  <a class="btn arrow" href="#gifts">ギフト一覧へ</a>
+</section>
+</main>
+
+<footer>
+  <a class="brand" href="https://www.rakuten.co.jp/d-craft/" target="_blank" rel="noopener" aria-label="ドリームクラフト＆ビッグボス 楽天市場店 トップページへ"><span><b>DREAM CRAFT</b><small>ドリームクラフト＆ビッグボス 楽天市場店</small></span></a>
+  <p>20歳未満の者の飲酒は法律で禁止されています。20歳未満の方への酒類の販売はいたしません。</p>
+  <a class="to-top" href="#top">特集ページのトップへ</a>
+</footer>
+<div class="floating"><span>お歳暮も、お年賀も。</span><a href="#gifts" class="btn">ギフトを選ぶ</a></div>
+
+<script>
+/* 見出し：行末の「、。」」と行頭の「「」を半角分詰める */
+document.querySelectorAll('h2').forEach(h=>{
+  h.innerHTML=h.innerHTML
+    .replace(/([、。」])(?=(?:<\/span>)?(?:<br[^>]*>|\s*$))/g,'<span class="pt">$1</span>')
+    .replace(/(^\s*|<br[^>]*>|<span class="nobr">)「/g,'$1<span class="po">「</span>');
+});
+const ITEM='https://item.rakuten.co.jp/d-craft/';
+/* 楽天のお気に入り登録（ドリームクラフト店舗ID 296346 ＋ 商品ごとの番号 rid） */
+const FAV=rid=>'https://my.bookmark.rakuten.co.jp/?func=reg&svid=101&shop_bid=296346&iid='+rid+'&itype=1';
+/* 商品データ（価格はドリームクラフト楽天市場店の商品ページより・2026年10月27日時点）
+   brand：メーカー／cat：テーマ（classic 定番・limited 限定醸造・eto 干支や飲み比べ・family ファミリー） */
+const products=[
+ {brand:'suntory',rid:'10022420',id:'BPF3S',cat:'classic',name:'ザ・プレミアム・モルツ ギフトセット',cans:12,spec:'350ml × 12缶',inside:'プレモル12本',price:2966,url:'4901777270022',img:'item-bpf3s.png',w:540,h:352,tag:'定番の味を贈る',when:'now'},
+ {brand:'suntory',rid:'10024553',id:'BPF4S',cat:'classic',name:'ザ・プレミアム・モルツ ギフトセット',cans:15,spec:'350ml × 15缶',inside:'プレモル15本',price:3899,url:'4901777394346',img:'item-bpf4s.png',w:620,h:524,tag:'定番の味を贈る',when:'now'},
+ {brand:'suntory',rid:'10008191',id:'BPF5S',cat:'classic',name:'ザ・プレミアム・モルツ ギフトセット',cans:19,spec:'350ml × 19缶',inside:'プレモル19本',price:4899,url:'4901777270046',img:'item-bpf5s.png',w:632,h:394,tag:'たっぷり楽しむ定番',when:'now'},
+ {brand:'suntory',rid:'10004842',id:'VM3S',cat:'limited',name:'プレモル 5種セット',cans:11,spec:'350ml × 11缶',inside:'プレモル4・香るエール3・黒2・マスターズドリーム1・<b>水泉動1</b>',price:2966,url:'4901777297517',img:'item-vm3s.png',w:587,h:377,tag:'限定醸造入り',when:'2026年10月27日発売'},
+ {brand:'suntory',rid:'10006280',id:'VM4S',cat:'limited',name:'プレモル 5種セット',cans:14,spec:'350ml × 14缶',inside:'プレモル4・香るエール3・黒3・マスターズドリーム2・<b>水泉動2</b>',price:3899,url:'4901777302709',img:'item-vm4s.png',w:571,h:417,tag:'限定醸造入り',when:'2026年10月27日発売'},
+ {brand:'suntory',rid:'10023145',id:'VM5S',cat:'limited',name:'プレモル 5種セット',cans:18,spec:'350ml × 18缶',inside:'プレモル4・香るエール4・黒4・マスターズドリーム3・<b>水泉動3</b>',price:4899,url:'4901777297494',img:'item-vm5s.png',w:555,h:496,tag:'限定醸造入り',when:'2026年10月27日発売'},
+ {brand:'suntory',rid:'10008213',id:'DMD3S',cat:'limited',name:'「夢」マスターズドリーム ダブルセット',cans:10,spec:'350ml × 10缶',inside:'マスターズドリーム5・<b>水泉動5</b>',price:2966,url:'4901777319035',img:'item-dmd3s.png',w:494,h:620,tag:'水泉動をいちばん多く',when:'2026年10月27日発売'},
+ {brand:'suntory',rid:'10023141',id:'BPCK3S',cat:'eto',name:'プレモル 干支デザインセット',cans:12,spec:'350ml × 12缶',inside:'<b>干支デザイン缶12</b>',price:2966,url:'4901777423923',img:'item-bpck3s.png',w:540,h:353,tag:'お年賀にもおすすめ',when:'2026年10月27日発売',eto:'全部が干支缶'},
+ {brand:'suntory',rid:'10022445',id:'BP5AG',cat:'eto',name:'サントリー 7種飲み比べセット',cans:18,spec:'350ml × 18缶',inside:'<b>干支デザイン8</b>・香るエール2・黒2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:4899,url:'4901777419131',img:'item-bp5ag.png',w:557,h:451,tag:'干支缶たっぷり',when:'2026年10月27日発売',eto:'干支缶8本'},
+ {brand:'suntory',rid:'10010852',id:'BP3AG',cat:'eto',name:'サントリー 6種飲み比べセット',cans:11,spec:'350ml × 11缶',inside:'<b>干支デザイン3</b>・香るエール2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:2966,url:'4901777323834',img:'item-bp3ag.png',w:612,h:436,tag:'いろいろな味を少しずつ',when:'2026年10月27日発売',eto:'干支缶3本'},
+ {brand:'suntory',rid:'10025769',id:'PM6B',cat:'eto',name:'プレモル 2種6缶セット',cans:6,spec:'350ml × 6缶',inside:'<b>干支デザイン3・香るエール 干支デザイン3</b>',price:2398,url:'2180000000410',img:'set-pm6b.jpg',w:600,h:600,photo:true,tag:'当店オリジナル箱',when:'2026年11月25日発売',eto:'2種の干支缶'},
+ {brand:'suntory',rid:'10008200',id:'FJ3S',cat:'family',name:'プレモル ファミリーセット',cans:15,spec:'ビール9缶＋果汁6缶',inside:'プレモル5・香るエール4・なっちゃんプレミアム100（オレンジ・りんご・白ぶどう）各2',price:2966,url:'4901777271487',img:'item-fj3s.png',w:620,h:421,tag:'ご家族への贈り物に',when:'2026年10月27日発売'},
+ {brand:'asahi',rid:'10008190',id:'AS-3N',cat:'classic',name:'アサヒ スーパードライ ギフトセット',cans:12,spec:'350ml × 10缶・500ml × 2缶',inside:'スーパードライ12本',price:2966,url:'4901004010988',img:'as3n.jpg',w:600,h:600,photo:true,tag:'辛口の定番',when:'now'},
+ {brand:'asahi',rid:'10004889',id:'AS-5N',cat:'classic',name:'アサヒ スーパードライ ギフトセット',cans:21,spec:'350ml × 21缶',inside:'スーパードライ21本',price:4899,url:'4901004018601',img:'as5n.jpg',w:600,h:600,photo:true,tag:'たっぷり21本',when:'now'},
+ {brand:'asahi',rid:'10021016',id:'SJ-3N',cat:'classic',name:'アサヒ スーパードライ 生ジョッキ缶セット',cans:12,spec:'340ml × 10缶・485ml × 2缶',inside:'<b>生ジョッキ缶12本</b>',price:2966,url:'4901004057426',img:'sj3n.jpg',w:600,h:600,photo:true,tag:'泡が楽しい生ジョッキ缶',when:'now'},
+ {brand:'asahi',rid:'10010716',id:'AVG-3',cat:'eto',name:'アサヒビール 5種セット',cans:12,spec:'12缶（350ml・340ml・500ml）',inside:'スーパードライ4・ジョッキ缶2・クリスタル2・マルエフ2・アサヒゴールド2',price:2966,url:'4901004045874',img:'avg3.jpg',w:600,h:600,photo:true,tag:'5種の飲み比べ',when:'now'},
+ {brand:'asahi',rid:'10021017',id:'AVG-5',cat:'eto',name:'アサヒビール 5種セット',cans:21,spec:'21缶（350ml・340ml）',inside:'スーパードライ7・ジョッキ缶4・クリスタル3・マルエフ4・アサヒゴールド3',price:4899,url:'4901004059345',img:'avg5.jpg',w:600,h:600,photo:true,tag:'5種の飲み比べ',when:'now'},
+ {brand:'asahi',rid:'10026214',id:'AVG-4',cat:'eto',name:'アサヒビール 5種セット',cans:15,spec:'15缶（350ml・340ml・500ml）',inside:'スーパードライ7・ジョッキ缶2・クリスタル2・マルエフ2・アサヒゴールド2',price:3899,url:'4901004068293',img:'avg4.jpg',w:600,h:600,photo:true,tag:'5種の飲み比べ',when:'now'},
+ {brand:'asahi',rid:'10008889',id:'FS-3G',cat:'family',name:'スーパードライ＆ウェルチ ファミリーセット',cans:14,spec:'ビール8缶＋果汁6本',inside:'スーパードライ 350ml×4・500ml×4、ウェルチ（グレープ・マスカット・マンゴー）各2',price:2966,url:'4901004038975',img:'fs3g.jpg',w:600,h:600,photo:true,tag:'ご家族への贈り物に',when:'now'},
+ {brand:'asahi',rid:'10022422',id:'FS-5G',cat:'family',name:'スーパードライ＆ウェルチ ファミリーセット',cans:26,spec:'ビール14缶＋果汁12本',inside:'スーパードライ14、ウェルチ（グレープ・マスカット・マンゴー）各4',price:4899,url:'4901004061713',img:'fs5g.jpg',w:600,h:600,photo:true,tag:'ご家族への贈り物に',when:'now'},
+ {brand:'kirin',rid:'10004863',id:'K-FM3B',cat:'family',name:'一番搾り＆トロピカーナ ファミリーセット',cans:15,spec:'ビール10缶＋果汁5缶',inside:'一番搾り10、トロピカーナ100%（アップル3・グレープ2）',price:2966,url:'4901411041070',img:'k-fm3b.jpg',w:600,h:600,photo:true,tag:'ご家族への贈り物に',when:'now'},
+ {brand:'kirin',rid:'10004864',id:'K-IS3',cat:'classic',name:'キリン 一番搾り ギフトセット',cans:12,spec:'350ml × 10缶・500ml × 2缶',inside:'一番搾り12本',price:2966,url:'4901411040493',img:'k-is3.jpg',w:600,h:600,photo:true,tag:'麦のうまみの定番',when:'now'},
+ {brand:'kirin',rid:'10015028',id:'K-IS5',cat:'classic',name:'キリン 一番搾り ギフトセット',cans:21,spec:'350ml × 21缶',inside:'一番搾り21本',price:4899,url:'4901411080338',img:'k-is5.jpg',w:600,h:600,photo:true,tag:'たっぷり21本',when:'now'},
+ {brand:'kirin',rid:'10021423',id:'K-PI3',cat:'classic',name:'キリン 一番搾り プレミアム ギフトセット',cans:12,spec:'350ml × 12缶',inside:'<b>一番搾り プレミアム12本</b>',price:2966,url:'4901411056227',img:'k-pi3.jpg',w:600,h:600,photo:true,tag:'ちょっと贅沢な一番搾り',when:'now'},
+ {brand:'kirin',rid:'10022468',id:'K-IPF3',cat:'eto',name:'キリン 一番搾り 3種飲み比べセット',cans:12,spec:'350ml × 10缶・500ml × 2缶',inside:'一番搾り6・黒生3・プレミアム3',price:2966,url:'4901411089706',img:'k-ipf3.jpg',w:600,h:600,photo:true,tag:'3種の飲み比べ',when:'now'},
+ {brand:'kirin',rid:'10022493',id:'K-NRL3',cat:'classic',name:'キリン ラガービール ギフトセット',cans:12,spec:'350ml × 10缶・500ml × 2缶',inside:'ラガービール12本',price:2966,url:'2101900000508',img:'k-nrl3.jpg',w:600,h:600,photo:true,tag:'苦みのきいた王道',when:'now'},
+ {brand:'sapporo',rid:'10008212',id:'KS3D',cat:'classic',name:'サッポロ 黒ラベル ギフトセット',cans:10,spec:'350ml × 10缶',inside:'黒ラベル10本',price:2968,url:'4901880859725',img:'ks3d.jpg',w:600,h:600,photo:true,tag:'生ビールの定番',when:'now'},
+ {brand:'sapporo',rid:'10008195',id:'YE3D',cat:'classic',name:'ヱビスビール ギフトセット',cans:12,spec:'350ml × 12缶',inside:'ヱビスビール12本',price:2998,url:'4901880879976',img:'ye3d.jpg',w:600,h:600,photo:true,tag:'贈り物の定番ヱビス',when:'now'},
+ {brand:'sapporo',rid:'10007585',id:'YE4DN',cat:'classic',name:'ヱビスビール ギフトセット',cans:15,spec:'350ml × 15缶',inside:'ヱビスビール15本',price:3899,url:'4901880879952',img:'ye4dn.jpg',w:600,h:600,photo:true,tag:'贈り物の定番ヱビス',when:'now'},
+ {brand:'sapporo',rid:'10008194',id:'YE5DT',cat:'classic',name:'ヱビスビール ギフトセット',cans:20,spec:'350ml × 20缶',inside:'ヱビスビール20本',price:4899,url:'4901880879943',img:'ye5dt.jpg',w:600,h:600,photo:true,tag:'たっぷり20本',when:'now'},
+ {brand:'sapporo',rid:'10015136',id:'YEF3D',cat:'eto',name:'ヱビス 4種飲み比べセット',cans:12,spec:'350ml × 12缶',inside:'ヱビス3・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:2966,url:'4901880884147-nsi',img:'yef3d.jpg',w:600,h:600,photo:true,tag:'4種の飲み比べ',when:'now'},
+ {brand:'sapporo',rid:'10015141',id:'YEF4D',cat:'eto',name:'ヱビス 4種飲み比べセット',cans:15,spec:'350ml × 15缶',inside:'ヱビス6・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:3899,url:'4901880884130-nsi',img:'yef4d.jpg',w:600,h:600,photo:true,tag:'4種の飲み比べ',when:'now'},
+ {brand:'sapporo',rid:'10007641',id:'YEF5DT',cat:'eto',name:'ヱビス 4種飲み比べセット',cans:20,spec:'350ml × 20缶',inside:'ヱビス8・プレミアムエール6・プレミアムブラック3・麦紡ぐ3',price:4899,url:'4901880884123-asu',img:'yef5dt.jpg',w:600,h:600,photo:true,tag:'4種の飲み比べ',when:'now'},
+ {brand:'sapporo',rid:'10014955',id:'YEV3DEC',cat:'limited',name:'ヱビス 5種セット（EC限定）',cans:11,spec:'350ml × 11缶',inside:'ヱビス2・プレミアムエール2・プレミアムブラック2・<b>星月夜2</b>・麦紡ぐ3',price:2966,url:'4901880897581-ec',img:'yev3dec.jpg',w:600,h:600,photo:true,tag:'EC限定の5種',when:'2026年11月25日発売'}
+];
+const BRANDS={suntory:{name:'サントリー',en:'SUNTORY',c:'#1f3d8a'},asahi:{name:'アサヒ',en:'ASAHI',c:'#5f6b78'},kirin:{name:'キリン',en:'KIRIN',c:'#b3121b'},sapporo:{name:'サッポロ',en:'SAPPORO',c:'#c9a24a'}};
+/* ドリームクラフト オリジナルギフト（税込・2026年10月28日時点） */
+const ORIG_CAT={beer:'ビール',light:'ノンアル・ハイボール',whisky:'ウイスキー',sake:'日本酒'};
+const originals=[
+ {cat:'beer',rid:'10023835',id:'Rセット',name:'国産ビール 6種ギフト',spec:'350ml × 6缶',inside:'スーパードライ・晴れ風・黒ラベル・ヱビス・プレモル・香るエール 各1',price:2780,url:'2101900000560',img:'gft-r.jpg',tag:'人気6銘柄を1本ずつ',when:'now'},
+ {cat:'beer',rid:'10019038',id:'Eセット',name:'発泡酒・新ジャンル 12種セット',spec:'350ml × 12缶',inside:'金麦・本麒麟・のどごし生・麦とホップ・スタイルフリーなど12種',price:3598,url:'2101900000270',img:'gft-e.jpg',tag:'気軽に飲み比べ',when:'now'},
+ {cat:'beer',rid:'10022164',id:'Dセット',name:'糖質ゼロ・糖質オフ 12種セット',spec:'350ml × 12缶',inside:'一番搾り 糖質ゼロ・パーフェクトサントリービール・極ZEROなど12種',price:3980,url:'2140110000694',img:'gft-d.jpg',tag:'健康志向の方へ',when:'now'},
+ {cat:'beer',rid:'10008169',id:'Zセット',name:'国産ビール 12種飲み比べセット',spec:'350ml × 12缶',inside:'スーパードライ・黒ラベル・一番搾り・晴れ風・金麦など4社12種',price:3998,url:'2101900000157',img:'gft-z.jpg',tag:'4社の味を少しずつ',when:'2026年11月4日発売'},
+ {cat:'beer',rid:'10008168',id:'Hセット',name:'究極12種 ビールセット',spec:'350ml × 12缶',inside:'スーパードライ・ヱビス4種・プレモル3種などプレミアムビール12種',price:4280,url:'2101900000140',img:'gft-h.jpg',tag:'プレミアムビール中心',when:'2026年11月6日発売'},
+ {cat:'beer',rid:'10019763',id:'Sセット',name:'サッポロ ビールセット',spec:'350ml × 12缶＋おつまみ2個',inside:'ラガー2・黒ラベル2・ヱビス4種など12本＋チーズスナック2個',price:4380,url:'2101900000300',img:'gft-s.jpg',tag:'おつまみ付き',when:'2026年10月30日発売'},
+ {cat:'beer',rid:'10008901',id:'Gセット',name:'究極15種 ビールセット',spec:'350ml × 15缶',inside:'<b>マスターズドリーム 水泉動</b>・干支デザイン缶・オリオンビールなど15種',price:5380,url:'2101900000171',img:'gft-g.jpg',tag:'限定醸造・クラフト入り',when:'2026年11月6日発売'},
+ {cat:'light',rid:'10023834',id:'Qセット',name:'ハイボール 6種セット',spec:'350ml × 6缶',inside:'角ハイボール・濃いめ・大山・山陰・三郎丸・ジャックダニエル＆コカ・コーラ',price:2780,url:'2114900000553',img:'gft-q.jpg',tag:'ハイボール好きの方へ',when:'now'},
+ {cat:'light',rid:'10015083',id:'Fセット',name:'ノンアルコールビール 12種セット',spec:'350ml × 12缶',inside:'オールフリー・ドライゼロ・パーフェクトフリー・ラガーゼロなど12種',price:3281,url:'2140110000779',img:'gft-f.jpg',tag:'お酒を飲まない方へ',when:'now',ship:'送料無料',nonalc:true},
+ {cat:'whisky',rid:'10014279',id:'5種',name:'世界のウイスキー 5種セット',spec:'180ml・200ml × 5本＋干支コースター',inside:'角瓶・ジムビーム・ブラック＆ホワイト・ホワイトホース・デュワーズ',price:4690,url:'2108120000431',img:'gft-whisky5.jpg',tag:'干支コースター付き',when:'now'},
+ {cat:'sake',rid:'10021295',id:'5選 vol.2',name:'金賞受賞酒 5選',spec:'300ml × 5本',inside:'北秋田 大吟醸・奥の松・蓬莱・仁勇・七賢',price:3488,url:'2180010000745',img:'gft-sake5-2.jpg',tag:'金賞受賞酒の飲み比べ',when:'now'},
+ {cat:'sake',rid:'10017025',id:'8選 vol.1',name:'辛口 王道飲み比べ 8選',spec:'180ml × 8本',inside:'八海山・初孫・高清水・梅一輪・土佐鶴など辛口8種',price:3698,url:'2180010000332',img:'gft-sake8-1.jpg',tag:'辛口好きの方へ',when:'now'},
+ {cat:'sake',rid:'10021224',id:'5選 vol.3',name:'大吟醸 5選',spec:'300ml × 5本',inside:'会津ほまれ・千曲錦・北秋田・京姫・千姫',price:3788,url:'2180010000752',img:'gft-sake5-3.jpg',tag:'大吟醸だけの5本',when:'now'},
+ {cat:'sake',rid:'10015745',id:'7選 vol.1',name:'日本酒 7選',spec:'180ml × 7本＋冷酒グラス2個',inside:'八海山・一ノ蔵・玉乃光・賀茂鶴など7県の地酒',price:3980,url:'2180010000271',img:'gft-sake7-1.jpg',tag:'冷酒グラス付き',when:'now'},
+ {cat:'sake',rid:'10024277',id:'香雅 3選',name:'香雅 -Koga- 大吟醸 3本セット',spec:'300ml × 3本＋グラス・枡',inside:'幻の瀧・高清水・玉乃光 の大吟醸、日本酒グラス2個・枡2個',price:3980,url:'2180010000790',img:'gft-koga3.jpg',tag:'グラス・枡付き',when:'now'},
+ {cat:'sake',rid:'10021283',id:'5選 vol.1',name:'全国酒どころ5県代表 5選',spec:'300ml × 5本',inside:'八海山・千曲錦・喜多屋・結芽の奏・日本盛 の純米大吟醸など',price:4287,url:'2180010000738',img:'gft-sake5-1.jpg',tag:'5県の銘酒を飲み比べ',when:'now'},
+ {cat:'sake',rid:'10016779',id:'8選 vol.2',name:'旨飲み 8選（純米大吟醸 八海山入り）',spec:'180ml × 8本',inside:'八海山 純米大吟醸・五橋・雪の茅舎・澤乃井など8種',price:4387,url:'2180010000325',img:'gft-sake8-2.jpg',tag:'八海山入り',when:'now'}
+];
+/* ハムギフト（税込・送料無料・要冷蔵） */
+const hams=[
+ {maker:'伊藤ハム',rid:'10024503',id:'IGM-30',name:'伊藤ハム 伝承献呈',price:2399,url:'4901231533618',img:'ham-igm30.jpg',inside:'特選ホワイトロースハム・焼豚・炙り焼あらびき黒胡椒ポーク',ship:'11月10日以降発送'},
+ {maker:'日本ハム',rid:'10021958',id:'NH-32',name:'日本ハム 本格派',price:2099,url:'4902115610999',img:'ham-nh32.jpg',inside:'ペッパーボロニア・あらびきステーキ・ロース生ハム・ウインナー2種',ship:'11月16日以降出荷'},
+ {maker:'丸大食品',rid:'10017389',id:'MO-300',name:'丸大食品 王覇',price:2999,url:'4902715234403',img:'ham-mo300.jpg',inside:'熟成ロースハム・生ハム肩ロース・熟成ベーコン・ボンレスハム・ウインナー2種',ship:'11月10日以降発送'},
+ {maker:'伊藤ハム',rid:'10026255',id:'GM-3',name:'伊藤ハム 伝承献呈',price:3099,url:'4901231049898',img:'ham-gm3.jpg',inside:'グリルドポーク・ホワイトロースハム・あらびきステーキ・黒胡椒ポーク・ウインナー',ship:'11月10日以降発送'},
+ {maker:'日本ハム',rid:'10024499',id:'NRB-50',name:'日本ハム 本格派',price:3499,url:'4902115703431',img:'ham-nrb50.jpg',inside:'<b>ローストビーフ（ソース付）</b>・ロース生ハム・スモークハム・ウインナー2種',ship:'11月16日以降出荷'},
+ {maker:'日本ハム',rid:'10023948',id:'UKH-58',name:'日本ハム 北海道プレミアム 美ノ国',price:3999,url:'4902115612146',img:'ham-ukh58.jpg',inside:'熟成ロースハム・ベーコン・生ハム・ビアシンケンなど北海道産の8品',ship:'11月16日以降出荷'},
+ {maker:'丸大食品',rid:'10021477',id:'MO-502',name:'丸大食品 王覇',price:4099,url:'4902715449104',img:'ham-mo502.jpg',inside:'<b>熟成ホワイトロースハム 380g・熟成ロースハム 380g</b>',ship:'11月10日以降発送'},
+ {maker:'丸大食品',rid:'10024493',id:'MV-556',name:'丸大食品 煌彩',price:4199,url:'4902053555003',img:'ham-mv556.jpg',inside:'ホワイトロースハム 350g・直火焼焼豚・生ハム・ローフ2種・ウインナー',ship:'11月10日以降発送'},
+ {maker:'伊藤ハム',rid:'10026254',id:'GM-5',name:'伊藤ハム 伝承献呈',price:4599,url:'4901231050436',img:'ham-gm5.jpg',inside:'ロースハム・ホワイトロースハム・焼豚・グリルドポーク・あらびきステーキ・ローフ',ship:'11月10日以降発送'}
+];
+const yen=n=>n.toLocaleString('ja-JP');
+const link=p=>ITEM+p.url+'/';
+/* 発売日（日本時間）の0時を過ぎたら「予約・〇月〇日発売」→「発売中」に自動で切り替え */
+const released=w=>{const m=/(\d{4})年(\d{1,2})月(\d{1,2})日/.exec(w||'');return !!m&&Date.now()>=Date.UTC(+m[1],m[2]-1,+m[3])-9*3600e3};
+const whenTag=w=>w==='now'||released(w)?'<span class="tag now">発売中</span>':w?`<span class="tag when">予約・${w}</span>`:'';
+document.querySelectorAll('[data-when]').forEach(el=>{if(released(el.dataset.when))el.outerHTML=whenTag('now')});
+function card(p,i){
+  return `<article class="product" data-cat="${p.cat}" data-brand="${p.brand}" data-price="${p.price}" data-cans="${p.cans}" data-order="${i}" id="gift-${p.id}">
+    <div class="tags"><span class="tag">${p.tag}</span>${whenTag(p.when)}</div>
+    <a class="ph${p.photo?' photo':''}" href="${link(p)}" target="_blank" rel="noopener"><img src="img/${p.img}" width="${p.w}" height="${p.h}" alt="${p.name} ${p.id}" loading="lazy"></a>
+    <div class="info"><p class="maker" style="--bc:${BRANDS[p.brand].c}">${BRANDS[p.brand].name}</p>
+    <h3>${p.name}</h3>
+    <p class="spec">${p.id} ｜ ${p.spec}</p>
+    <p class="inside">${p.inside}</p>
+    <p class="price">${yen(p.price)}<small>円（税込）</small></p><p class="ship">本州送料無料</p></div>
+    <div class="btn-row"><a class="btn red buy" href="${link(p)}" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="${FAV(p.rid)}" target="_blank" rel="noopener" aria-label="${p.name} ${p.id}をお気に入りに登録" title="お気に入りに登録"></a></div>
+  </article>`;
+}
+document.querySelector('#masters-grid').innerHTML=products.filter(p=>p.cat==='limited'&&p.brand==='suntory').map(p=>`<a class="mini" href="${link(p)}" target="_blank" rel="noopener"><img src="img/${p.img}" width="${p.w}" height="${p.h}" alt="${p.name} ${p.id}" loading="lazy"><span class="q">水泉動 <b>×${(p.inside.match(/水泉動(\d)/)||[])[1]||''}本</b></span><span class="nm">${p.id}｜${p.spec.replace('350ml × ','')}</span><span class="pr">${yen(p.price)}<small>円（税込）</small></span><span class="go">商品ページへ ›</span></a>`).join('');
+document.querySelector('#all-grid').innerHTML=products.map(card).join('');
+document.querySelector('#brands').innerHTML=Object.entries(BRANDS).map(([k,b])=>`<button type="button" class="brand-card" data-brand="${k}" aria-pressed="false" style="--bc:${b.c}"><span class="en">${b.en}</span><b>${b.name}</b><small>商品を見る</small></button>`).join('');
+document.querySelector('#ham-grid').innerHTML=hams.slice().sort((a,b)=>a.price-b.price).map(h=>`<article class="product" data-maker="${h.maker}">
+    <div class="tags"><span class="tag">送料無料</span><span class="tag when">${h.ship}</span></div>
+    <a class="ph photo" href="${ITEM+h.url}/" target="_blank" rel="noopener"><img src="img/${h.img}" width="600" height="600" alt="${h.name} ${h.id}" loading="lazy"></a>
+    <div class="info"><p class="maker">${h.maker}</p>
+    <h3>${h.name}</h3>
+    <p class="spec">${h.id} ｜ 要冷蔵</p>
+    <p class="inside">${h.inside}</p>
+    <p class="price">${yen(h.price)}<small>円（税込）</small></p><p class="ship">送料無料・冷蔵便</p></div>
+    <div class="btn-row"><a class="btn red buy" href="${ITEM+h.url}/" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="${FAV(h.rid)}" target="_blank" rel="noopener" aria-label="${h.name} ${h.id}をお気に入りに登録" title="お気に入りに登録"></a></div>
+  </article>`).join('');
+document.querySelector('#orig-grid').innerHTML=originals.map(o=>`<article class="product" data-orig="${o.cat}">
+    <div class="tags">${o.nonalc?'<span class="tag nonalc">ノンアルコール</span>':''}<span class="tag">${o.tag}</span>${whenTag(o.when)}</div>
+    <a class="ph photo cover" href="${ITEM+o.url}/" target="_blank" rel="noopener"><img src="img/${o.img}" width="600" height="600" alt="${o.name} ${o.id}" loading="lazy"></a>
+    <div class="info"><p class="maker orig">オリジナル｜${ORIG_CAT[o.cat]}</p>
+    <h3>${o.name}</h3>
+    <p class="spec">${o.id} ｜ ${o.spec}</p>
+    <p class="inside">${o.inside}</p>
+    <p class="price">${yen(o.price)}<small>円（税込）</small></p><p class="ship">${o.ship||'本州送料無料'}</p></div>
+    <div class="btn-row"><a class="btn red buy" href="${ITEM+o.url}/" target="_blank" rel="noopener">商品ページへ</a><a class="btn fav" href="${FAV(o.rid)}" target="_blank" rel="noopener" aria-label="${o.name}をお気に入りに登録" title="お気に入りに登録"></a></div>
+  </article>`).join('');
+/* オリジナルギフト：種類で絞り込み */
+(()=>{const oc=[...document.querySelectorAll('#orig-grid .product')],ob=[...document.querySelectorAll('[data-orig]')].filter(b=>b.tagName==='BUTTON');
+  ob.forEach(b=>b.addEventListener('click',()=>{oc.forEach(c=>{c.hidden=!(b.dataset.orig==='all'||c.dataset.orig===b.dataset.orig);c.classList.add('in')});ob.forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));const n=oc.filter(c=>!c.hidden).length,g=document.querySelector('#orig-grid');g.classList.toggle('single',n===1);g.classList.toggle('double',n===2);if(window.fitText)window.fitText()}))})();
+/* ハムギフト：メーカーで絞り込み */
+(()=>{const hc=[...document.querySelectorAll('#ham-grid .product')],hb=[...document.querySelectorAll('[data-ham]')];
+  hb.forEach(b=>{b.addEventListener('click',()=>{hc.forEach(c=>{c.hidden=!(b.dataset.ham==='all'||c.dataset.maker===b.dataset.ham);c.classList.add('in')});hb.forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));const n=hc.filter(c=>!c.hidden).length,g=document.querySelector('#ham-grid');g.classList.toggle('single',n===1);g.classList.toggle('double',n===2);if(window.fitText)window.fitText()})})})();
+document.querySelector('#eto-row').innerHTML=products.filter(p=>p.eto).map(p=>`<a class="eto-item" href="${link(p)}" target="_blank" rel="noopener"><div class="ph${p.photo?' photo':''}"><img src="img/${p.img}" width="${p.w}" height="${p.h}" alt="${p.name} ${p.id}" loading="lazy"></div><div><span class="et">${p.eto}</span><b>${p.name}</b><small>${p.id}｜${p.spec}</small><div class="pr">${yen(p.price)}<small>円（税込）</small></div><span class="go">商品ページへ ›</span></div></a>`).join('');
+
+/* 吹き出し（PC）：折り返し後の右の余白をなくす */
+(()=>{const ps=[...document.querySelectorAll('.bb-say p')];const pc=matchMedia('(min-width:761px)');function fit(){ps.forEach(p=>{p.style.width='';if(!pc.matches)return;const r=document.createRange();r.selectNodeContents(p);let L=Infinity,Rt=-Infinity;for(const b of r.getClientRects()){if(b.width<1)continue;L=Math.min(L,b.left);Rt=Math.max(Rt,b.right)}if(Rt>L){const cs=getComputedStyle(p);const extra=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+parseFloat(cs.borderLeftWidth)+parseFloat(cs.borderRightWidth);p.style.width=Math.ceil(Rt-L+extra+1)+'px'}})}
+let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(fit,100)});addEventListener('load',fit);if(document.fonts)document.fonts.ready.then(fit);fit()})();
+
+/* ご予算から選ぶ：価格帯は商品データの price から自動で振り分け */
+const bands=[
+ {key:'b2500',label:'2,500円以下',min:0,max:2500,scene:'ちょっとしたお礼に',pick:'PM6B'},
+ {key:'b3000',label:'3,000円前後',min:2501,max:3500,scene:'定番のご挨拶に',pick:'YEF3D'},
+ {key:'b4000',label:'4,000円前後',min:3501,max:4500,scene:'お世話になった方へ',pick:'AVG-4'},
+ {key:'b5000',label:'5,000円前後',min:4501,max:5500,scene:'特にお世話になった方へ',pick:'K-IS5'}
+];
+const bandOf=price=>(bands.find(b=>price>=b.min&&price<=b.max)||{}).key||'';
+document.querySelector('#budget-list').innerHTML=bands.map(b=>{
+  const items=products.filter(p=>bandOf(p.price)===b.key);
+  if(!items.length)return '';
+  const lo=Math.min(...items.map(p=>p.price)),hi=Math.max(...items.map(p=>p.price));
+  const r=items.find(p=>p.id===b.pick)||items[0];
+  return `<a class="budget-card" href="#gifts" data-jump="${b.key}"><span class="band">${b.label}</span><span class="scene">${b.scene}</span><span class="yen">${yen(lo)}<small>円${lo!==hi?'〜':''}</small></span>${lo!==hi?`<span class="sub">〜${yen(hi)}円</span>`:'<span class="sub">（税込）</span>'}<span class="thumbs"><img src="img/${r.img}" width="${r.w}" height="${r.h}" alt=""${r.photo?' class="photo"':''} loading="lazy"></span><span class="count">商品を見る</span></a>`;
+}).join('');
+
+/* 絞り込み・並び替え */
+const grid=document.querySelector('#all-grid');
+const cards=[...grid.querySelectorAll('.product')];
+const buttons=[...document.querySelectorAll('#gifts .filters button')];
+const result=document.querySelector('#result');
+const num=(c,k)=>parseInt(c.dataset[k],10);
+/* メーカー（brand）と、テーマ・ご予算（f）を組み合わせて絞り込む */
+const brandCards=[...document.querySelectorAll('.brand-card')];
+let curBrand='all',curF='all';
+const inCat=(c,f)=>f==='all'||c.dataset.cat===f||bandOf(num(c,'price'))===f;
+const inBrand=c=>curBrand==='all'||c.dataset.brand===curBrand;
+function applyFilter(f){
+  curF=f;let n=0;
+  cards.forEach(c=>{c.hidden=!(inBrand(c)&&inCat(c,f));if(!c.hidden)n++});
+  buttons.forEach(b=>b.setAttribute('aria-pressed',b.dataset.filter===f?'true':'false'));
+  brandCards.forEach(b=>b.setAttribute('aria-pressed',b.dataset.brand===curBrand?'true':'false'));
+  const lbl=[curBrand!=='all'&&BRANDS[curBrand].name,f!=='all'&&(buttons.find(b=>b.dataset.filter===f)||{}).textContent].filter(Boolean).join('・');
+  result.textContent=(lbl?lbl+'：':'')+n+'商品を表示';
+  grid.classList.toggle('single',n===1); // 1商品だけのときは横長で大きく中央に
+  grid.classList.toggle('double',n===2); // 2商品のときは少し大きくして中央に
+  if(window.fitText)window.fitText();
+  document.querySelector('#clear-filter').hidden=curBrand==='all'&&f==='all';
+}
+buttons.forEach(b=>b.addEventListener('click',()=>applyFilter(b.dataset.filter)));
+/* 選択をすべてクリア：メーカー・テーマ・ご予算・並び替えを初期状態に */
+document.querySelector('#clear-filter').addEventListener('click',()=>{curBrand='all';const so=document.querySelector('#sort');if(so.value!=='default'){so.value='default';so.dispatchEvent(new Event('change'))}applyFilter('all');cards.forEach(c=>{c.style.setProperty('--d','0s');c.classList.add('in')})});
+/* メーカーカード：もう一度押すと解除 */
+brandCards.forEach(b=>b.addEventListener('click',()=>{curBrand=curBrand===b.dataset.brand?'all':b.dataset.brand;applyFilter(curF)}));
+/* ページ上部の選び方・ご予算カードから来たときは、メーカーの選択を解除 */
+document.querySelectorAll('[data-jump]').forEach(a=>a.addEventListener('click',()=>{curBrand='all';applyFilter(a.dataset.jump)}));
+document.querySelector('#sort').addEventListener('change',e=>{
+  const v=e.target.value;
+  cards.slice().sort((a,b)=>{
+    if(v==='price-asc')return num(a,'price')-num(b,'price')||num(a,'order')-num(b,'order');
+    if(v==='price-desc')return num(b,'price')-num(a,'price')||num(a,'order')-num(b,'order');
+    if(v==='cans-desc')return num(b,'cans')-num(a,'cans')||num(a,'order')-num(b,'order');
+    return num(a,'order')-num(b,'order');
+  }).forEach(c=>grid.appendChild(c));
+});
+applyFilter('all');
+
+/* スクロール演出 */
+(()=>{
+  const mq=matchMedia('(prefers-reduced-motion: reduce)');
+  const hero=document.querySelector('.hero');
+  [['.hero-copy .eyebrow'],['.hero-lead'],['.hero h1'],['.hero-sub'],['.hero-badges'],['.hero-copy .btn'],['.hero-art .main'],['.hero-art .can']].forEach(([sel],i)=>{
+    document.querySelectorAll(sel).forEach((el,j)=>{el.classList.add('ld');el.style.setProperty('--d',(i*.12+j*.12)+'s')});
+  });
+  const showHero=()=>hero.classList.add('loaded');
+  requestAnimationFrame(()=>requestAnimationFrame(showHero));
+  setTimeout(showHero,300);
+  const plan=[
+    ['.shead > *','up',.1],['.choice','up',.12],['.budget-card','up',.08],
+    ['.pickup','up',0],['.feature-img','left zoom',0],['.feature > div:last-child > *','up',.1],
+    ['.mini','up',.08],['.eto-main > div:first-child > *','up',.1],['.eto-cans','right zoom',0],['.eto-item','up',.1],
+    ['.noshi-block','up',.15],['.noshi-notes li','left',.12],['.product','up',.08],
+    ['.flow-steps li','up',.12],['.deliv > div','up',.08],['.closing > *','up',.12]
+  ];
+  const targets=[];
+  plan.forEach(([sel,kind,step])=>{
+    const groups=new Map();
+    document.querySelectorAll(sel).forEach(el=>{
+      const n=groups.get(el.parentElement)||0;groups.set(el.parentElement,n+1);
+      el.classList.add('rv',...kind.split(' '));
+      el.style.setProperty('--d',((el.classList.contains('product')?n%3:n)*step)+'s');
+      targets.push(el);
+    });
+  });
+  document.querySelectorAll('.hero-badges .fill, .floating .btn, .closing .btn').forEach(el=>el.classList.add('shine'));
+  if(mq.matches||!('IntersectionObserver' in window)){targets.forEach(el=>el.classList.add('in'));return}
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -10% 0px',threshold:.08});
+  targets.forEach(el=>io.observe(el));
+  document.querySelectorAll('.filters button, #sort, [data-jump], .brand-card').forEach(b=>b.addEventListener(b.tagName==='SELECT'?'change':'click',()=>{document.querySelectorAll('#all-grid .product').forEach(c=>{c.style.setProperty('--d','0s');c.classList.add('in')})}));
+})();
+
+/* 金の粒（FV内のみ。ゆっくり舞い上がる光） */
+(()=>{const c=document.querySelector('.gold-dust'),ctx=c.getContext('2d'),hero=document.querySelector('.hero'),mq=matchMedia('(prefers-reduced-motion: reduce)');
+let w=0,h=0,dots=[],frame=0,last=0,visible=true;
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function make(bottom){return{x:rnd(0,w),y:bottom?h+rnd(0,40):rnd(0,h),r:rnd(.8,2.6),vy:rnd(10,26),ph:rnd(0,6.28),sp:rnd(.8,2),a:rnd(.35,.9)}}
+function resize(){w=c.clientWidth;h=c.clientHeight;const d=Math.min(devicePixelRatio||1,2);c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0);dots=Array.from({length:w<760?26:60},()=>make(false))}
+function draw(t){frame=0;if(mq.matches||document.hidden||!visible){last=0;return}const dt=last?Math.min((t-last)/1000,.05):0;last=t;ctx.clearRect(0,0,w,h);
+for(const p of dots){p.y-=p.vy*dt;p.ph+=p.sp*dt;p.x+=Math.sin(p.ph)*6*dt;if(p.y<-10)Object.assign(p,make(true));
+const tw=.55+.45*Math.sin(p.ph*2);ctx.globalAlpha=p.a*tw;const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*3);g.addColorStop(0,'#fff3c8');g.addColorStop(.4,'#e6c46e');g.addColorStop(1,'rgba(230,196,110,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r*3,0,6.283);ctx.fill()}
+ctx.globalAlpha=1;frame=requestAnimationFrame(draw)}
+function resume(){if(!frame&&!mq.matches&&!document.hidden&&visible)frame=requestAnimationFrame(draw)}
+new ResizeObserver(()=>{resize();resume()}).observe(c);new IntersectionObserver(e=>{visible=e[0].isIntersecting;resume()}).observe(hero);document.addEventListener('visibilitychange',resume);resize();resume()})();
+
+/* スマホ：説明文のかたまりを中央に（文字は左詰めのまま、いちばん長い行の幅に合わせて中央寄せ） */
+(()=>{const sel='.feature > div:last-child > p, .eto-main > div > p, .pickup > div, .noshi-block > p, .grid .product .info, .flow-steps li';const sp=matchMedia('(max-width:760px)');
+  function fit(){document.querySelectorAll(sel).forEach(el=>{el.style.width='';el.style.marginLeft='';el.style.marginRight='';if(!sp.matches)return;const r=document.createRange();r.selectNodeContents(el);let L=Infinity,Rt=-Infinity;for(const b of r.getClientRects()){if(b.width<1)continue;L=Math.min(L,b.left);Rt=Math.max(Rt,b.right)}if(Rt>L){const cs=getComputedStyle(el);const extra=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);el.style.width='min('+Math.ceil(Rt-L+extra+1)+'px,100%)';el.style.marginLeft='auto';el.style.marginRight='auto'}})}
+  window.fitText=fit;let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(fit,120)});addEventListener('load',fit);if(document.fonts)document.fonts.ready.then(fit);fit()})();
+/* スマホのハンバーガーメニュー：開閉と、項目を押したら閉じる */
+(()=>{const nav=document.querySelector('.nav'),btn=nav.querySelector('.nav-toggle');
+  const set=o=>{nav.classList.toggle('open',o);btn.setAttribute('aria-expanded',o?'true':'false')};
+  btn.addEventListener('click',()=>set(!nav.classList.contains('open')));
+  nav.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',()=>set(false)));
+  document.addEventListener('click',e=>{if(!nav.contains(e.target))set(false)});
+})();
+/* 右下のページトップボタン */
+(()=>{const t=document.createElement('a');t.href='#top';t.className='pagetop';t.setAttribute('aria-label','ページの最上部へ戻る');document.body.appendChild(t);
+  let timer;addEventListener('scroll',()=>{t.classList.toggle('show',scrollY>600);t.classList.add('moving');clearTimeout(timer);timer=setTimeout(()=>t.classList.remove('moving'),250)},{passive:true});
+  t.addEventListener('click',e=>{e.preventDefault();scrollTo({top:0,behavior:'smooth'})})})();
+document.querySelector('.to-top').addEventListener('click',e=>{e.preventDefault();scrollTo({top:0,behavior:'smooth'})});
+</script>
+</body>
+</html>

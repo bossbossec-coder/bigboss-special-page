@@ -607,6 +607,10 @@ def _main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=1)
     ap.add_argument("--date", help="基準日(YYYY-MM-DD)。省略時は今日")
+    ap.add_argument("--reserve-offset", type=int, default=1,
+                    help="予約テキストの対象とする発売日が、実行日の何日前か。1=前日(既定)、0=当日")
+    ap.add_argument("--reserve-only", action="store_true",
+                    help="出荷日表記・楽天の最強配送の処理は行わず、予約テキストの削除だけ行う")
     ap.add_argument("--ship-offset", type=int, default=0,
                     help="出荷日表記(○月○日出荷)の対象日。0=当日(既定)、1=前日")
     ap.add_argument("--dry-run", action="store_true")
@@ -624,7 +628,7 @@ def _main():
         level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s",
         handlers=[logging.FileHandler(os.path.join(here, "logs", today.strftime("%Y%m%d") + ".log"),
                                       encoding="utf-8"), logging.StreamHandler()])
-    dates = [today - datetime.timedelta(days=i) for i in range(1, a.days + 1)]
+    dates = [today - datetime.timedelta(days=a.reserve_offset + i) for i in range(a.days)]
     ship_dates = [today - datetime.timedelta(days=a.ship_offset + i) for i in range(a.days)]
     logging.info("開始 対象発売日: %s 出荷日表記: %s dry_run=%s", [jp_date(d) for d in dates],
                  [ship_text(d) for d in ship_dates], a.dry_run)
@@ -665,7 +669,8 @@ def _main():
                     logging.warning("失敗があるためMarkは外しません")
             else:
                 logging.info("更新0件のため一括出品処理はスキップ")
-        total += shipping_job(page, ship_dates, a.dry_run, errors, only)
+        if not a.reserve_only:
+            total += shipping_job(page, ship_dates, a.dry_run, errors, only)
     except LoginRequired:
         logging.error("ログインが切れています。自動化用Chromeでログインし直してください")
         return 2

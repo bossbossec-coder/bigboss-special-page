@@ -642,8 +642,8 @@ def _main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=1)
     ap.add_argument("--date", help="基準日(YYYY-MM-DD)。省略時は今日")
-    ap.add_argument("--reserve-offset", type=int, default=1,
-                    help="予約テキストの対象とする発売日が、実行日の何日前か。1=前日(既定)、0=当日")
+    ap.add_argument("--reserve-offset", type=int, default=0,
+                    help="予約テキストの対象とする発売日が、実行日の何日前か。0=当日(既定)、1=前日")
     ap.add_argument("--reserve-only", action="store_true",
                     help="出荷日表記・楽天の最強配送の処理は行わず、予約テキストの削除だけ行う")
     ap.add_argument("--ship-offset", type=int, default=0,

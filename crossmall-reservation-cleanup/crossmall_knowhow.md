@@ -76,6 +76,6 @@
 
 ## 8. 関連ファイル
 - `reservation_cleanup.py`: 本体
-- `run_cleanup.bat`(元 `予約テキスト削除_実行.bat`): タスクスケジューラ用
+- `run_cleanup.bat`(元 `run_cleanup.bat`): タスクスケジューラ用
 - `README.md`: 使い方
 - `.claude/skills/crossmall-ui/SKILL.md`: 画面の部品一覧(ID・セレクタ)

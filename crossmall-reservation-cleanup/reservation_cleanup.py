@@ -12,6 +12,7 @@ import json
 import logging
 import os
 import re
+import subprocess
 import sys
 import time
 import traceback
@@ -21,6 +22,10 @@ import websocket
 
 PORT = 9222
 BASE = "http://127.0.0.1:%d" % PORT
+CHROME_EXES = [r"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe",
+               r"C:\Program Files\Google\Chrome\Application\chrome.exe"]
+CHROME_ARGS = ["--remote-debugging-port=%d" % PORT, r"--user-data-dir=C:\chrome-claude-profile"]
+ITEM_BATCH_URL = "https://www.crossmall.jp/item_batch/?mId=&umId=0"
 
 SHOPS = [  # (shop_id, 名前, 種別)  この順に処理する
     ("5255", "ビッグボス楽天", "rakuten"),
@@ -38,9 +43,33 @@ class LoginRequired(Exception):
 
 
 # ---------------------------------------------------------------- CDP
-def http_json(path):
-    with urllib.request.urlopen(BASE + path, timeout=10) as r:
+def http_json(path, method="GET"):
+    req = urllib.request.Request(BASE + path, method=method)
+    with urllib.request.urlopen(req, timeout=10) as r:
         return json.loads(r.read().decode("utf-8"))
+
+
+def ensure_chrome():
+    """自動化用Chrome(ポート9222)が起動していなければ、起動する。ログインはプロファイルに保存されたものを使う。"""
+    try:
+        http_json("/json/version")
+        return
+    except Exception:
+        pass
+    exe = next((e for e in CHROME_EXES if os.path.exists(e)), None)
+    if exe is None:
+        raise RuntimeError("chrome.exeが見つかりません: %s" % CHROME_EXES)
+    logging.info("Chrome(9222)が起動していないため起動します")
+    subprocess.Popen([exe] + CHROME_ARGS)
+    for _ in range(40):
+        time.sleep(1)
+        try:
+            http_json("/json/version")
+            return
+        except Exception:
+            pass
+    raise RuntimeError("Chrome(9222)に接続できません。自動化用のChromeが、別の方法で開かれている可能性があります。"
+                       "開いているChromeをすべて閉じてから、もう一度実行してください")
 
 
 def list_pages():
@@ -185,14 +214,20 @@ def find_crossmall_page():
         if "crossmall.jp" in t.get("url", ""):
             _PAGE = Page(t)
             return _PAGE
-    raise RuntimeError("クロスモールのタブが見つかりません(自動化用Chromeを起動・ログインしてください)")
+    # クロスモールのタブがなければ(Chromeを起動した直後など)、商品一括処理の画面を新しいタブで開く
+    logging.info("クロスモールのタブがないため、新しいタブで開きます")
+    _PAGE = Page(http_json("/json/new?" + ITEM_BATCH_URL, method="PUT"))
+    _PAGE.wait_for("document.readyState==='complete'", 60)
+    return _PAGE
 
 
 def open_bulk_page(page):
     url = page.ev("location.href")
     if "login" in url.lower():
         raise LoginRequired(url)
-    if page.ev("!!document.getElementById('shop_id')"):
+    if page.wait_for("!!document.getElementById('shop_id') || document.querySelector('input[type=password]')!==null", 30):
+        if page.ev("document.querySelector('input[type=password]')!==null"):
+            raise LoginRequired("ログイン画面が表示されました")
         return
     page.ev("(()=>{const h=document.getElementById('menu2_header_hd'); if(h) h.click();})()")
     time.sleep(1)
@@ -635,6 +670,7 @@ def _main():
 
     if a.clear_marks_only:
         try:
+            ensure_chrome()
             page = find_crossmall_page()
             open_bulk_page(page)
             clear_marks(page)
@@ -650,6 +686,7 @@ def _main():
     only = {c.strip() for c in a.only_codes.split(",") if c.strip()} if a.only_codes else None
     errors, total = [], 0
     try:
+        ensure_chrome()
         page = find_crossmall_page()
         open_bulk_page(page)
         if not a.ship_only:

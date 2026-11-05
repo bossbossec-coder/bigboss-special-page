@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<!--
+  酒のビッグボス「サッポロ お歳暮ギフト特集ページ」
+  ------------------------------------------------
+  参考: エビスギフト特集（サッポロビール公式・楽天メーカーショールーム）
+  https://maker-showroom.rakuten.co.jp/sapporo/campaign/oseibo/
+  の構成（キービジュアル → 注目商品 → 商品一覧）を下敷きにし、
+  クーポン・ポイントキャンペーン・ワイン/ウイスキー・キャンペーン概要は削除しています。
+
+  商品は「お歳暮 サッポロ GIFT」のショップ内検索結果
+  https://search.rakuten.co.jp/search/mall/%E3%81%8A%E6%AD%B3%E6%9A%AE+%E3%82%B5%E3%83%83%E3%83%9D%E3%83%AD+GIFT/?sf=1&sid=224915
+  に並ぶ8商品です。商品画像は各商品ページの画像の一番最後の1枚を使っています。
+  価格は変動するため掲載せず、商品ページへのリンクにしています。
+
+  ★差し替えポイント一覧
+   1. 商品カード（.item-card）: 商品の追加・入れ替えはカード単位でコピー
+   2. 限定商品の発売日（.pickup-date）: 年度が変わったら更新
+   3. 送料無料・のし対応などの案内（.service-list）
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>サッポロ お歳暮ギフト2026 | 酒のビッグボス</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#131313;
+    --black-soft:#1f1c17;
+    --gold:#e7b300;
+    --gold-light:#e6bb09;
+    --gold-dark:#997f11;
+    --gold-pale:#f7eecf;
+    --red:#e93434;
+    --paper:#fffdf6;
+    --ink:#1a1a1a;
+    --gray:#666;
+    --line:#d2d2d2;
+    --bb-yellow:#ffcc00;
+    --bb-black:#1a1a1a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    padding:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Zen Kaku Gothic New","Yu Gothic","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    line-height:1.8;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px;}
+  .en{font-family:"Oswald",sans-serif;letter-spacing:.12em;}
+
+  /* ===== ショップ識別バー ===== */
+  .shop-bar{
+    background:repeating-linear-gradient(45deg,var(--bb-yellow) 0 18px,var(--bb-black) 18px 36px);
+    padding:3px 0;
+  }
+  .shop-bar-inner{
+    background:var(--bb-black);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:10px 18px;
+    max-width:960px;
+    margin:0 auto;
+    font-size:13px;
+  }
+  .shop-bar-logo{
+    font-size:16px;
+    font-weight:900;
+    letter-spacing:.05em;
+    color:var(--bb-yellow);
+  }
+  .shop-bar-nav a{
+    color:#fff;
+    text-decoration:none;
+    margin-left:14px;
+  }
+  .shop-bar-nav a:hover{color:var(--bb-yellow);}
+
+  /* ===== 20歳未満注意 ===== */
+  .age-note{
+    background:#000;
+    color:#fff;
+    font-size:11px;
+    text-align:center;
+    padding:6px 12px;
+    letter-spacing:.03em;
+  }
+
+  /* ===== キービジュアル ===== */
+  .kv{
+    position:relative;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 50% 38%,rgba(231,179,0,.28),transparent 58%),
+      linear-gradient(180deg,#0b0b0b 0%,var(--black-soft) 100%);
+    color:#fff;
+    text-align:center;
+    padding:56px 16px 48px;
+  }
+  .kv-mizuhiki{
+    position:absolute;
+    left:50%;
+    top:18px;
+    transform:translateX(-50%);
+    width:min(520px,90%);
+    opacity:.9;
+  }
+  .kv-corner{
+    position:absolute;
+    width:160px;
+    opacity:.55;
+  }
+  .kv-corner.left{left:-20px;bottom:-10px;}
+  .kv-corner.right{right:-20px;top:-10px;transform:scaleX(-1);}
+  .kv-inner{position:relative;}
+  .kv-lead{
+    font-size:15px;
+    letter-spacing:.3em;
+    color:var(--gold-light);
+    margin:40px 0 6px;
+  }
+  .kv h1{
+    margin:0;
+    font-weight:900;
+    font-size:clamp(34px,7vw,60px);
+    line-height:1.25;
+    letter-spacing:.06em;
+    background:linear-gradient(180deg,#fff6cf 0%,var(--gold) 55%,var(--gold-dark) 100%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .kv h1 small{
+    display:block;
+    font-size:.42em;
+    letter-spacing:.2em;
+  }
+  .kv-copy{
+    margin:18px auto 0;
+    font-size:clamp(15px,2.6vw,19px);
+    letter-spacing:.1em;
+  }
+  .kv-items{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    max-width:720px;
+    margin:32px auto 0;
+  }
+  .kv-items img{
+    border-radius:4px;
+    background:#fff;
+    box-shadow:0 8px 24px rgba(0,0,0,.45);
+  }
+  .service-list{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:28px 0 0;
+    padding:0;
+    list-style:none;
+  }
+  .service-list li{
+    border:1px solid var(--gold);
+    color:var(--gold-light);
+    border-radius:999px;
+    font-size:13px;
+    font-weight:700;
+    padding:4px 16px;
+  }
+
+  /* ===== セクション共通 ===== */
+  section{padding:64px 0;}
+  .sec-title{
+    text-align:center;
+    margin:0 0 36px;
+  }
+  .sec-title .en{
+    display:block;
+    color:var(--gold-dark);
+    font-size:14px;
+  }
+  .sec-title h2{
+    margin:4px 0 0;
+    font-size:clamp(22px,4vw,30px);
+    font-weight:900;
+    letter-spacing:.08em;
+  }
+  .sec-title h2::after{
+    content:"";
+    display:block;
+    width:56px;
+    height:3px;
+    margin:14px auto 0;
+    background:linear-gradient(90deg,var(--gold-dark),var(--gold),var(--gold-dark));
+  }
+  .sec-title p{margin:12px 0 0;color:var(--gray);font-size:14px;}
+
+  /* ===== 注目商品 ===== */
+  .pickup{
+    background:linear-gradient(180deg,var(--gold-pale) 0%,var(--paper) 100%);
+  }
+  .pickup-box{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:32px;
+    align-items:center;
+    background:#fff;
+    border:1px solid var(--gold);
+    padding:32px;
+  }
+  .pickup-badge{
+    display:inline-block;
+    background:var(--red);
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    padding:2px 12px;
+  }
+  .pickup-date{
+    display:inline-block;
+    margin-left:6px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--red);
+  }
+  .pickup h3{
+    margin:12px 0 8px;
+    font-size:clamp(20px,3.4vw,26px);
+    line-height:1.5;
+  }
+  .pickup p{margin:0 0 12px;font-size:15px;}
+  .beer-list{
+    list-style:none;
+    margin:0 0 20px;
+    padding:0;
+    border-top:1px solid var(--line);
+  }
+  .beer-list li{
+    display:flex;
+    justify-content:space-between;
+    border-bottom:1px solid var(--line);
+    padding:6px 0;
+    font-size:14px;
+  }
+
+  /* ===== 商品一覧 ===== */
+  .lineup{background:var(--paper);}
+  .lineup-group + .lineup-group{margin-top:56px;}
+  .group-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:0 0 20px;
+    font-size:20px;
+    font-weight:900;
+  }
+  .group-title::before{
+    content:"";
+    width:6px;
+    height:26px;
+    background:var(--gold);
+  }
+  .item-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+    gap:20px;
+  }
+  .item-card{
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+    border:1px solid var(--line);
+    transition:box-shadow .2s,transform .2s;
+  }
+  .item-card:hover{
+    box-shadow:0 10px 24px rgba(0,0,0,.12);
+    transform:translateY(-2px);
+  }
+  .item-photo{position:relative;}
+  .item-tag{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:var(--black);
+    color:var(--gold-light);
+    font-size:12px;
+    font-weight:700;
+    padding:2px 10px;
+  }
+  .item-tag.limited{background:var(--red);color:#fff;}
+  .item-body{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    padding:16px 18px 20px;
+  }
+  .item-catch{
+    margin:0;
+    color:var(--gold-dark);
+    font-size:13px;
+    font-weight:700;
+  }
+  .item-body h4{
+    margin:2px 0 4px;
+    font-size:17px;
+    line-height:1.5;
+  }
+  .item-code{
+    margin:0 0 10px;
+    color:var(--gray);
+    font-size:12px;
+  }
+  .item-contents{
+    margin:0 0 16px;
+    padding:10px 12px;
+    background:#faf7ee;
+    font-size:13px;
+    line-height:1.7;
+  }
+  .item-contents strong{display:block;margin-top:4px;}
+  .btn{
+    display:block;
+    margin-top:auto;
+    text-align:center;
+    text-decoration:none;
+    font-weight:700;
+    letter-spacing:.06em;
+    color:var(--black);
+    background:linear-gradient(180deg,#f4d24a 0%,var(--gold) 100%);
+    border-bottom:3px solid var(--gold-dark);
+    padding:12px 16px;
+    transition:filter .2s;
+  }
+  .btn:hover{filter:brightness(1.08);}
+  .btn-dark{
+    color:var(--gold-light);
+    background:var(--black);
+    border-bottom-color:#000;
+  }
+  .more{
+    text-align:center;
+    margin-top:48px;
+  }
+  .more .btn{
+    display:inline-block;
+    min-width:min(420px,100%);
+  }
+
+  /* ===== フッター ===== */
+  footer{
+    background:var(--black);
+    color:#ccc;
+    font-size:13px;
+    padding:40px 0 24px;
+  }
+  footer h5{
+    margin:0 0 8px;
+    color:var(--gold-light);
+    font-size:15px;
+  }
+  footer p{margin:0 0 10px;}
+  .footer-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:12px 0;
+  }
+  .footer-badges span{
+    border:1px solid var(--gold-dark);
+    color:var(--gold-light);
+    padding:2px 10px;
+    font-size:12px;
+  }
+  .copyright{color:#888;font-size:11px;margin-top:20px;}
+
+  @media (max-width:640px){
+    section{padding:48px 0;}
+    .pickup-box{grid-template-columns:1fr;padding:20px;gap:16px;}
+    .kv{padding:44px 16px 36px;}
+    .kv-corner{width:110px;}
+    .shop-bar-nav a{margin:0 14px 0 0;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- ショップ識別バー -->
+  <div class="shop-bar">
+    <div class="shop-bar-inner">
+      <div class="shop-bar-logo">酒のビッグボス</div>
+      <nav class="shop-bar-nav">
+        <a href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">ショップトップ</a>
+        <a href="https://search.rakuten.co.jp/search/mall/%E3%81%8A%E6%AD%B3%E6%9A%AE+%E3%82%B5%E3%83%83%E3%83%9D%E3%83%AD+GIFT/?sf=1&sid=224915" target="_blank" rel="noopener">サッポロギフト一覧</a>
+        <a href="https://www.rakuten.co.jp/bigbossshibazaki/info.html" target="_blank" rel="noopener">店舗情報</a>
+      </nav>
+    </div>
+  </div>
+  <div class="age-note">ストップ！20歳未満飲酒・飲酒運転。妊娠中や授乳期の飲酒はやめましょう。お酒は楽しく適量で。のんだあとはリサイクル。</div>
+
+  <!-- キービジュアル -->
+  <header class="kv">
+    <!-- 水引 -->
+    <svg class="kv-mizuhiki" viewBox="0 0 520 60" aria-hidden="true">
+      <g fill="none" stroke="#e7b300" stroke-width="2">
+        <path d="M0 30 H200 C220 30 230 8 260 8 C290 8 300 30 320 30 H520"/>
+        <path d="M0 36 H200 C220 36 230 52 260 52 C290 52 300 36 320 36 H520"/>
+        <ellipse cx="236" cy="30" rx="22" ry="14"/>
+        <ellipse cx="284" cy="30" rx="22" ry="14"/>
+      </g>
+      <g fill="none" stroke="#e93434" stroke-width="2">
+        <path d="M0 42 H200 C222 42 236 58 260 58 C284 58 298 42 320 42 H520"/>
+      </g>
+    </svg>
+    <!-- 松（四隅の飾り） -->
+    <svg class="kv-corner left" viewBox="0 0 160 160" aria-hidden="true">
+      <g fill="#997f11">
+        <circle cx="40" cy="120" r="34"/><circle cx="84" cy="128" r="26"/><circle cx="62" cy="88" r="24"/>
+      </g>
+      <g fill="none" stroke="#e7b300" stroke-width="1.5">
+        <circle cx="40" cy="120" r="26"/><circle cx="84" cy="128" r="18"/><circle cx="62" cy="88" r="16"/>
+      </g>
+    </svg>
+    <svg class="kv-corner right" viewBox="0 0 160 160" aria-hidden="true">
+      <g fill="#997f11">
+        <circle cx="40" cy="40" r="34"/><circle cx="84" cy="32" r="26"/><circle cx="62" cy="72" r="24"/>
+      </g>
+      <g fill="none" stroke="#e7b300" stroke-width="1.5">
+        <circle cx="40" cy="40" r="26"/><circle cx="84" cy="32" r="18"/><circle cx="62" cy="72" r="16"/>
+      </g>
+    </svg>
+
+    <div class="kv-inner">
+      <p class="kv-lead en">SAPPORO WINTER GIFT 2026</p>
+      <h1><small>お歳暮に贈る</small>サッポロ<br>ビールギフト</h1>
+      <p class="kv-copy">一年の感謝を、ヱビスと黒ラベルにのせて。</p>
+      <div class="kv-items">
+        <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/4901880217853_0.jpg" alt="ヱビス 4種の味わいセット 20本">
+        <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/2026_ye5.jpg" alt="ヱビスビール 缶セット 20本">
+        <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/s4901880859725_08.jpg" alt="サッポロ生ビール黒ラベル 缶セット">
+      </div>
+      <ul class="service-list">
+        <li>本州 送料無料</li>
+        <li>のし対応</li>
+        <li>全8セット</li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- 注目商品 -->
+  <section class="pickup">
+    <div class="wrap">
+      <div class="sec-title">
+        <span class="en">PICK UP</span>
+        <h2>EC限定 ヱビス5種の飲み比べ</h2>
+      </div>
+      <div class="pickup-box">
+        <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/4901880218614_0.jpg" alt="ヱビス 5種の味わいセット 11缶（EC限定）">
+        <div>
+          <span class="pickup-badge">EC限定</span><span class="pickup-date">2026年11月25日 限定発売【予約受付中】</span>
+          <h3>ヱビス 5種の味わいセット<br>（YEV3DEC）</h3>
+          <p>定番のヱビスビールに、プレミアムエール・プレミアムブラック・星月夜・麦紡ぐを詰め合わせた、ヱビスの個性を飲み比べできるギフトです。</p>
+          <ul class="beer-list">
+            <li><span>ヱビスビール</span><span>350ml×2本</span></li>
+            <li><span>ヱビス プレミアムエール</span><span>350ml×2本</span></li>
+            <li><span>ヱビス プレミアムブラック</span><span>350ml×2本</span></li>
+            <li><span>ヱビス 星月夜</span><span>350ml×2本</span></li>
+            <li><span>ヱビス 麦紡ぐ</span><span>350ml×3本</span></li>
+          </ul>
+          <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880897581-ec/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 商品一覧 -->
+  <section class="lineup">
+    <div class="wrap">
+      <div class="sec-title">
+        <span class="en">LINE UP</span>
+        <h2>サッポロ お歳暮ギフト</h2>
+        <p>すべて本州送料無料。価格・お届け日は各商品ページでご確認ください。</p>
+      </div>
+
+      <!-- ヱビス 飲み比べセット -->
+      <div class="lineup-group">
+        <h3 class="group-title">ヱビス 飲み比べセット</h3>
+        <div class="item-grid">
+
+          <article class="item-card">
+            <div class="item-photo">
+              <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/4901880218614_0.jpg" alt="ヱビス 5種の味わいセット 11缶">
+              <span class="item-tag limited">EC限定</span>
+            </div>
+            <div class="item-body">
+              <p class="item-catch">5種のヱビスを少しずつ</p>
+              <h4>ヱビス 5種の味わいセット</h4>
+              <p class="item-code">YEV3DEC</p>
+              <div class="item-contents">
+                ヱビスビール 350ml×2本、プレミアムエール 350ml×2本、プレミアムブラック 350ml×2本、星月夜 350ml×2本、麦紡ぐ 350ml×3本
+                <strong>合計11本</strong>
+              </div>
+              <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880897581-ec/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+            </div>
+          </article>
+
+          <article class="item-card">
+            <div class="item-photo">
+              <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/4901880217853_0.jpg" alt="ヱビス 4種の味わいセット 20本">
+              <span class="item-tag">20本</span>
+            </div>
+            <div class="item-body">
+              <p class="item-catch">ボリュームたっぷりの飲み比べ</p>
+              <h4>ヱビス 4種の味わいセット</h4>
+              <p class="item-code">YEF5DT</p>
+              <div class="item-contents">
+                ヱビスビール 350ml×8本、プレミアムエール 350ml×6本、プレミアムブラック 350ml×3本、麦紡ぐ 350ml×3本
+                <strong>合計20本</strong>
+              </div>
+              <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880884123-asu/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+            </div>
+          </article>
+
+          <article class="item-card">
+            <div class="item-photo">
+              <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/4901880217860_0.jpg" alt="ヱビス 4種の味わいセット 15本">
+              <span class="item-tag">15本</span>
+            </div>
+            <div class="item-body">
+              <p class="item-catch">4種の味わいをバランスよく</p>
+              <h4>ヱビス 4種の味わいセット</h4>
+              <p class="item-code">YEF4D</p>
+              <div class="item-contents">
+                ヱビスビール 350ml×6本、プレミアムエール 350ml×3本、プレミアムブラック 350ml×3本、麦紡ぐ 350ml×3本
+                <strong>合計15本</strong>
+              </div>
+              <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880884130-nsi/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+            </div>
+          </article>
+
+          <article class="item-card">
+            <div class="item-photo">
+              <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/4901880217877_0.jpg" alt="ヱビス 4種の味わいセット 12本">
+              <span class="item-tag">12本</span>
+            </div>
+            <div class="item-body">
+              <p class="item-catch">4種を3本ずつ、気軽な贈り物に</p>
+              <h4>ヱビス 4種の味わいセット</h4>
+              <p class="item-code">YEF3D</p>
+              <div class="item-contents">
+                ヱビスビール 350ml×3本、プレミアムエール 350ml×3本、プレミアムブラック 350ml×3本、麦紡ぐ 350ml×3本
+                <strong>合計12本</strong>
+              </div>
+              <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880884147-nsi/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- ヱビスビール 缶セット -->
+      <div class="lineup-group">
+        <h3 class="group-title">ヱビスビール 缶セット</h3>
+        <div class="item-grid">
+
+          <article class="item-card">
+            <div class="item-photo">
+              <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/2026_ye5.jpg" alt="ヱビスビール 缶セット 20本">
+              <span class="item-tag">20本</span>
+            </div>
+            <div class="item-body">
+              <p class="item-catch">大切な方への贈り物に</p>
+              <h4>ヱビスビール 缶セット</h4>
+              <p class="item-code">YE5DT</p>
+              <div class="item-contents">
+                ヱビスビール 350ml×20本
+                <strong>合計20本</strong>
+              </div>
+              <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/10000981/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+            </div>
+          </article>
+
+          <article class="item-card">
+            <div class="item-photo">
+              <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/2026_ye4.jpg" alt="ヱビスビール 缶セット 15本">
+              <span class="item-tag">15本</span>
+            </div>
+            <div class="item-body">
+              <p class="item-catch">ちょうどいい本数のヱビス</p>
+              <h4>ヱビスビール 缶セット</h4>
+              <p class="item-code">YE4DN</p>
+              <div class="item-contents">
+                ヱビスビール 350ml×15本
+                <strong>合計15本</strong>
+              </div>
+              <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880879952/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+            </div>
+          </article>
+
+          <article class="item-card">
+            <div class="item-photo">
+              <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/2026_ye3.jpg" alt="ヱビスビール 缶セット 12本">
+              <span class="item-tag">12本</span>
+            </div>
+            <div class="item-body">
+              <p class="item-catch">定番のヱビスを手軽に</p>
+              <h4>ヱビスビール 缶セット</h4>
+              <p class="item-code">YE3D</p>
+              <div class="item-contents">
+                ヱビスビール 350ml×12本
+                <strong>合計12本</strong>
+              </div>
+              <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/10005090/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- サッポロ生ビール黒ラベル -->
+      <div class="lineup-group">
+        <h3 class="group-title">サッポロ生ビール黒ラベル</h3>
+        <div class="item-grid">
+
+          <article class="item-card">
+            <div class="item-photo">
+              <img src="https://image.rakuten.co.jp/bigbossshibazaki/cabinet/c55/s4901880859725_08.jpg" alt="サッポロ生ビール黒ラベル 缶セット">
+              <span class="item-tag">12本</span>
+            </div>
+            <div class="item-body">
+              <p class="item-catch">350ml・500mlの2サイズ入り</p>
+              <h4>サッポロ生ビール黒ラベル 缶セット</h4>
+              <p class="item-code">KS3D</p>
+              <div class="item-contents">
+                黒ラベル 350ml×10本、黒ラベル 500ml×2本
+                <strong>合計12本</strong>
+              </div>
+              <a class="btn" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880859725/" target="_blank" rel="noopener">商品ページを見る ▶</a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="more">
+        <a class="btn btn-dark" href="https://search.rakuten.co.jp/search/mall/%E3%81%8A%E6%AD%B3%E6%9A%AE+%E3%82%B5%E3%83%83%E3%83%9D%E3%83%AD+GIFT/?sf=1&sid=224915" target="_blank" rel="noopener">サッポロのお歳暮ギフトをもっと見る ▶</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="age-note">ストップ！20歳未満飲酒・飲酒運転。妊娠中や授乳期の飲酒はやめましょう。お酒は楽しく適量で。のんだあとはリサイクル。</div>
+
+  <!-- フッター：ショップ情報 -->
+  <footer>
+    <div class="wrap">
+      <h5>酒のビッグボス（運営：有限会社習志野酒店）</h5>
+      <p>世界のお酒がなんでも揃う、酒・飲料・食品とギフトの専門ショップ。国内外7,000品以上を取り揃え、年中無休・24時間受注受付、365日発送に対応しています。</p>
+      <div class="footer-badges">
+        <span>SHOP OF THE YEAR 受賞ショップ</span>
+        <span>年中無休</span>
+        <span>送料無料商品多数</span>
+      </div>
+      <p>
+        <a href="https://www.rakuten.co.jp/bigbossshibazaki/" target="_blank" rel="noopener">ショップトップページ</a>
+        ／
+        <a href="https://www.rakuten.co.jp/bigbossshibazaki/info.html" target="_blank" rel="noopener">店舗詳細情報</a>
+      </p>
+      <p class="copyright">&copy; 酒のビッグボス（有限会社習志野酒店）</p>
+    </div>
+  </footer>
+
+</body>
+</html>

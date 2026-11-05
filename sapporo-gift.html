@@ -93,7 +93,7 @@
     content:"";
     width:271px;
     height:347.5px;
-    background:url(img/sapporo-gift/fv_img_02.png) no-repeat left top / 100% auto;
+    background:url(img/sapporo-gift/fv_img_02.webp) no-repeat left top / 100% auto;
     position:absolute;
     top:-29px;
     left:-199px;
@@ -112,7 +112,7 @@
     content:"";
     width:144.56px;
     height:339.18px;
-    background:url(img/sapporo-gift/fv_img_04.png) no-repeat left top / 100% auto;
+    background:url(img/sapporo-gift/fv_img_04.webp) no-repeat left top / 100% auto;
     position:absolute;
     top:2.73px;
     left:-77.89px;
@@ -168,65 +168,6 @@
   .fv_star span:nth-child(19){top:175px;left:calc(50% + 883px);width:20px;animation-delay:-.5s;}
   .fv_star span:nth-child(20){top:150px;left:calc(50% + 200px);animation-delay:-.1s;}
 
-  /* FV下部の帯 */
-  .fv_band{
-    width:876px;
-    height:137px;
-    margin:0 auto;
-    position:absolute;
-    left:0;
-    right:0;
-    bottom:0;
-    z-index:20;
-    border-radius:20px 20px 0 0;
-    background:linear-gradient(to right,var(--gold-d) -20%,var(--gold-l) 50%,var(--gold-d) 200%);
-    display:flex;
-    align-items:center;
-    padding:0 190px 0 48px;
-  }
-  .fv_band_txt p:nth-child(1){font-size:20px;font-weight:700;}
-  .fv_band_txt p:nth-child(2){
-    color:var(--blue);
-    font-weight:900;
-    font-size:44px;
-    line-height:1.2;
-    letter-spacing:.04em;
-  }
-  .fv_band_txt p:nth-child(2) small{font-size:24px;margin-left:8px;}
-  .fv_band_btn{
-    position:absolute;
-    top:7px;
-    right:35px;
-    padding-top:34px;
-    width:123px;
-    height:123px;
-    border-radius:50%;
-    background:var(--blue);
-    color:#FFED53;
-    font-size:17px;
-    line-height:1.35;
-    letter-spacing:1px;
-    font-weight:700;
-    text-align:center;
-    transition:opacity .3s;
-  }
-  .fv_band_btn::after{
-    content:"";
-    display:block;
-    width:12px;
-    height:12px;
-    border-top:3px solid #FFED53;
-    border-right:3px solid #FFED53;
-    transform:scale(.86) rotate(135deg);
-    position:absolute;
-    left:0;
-    right:0;
-    bottom:19px;
-    margin:0 auto;
-    transition:transform .3s;
-  }
-  .fv_band_btn:hover{opacity:.6;}
-  .fv_band_btn:hover::after{transform:translateY(5px) scale(.86) rotate(135deg);}
 
   .age_note{
     text-align:center;
@@ -239,13 +180,13 @@
 
   /* ===== クーポン ===== */
   .coupon{
-    background:url(img/sapporo-gift/campaign_bg_01.png) no-repeat center top / cover;
+    background:url(img/sapporo-gift/campaign_bg_01.webp) no-repeat center top / cover;
     position:relative;
     padding:183px 16px 64px;
   }
   .coupon::before{
     content:"";
-    background:url(img/sapporo-gift/campaign_img_01.png) no-repeat left top / 100% auto;
+    background:url(img/sapporo-gift/campaign_img_01.webp) no-repeat left top / 100% auto;
     width:675px;
     max-width:100%;
     aspect-ratio:675/179;
@@ -285,29 +226,33 @@
   .coupon h2 > span .en span:nth-child(2){line-height:1;font-size:84.18px;}
   .coupon h2 > span img{display:inline-block;width:260px;vertical-align:-1px;}
 
-  /* 「5%OFFクーポン」がどどーんと出るアニメーション（5回） */
-  .coupon_impact{transform-origin:50% 60%;opacity:0;}
-  .coupon.show .coupon_impact{animation:dodon 1.8s cubic-bezier(.2,.9,.3,1.2) 5 both;}
+  /* 「クーポンを獲得する」ボタンがどどーんと出るアニメーション（5回） */
+  .coupon_btn{opacity:0;}
+  .coupon.show .coupon_btn{animation:dodon .8s cubic-bezier(.2,.9,.3,1.2) 5 both;}
   @keyframes dodon{
-    0%{opacity:0;transform:scale(2.4);filter:blur(6px);}
-    14%{opacity:1;transform:scale(.88);filter:blur(0);}
-    20%{transform:scale(1.1) rotate(-1.5deg);}
-    26%{transform:scale(.97) rotate(1deg);}
-    32%{transform:scale(1.03);}
-    38%,100%{opacity:1;transform:scale(1);}
+    0%{opacity:0;transform:scale(2.2);filter:blur(5px);}
+    22%{opacity:1;transform:scale(.88);filter:blur(0);}
+    34%{transform:scale(1.08) rotate(-1.5deg);}
+    46%{transform:scale(.97) rotate(1deg);}
+    58%{transform:scale(1.02);}
+    70%,100%{opacity:1;transform:scale(1);}
   }
-  .coupon.show .coupon_impact .en > span:first-child{
-    display:inline-block;
-    animation:dodon_flash 1.8s ease-out 5;
+  .coupon.show .coupon_btn::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    pointer-events:none;
+    animation:dodon_flash .8s ease-out 5;
   }
   @keyframes dodon_flash{
-    0%,12%{text-shadow:none;}
-    18%{text-shadow:0 0 18px #fff,0 0 34px var(--gold-l);}
-    40%,100%{text-shadow:none;}
+    0%,18%{box-shadow:0 0 0 0 rgba(255,239,65,0);}
+    30%{box-shadow:0 0 0 8px rgba(255,239,65,.9),0 0 28px 10px rgba(255,255,255,.8);}
+    70%,100%{box-shadow:0 0 0 18px rgba(255,239,65,0);}
   }
 
   .coupon_count{text-align:center;font-size:20px;letter-spacing:1px;font-weight:700;margin:-11px 0 11px;}
-  .coupon_btn,.coupon_btn_item{
+  .coupon_btn{
     display:flex;
     justify-content:center;
     align-items:center;
@@ -325,8 +270,7 @@
     position:relative;
     transition:opacity .3s;
   }
-  .coupon_btn_item{background:#333;}
-  .coupon_btn::after,.coupon_btn_item::after{
+  .coupon_btn::after{
     content:"";
     width:12px;
     height:12px;
@@ -340,16 +284,14 @@
     margin:auto 0;
     transition:transform .3s;
   }
-  .coupon_btn_item::after{right:38px;bottom:5px;transform:scale(.9) rotate(135deg);}
-  .coupon_btn:hover,.coupon_btn_item:hover{opacity:.6;}
+  .coupon.show .coupon_btn:hover{opacity:.6;}
   .coupon_btn:hover::after{transform:translateX(5px) scale(.9) rotate(45deg);}
-  .coupon_btn_item:hover::after{transform:translateY(5px) scale(.9) rotate(135deg);}
   .coupon_note_01{text-align:center;font-size:14px;line-height:1.3;margin-top:6px;}
   .coupon_period{text-align:center;color:var(--blue);margin:19px 0 11px;}
   .coupon_period dt{font-size:18px;font-weight:700;line-height:1.35;}
   .coupon_period dd{font-size:26px;font-weight:900;line-height:1.35;margin-top:1px;}
   .coupon_note_02{text-align:center;font-size:15px;color:#C00030;font-weight:500;letter-spacing:1.9px;}
-  .coupon_note_03{font-size:14px;line-height:1.45;width:fit-content;max-width:100%;margin:8px auto 40px;}
+  .coupon_note_03{font-size:14px;line-height:1.45;width:fit-content;max-width:100%;margin:8px auto 0;}
   .coupon_note_03 a{text-decoration:underline;}
 
   /* ===== のし（ショップ「oseibo2026」ページののし欄と同じデザイン） ===== */
@@ -441,23 +383,7 @@
     margin:0 auto 20px;
     filter:drop-shadow(0 0 4px rgba(0,57,75,.5));
   }
-  .hoshi_logo{width:136px;margin:0 auto 22px;}
-  .hoshi_btn{
-    display:block;
-    width:322px;
-    max-width:100%;
-    margin:0 auto;
-    padding:12px 0;
-    border:1px solid rgba(255,255,255,.8);
-    border-radius:30px;
-    color:#fff;
-    text-align:center;
-    font-weight:700;
-    font-size:15px;
-    background:rgba(4,92,147,.55);
-    transition:opacity .3s;
-  }
-  .hoshi_btn:hover{opacity:.7;}
+  .hoshi_logo{width:136px;margin:0 auto;}
 
   /* ===== 商品エリア共通 ===== */
   .item01{background:url(img/sapporo-gift/item01_bg_01.jpg) no-repeat top center / cover;padding:63px 16px 72px;}
@@ -606,12 +532,12 @@
     margin:0 auto;
     display:grid;
     grid-template-columns:repeat(2,1fr);
-    gap:72px 76px;
+    gap:108px 76px;
   }
   .item01_item{display:flex;flex-direction:column;}
   .item01_item .item_photo.flower-l::after{
     content:"";
-    background:url(img/sapporo-gift/item01_img_02_flower.png) no-repeat left top / 100% auto;
+    background:url(img/sapporo-gift/item01_img_02_flower.webp) no-repeat left top / 100% auto;
     position:absolute;
     left:-6px;
     top:-40px;
@@ -621,7 +547,7 @@
   }
   .item01_item .item_photo.flower-r::after{
     content:"";
-    background:url(img/sapporo-gift/item01_img_04_flower.png) no-repeat left top / 100% auto;
+    background:url(img/sapporo-gift/item01_img_04_flower.webp) no-repeat left top / 100% auto;
     position:absolute;
     right:0;
     top:-40px;
@@ -696,6 +622,29 @@
   .item03_body .item_contents{margin:16px 0 22px;}
   .item03_body .item_btn_gold{margin:0;}
 
+  /* ===== ご注文の流れ（ショップ「oseibo2026」ページと同じデザイン） ===== */
+  .flow{background:#faf8f3;color:#182740;padding:64px 16px;line-height:1.85;}
+  .flow-inner{max-width:1000px;margin:auto;}
+  .flow-head{text-align:center;margin-bottom:28px;}
+  .flow-head .eyebrow{font-size:13px;letter-spacing:.2em;font-weight:600;color:#987535;}
+  .flow-head h2{font-size:clamp(24px,2.6vw,34px);line-height:1.5;margin-top:8px;font-weight:600;}
+  .flow-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:0;padding:0;}
+  .flow-steps li{list-style:none;background:#fff;border:1px solid #eadfc6;padding:22px 20px;}
+  .flow-steps .no{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.12em;color:#fff;background:#102443;padding:2px 10px;}
+  .flow-steps h3{font-size:17px;margin:10px 0 6px;}
+  .flow-steps p{font-size:14px;color:#4a4f5c;line-height:1.75;}
+  .deliv{margin-top:20px;background:#fff;border:2px solid #c50000;padding:20px 24px;display:grid;grid-template-columns:auto 1fr;gap:10px 24px;align-items:center;}
+  .deliv .ttl{font-weight:800;color:#c50000;font-size:16px;}
+  .deliv ul{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 20px;}
+  .deliv li{font-size:14px;line-height:1.6;}
+  .deliv li b{display:block;font-size:13px;color:#746751;}
+  .deliv li span{font-size:18px;font-weight:800;}
+  .corp{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:20px;color:#fff;padding:20px 28px;background:linear-gradient(135deg,#c94f00 0%,#e8701c 55%,#c94f00 100%);box-shadow:0 8px 20px rgba(201,79,0,.2);}
+  .corp b{display:block;font-size:17px;}
+  .corp p{font-size:14px;margin-top:4px;color:#fff3e8;}
+  .corp a{flex:none;display:inline-flex;align-items:center;min-height:48px;padding:10px 28px;border-radius:999px;background:#fff;color:#c94f00;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,.13);}
+  .corp a:hover{filter:brightness(1.06);}
+
   /* ===== もっと見る ===== */
   .more{
     background:#000 url(img/sapporo-gift/fv_bg_01.jpg) no-repeat center / cover;
@@ -717,7 +666,7 @@
   .copyright{color:#888;font-size:11px;margin-top:20px;}
 
   @media (prefers-reduced-motion:reduce){
-    .coupon.show .coupon_impact,.coupon.show .coupon_impact .en > span:first-child{animation:none;opacity:1;}
+    .coupon.show .coupon_btn,.coupon.show .coupon_btn::before{animation:none;opacity:1;}
   }
 
   /* ===== スマホ ===== */
@@ -726,24 +675,25 @@
     .fv_ttl{position:relative;top:auto;width:min(437px,100%);}
     .fv_ttl img{width:100%;left:0;}
     .fv_ttl img + img{width:62%;}
-    .fv_img_01,.fv_img_02{display:none;}
-    .fv_band{
-      position:relative;
-      width:auto;
-      height:auto;
-      margin:24px -16px 0;
-      border-radius:16px 16px 0 0;
-      padding:18px 16px;
-      flex-direction:column;
-      gap:12px;
-      text-align:center;
-    }
-    .fv_band_txt p:nth-child(1){font-size:15px;}
-    .fv_band_txt p:nth-child(2){font-size:28px;}
-    .fv_band_txt p:nth-child(2) small{font-size:16px;display:block;margin:0;}
-    .fv_band_btn{position:static;width:auto;height:auto;padding:10px 32px 10px 24px;border-radius:30px;}
-    .fv_band_btn br{display:none;}
-    .fv_band_btn::after{left:auto;right:14px;bottom:0;top:0;margin:auto 0;transform:scale(.7) rotate(135deg);}
+    /* スマホのFV：タイトルの下に商品2点を並べる */
+    .fv{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:12px 6%;padding-bottom:28px;}
+    .fv_ttl{order:-1;flex-basis:100%;}
+    .fv_img_01,.fv_img_02{position:relative;top:auto;left:auto;width:38%;}
+    .fv_img_02{width:34%;}
+    .fv_img_01::after,.fv_img_02::before{display:none;}
+
+    /* スマホは軽い背景画像に差し替え */
+    .coupon{background-image:url(img/sapporo-gift/campaign_bg_01_sp.webp);}
+    .item01{background-image:url(img/sapporo-gift/item01_bg_01_sp.jpg);}
+    .item02{background-image:url(img/sapporo-gift/item02_bg_01_sp.jpg);}
+    .item03{background-image:url(img/sapporo-gift/item03_bg_01_sp.jpg);}
+
+    .flow{padding:44px 16px;}
+    .flow-steps{grid-template-columns:1fr;gap:10px;}
+    .deliv{grid-template-columns:1fr;padding:16px;}
+    .deliv ul{grid-template-columns:1fr;}
+    .corp{flex-direction:column;align-items:flex-start;padding:18px;}
+    .corp a{width:100%;justify-content:center;}
     .age_note{font-size:12px;}
 
     .coupon{padding-top:calc((100vw - 32px) * 179 / 675 + 24px);}
@@ -756,8 +706,8 @@
     .coupon h2 > span .en span:nth-child(2){font-size:40px;}
     .coupon h2 > span img{width:124px;}
     .coupon_count{font-size:16px;margin-top:0;}
-    .coupon_btn,.coupon_btn_item{height:60px;font-size:18px;}
-    .coupon_btn::after,.coupon_btn_item::after{right:24px;}
+    .coupon_btn{height:60px;font-size:18px;}
+    .coupon_btn::after{right:24px;}
     .coupon_period dt{font-size:15px;}
     .coupon_period dd{font-size:16px;}
     .coupon_note_02{font-size:12px;letter-spacing:0;}
@@ -768,8 +718,8 @@
     .hoshi_box{width:100%;margin-top:56px;}
     .hoshi_box h2 img{max-width:100%;}
     .item01 h2,.item02 h2,.item03 h2{padding-top:15%;font-size:14px;margin-bottom:32px;}
-    .item01_list{grid-template-columns:1fr;gap:56px;max-width:420px;}
-    .item02_list{grid-template-columns:1fr;max-width:420px;gap:48px;}
+    .item01_list{grid-template-columns:1fr;gap:84px;max-width:420px;}
+    .item02_list{grid-template-columns:1fr;max-width:420px;gap:72px;}
     .item02_list::before{display:none;}
     .item01_item h3{font-size:21px;}
     .item_no{font-size:20px;}
@@ -815,21 +765,14 @@
     <!-- FV -->
     <section class="fv">
       <div class="fv_water"></div>
-      <figure class="fv_img_01"><img src="img/sapporo-gift/fv_img_01.png" alt=""></figure>
+      <figure class="fv_img_01"><img src="img/sapporo-gift/fv_img_01.webp" alt=""></figure>
       <h1 class="fv_ttl"><img src="img/sapporo-gift/fv_txt_01.svg" alt="SAPPORO 乾杯をもっとおいしく。"><img src="img/sapporo-gift/fv_txt_02.svg" alt="お世話になったあの人に"></h1>
-      <figure class="fv_img_02"><img src="img/sapporo-gift/fv_img_03.png" alt=""></figure>
+      <figure class="fv_img_02"><img src="img/sapporo-gift/fv_img_03.webp" alt=""></figure>
       <div class="fv_star" aria-hidden="true">
         <span></span><span></span><span></span><span></span><span></span>
         <span></span><span></span><span></span><span></span><span></span>
         <span></span><span></span><span></span><span></span><span></span>
         <span></span><span></span><span></span><span></span><span></span>
-      </div>
-      <div class="fv_band">
-        <div class="fv_band_txt">
-          <p>酒のビッグボスのお歳暮ギフト</p>
-          <p>本州送料無料<small>のし対応・全8セット</small></p>
-        </div>
-        <a href="#item" class="fv_band_btn">ギフトを<br>見る</a>
       </div>
     </section>
 
@@ -841,7 +784,7 @@
         <span></span><span></span><span></span><span></span>
       </div>
       <div class="coupon_inner">
-        <h2><img src="img/sapporo-gift/campaign_ttl_01.svg" alt="感謝の気持ちを贅沢なビールで">対象アイテムに使える<span class="coupon_impact"><span class="en"><span>5</span><span>%</span>OFF</span><img src="img/sapporo-gift/campaign_ttl_02.svg" alt="クーポン"></span></h2>
+        <h2><img src="img/sapporo-gift/campaign_ttl_01.svg" alt="感謝の気持ちを贅沢なビールで">対象アイテムに使える<span><span class="en"><span>5</span><span>%</span>OFF</span><img src="img/sapporo-gift/campaign_ttl_02.svg" alt="クーポン"></span></h2>
         <p class="coupon_count">先着利用 3,500回</p>
         <a href="https://maker-showroom.rakuten.co.jp/sapporo/campaign/oseibo/?l-id=adsol_2509_shop_bigbossshibazaki#coupon" class="coupon_btn" target="_blank" rel="noopener">クーポンを獲得する</a>
         <p class="coupon_note_01">※メルマガ購読がキャンペーンの応募条件になります。</p>
@@ -855,7 +798,6 @@
           <li>※一部クーポン対象外の商品があります。</li>
           <li>※本キャンペーンは予告なく変更または終了する場合があります。</li>
         </ul>
-        <a href="#item" class="coupon_btn_item">対象アイテムはこちら</a>
       </div>
     </section>
 
@@ -914,30 +856,29 @@
     <!-- 動画 -->
     <section class="movie">
       <div class="movie_inner">
-        <video src="video/sapporo-gift.mp4" poster="img/sapporo-gift/video_poster.jpg" controls playsinline preload="metadata"></video>
+        <video src="video/sapporo-gift.mp4" poster="img/sapporo-gift/video_poster.jpg" controls playsinline preload="none"></video>
       </div>
     </section>
 
     <!-- 星月夜 -->
     <section class="hoshi">
       <div class="hoshi_inner">
-        <figure><img src="img/sapporo-gift/hoshi_img_01.png" alt="ヱビス クリエイティブブリュー 星月夜"><figcaption><img src="img/sapporo-gift/hoshi_img_02.svg" alt="2026 限定醸造 LIMITED BREW"></figcaption></figure>
+        <figure><img loading="lazy" decoding="async" src="img/sapporo-gift/hoshi_img_01.webp" alt="ヱビス クリエイティブブリュー 星月夜"><figcaption><img loading="lazy" decoding="async" src="img/sapporo-gift/hoshi_img_02.svg" alt="2026 限定醸造 LIMITED BREW"></figcaption></figure>
         <div class="hoshi_box">
-          <h2><img src="img/sapporo-gift/hoshi_txt_01.svg" alt="夜が満ちてゆく。香りが満ちてゆく。"><img src="img/sapporo-gift/hoshi_ttl_01.png" alt="エビス クリエイティブブリュー 星月夜 ほしづきよ YEBISU CREATIVE BREW #14 花とホップが織りなす幻想的で華やかな香り"></h2>
-          <p><img src="img/sapporo-gift/hoshi_txt_02.svg" alt="パリ・オルセー美術館の名画《星月夜》から着想を得た新たなビールの魅力"></p>
-          <div class="hoshi_logo"><img src="img/sapporo-gift/yebisu_logo_01.svg" alt="Premium YEBISU"></div>
-          <a class="hoshi_btn" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880897581-ec/" target="_blank" rel="noopener">星月夜が入ったEC限定ギフトはこちら</a>
+          <h2><img loading="lazy" decoding="async" src="img/sapporo-gift/hoshi_txt_01.svg" alt="夜が満ちてゆく。香りが満ちてゆく。"><img loading="lazy" decoding="async" src="img/sapporo-gift/hoshi_ttl_01.png" alt="エビス クリエイティブブリュー 星月夜 ほしづきよ YEBISU CREATIVE BREW #14 花とホップが織りなす幻想的で華やかな香り"></h2>
+          <p><img loading="lazy" decoding="async" src="img/sapporo-gift/hoshi_txt_02.svg" alt="パリ・オルセー美術館の名画《星月夜》から着想を得た新たなビールの魅力"></p>
+          <div class="hoshi_logo"><img loading="lazy" decoding="async" src="img/sapporo-gift/yebisu_logo_01.svg" alt="Premium YEBISU"></div>
         </div>
       </div>
     </section>
 
     <!-- ヱビス ギフト -->
     <section class="item01" id="item">
-      <h2><img src="img/sapporo-gift/item01_ttl_01.svg" alt="お世話になったあの人に 今年1年のご褒美に">ヱビス 飲み比べギフト</h2>
+      <h2><img loading="lazy" decoding="async" src="img/sapporo-gift/item01_ttl_01.svg" alt="お世話になったあの人に 今年1年のご褒美に">ヱビス 飲み比べギフト</h2>
       <div class="item01_list">
 
         <div class="item01_item">
-          <figure class="item_photo"><img src="img/sapporo-gift/items/YEV3DEC.png" alt="ヱビス ビールギフト YEV3DEC"></figure>
+          <figure class="item_photo"><img loading="lazy" decoding="async" src="img/sapporo-gift/items/YEV3DEC.webp" alt="ヱビス ビールギフト YEV3DEC"></figure>
           <div class="item01_label"><span>EC</span>限定</div>
           <h3>ヱビス ビールギフト</h3>
           <p class="item_no">YEV3DEC</p>
@@ -954,7 +895,7 @@
         </div>
 
         <div class="item01_item">
-          <figure class="item_photo flower-l"><img src="img/sapporo-gift/items/YEF3D.png" alt="ヱビス4種の味わいセット YEF3D"></figure>
+          <figure class="item_photo flower-l"><img loading="lazy" decoding="async" src="img/sapporo-gift/items/YEF3D.webp" alt="ヱビス4種の味わいセット YEF3D"></figure>
           <h3>ヱビス4種の味わいセット</h3>
           <p class="item_no">YEF3D</p>
           <p class="item_price">2,966円<small>税込・送料無料</small></p>
@@ -969,7 +910,7 @@
         </div>
 
         <div class="item01_item">
-          <figure class="item_photo"><img src="img/sapporo-gift/items/YEF4D.png" alt="ヱビス4種の味わいセット YEF4D"></figure>
+          <figure class="item_photo"><img loading="lazy" decoding="async" src="img/sapporo-gift/items/YEF4D.webp" alt="ヱビス4種の味わいセット YEF4D"></figure>
           <h3>ヱビス4種の味わいセット</h3>
           <p class="item_no">YEF4D</p>
           <p class="item_price">3,639円<small>税込・送料無料</small></p>
@@ -984,7 +925,7 @@
         </div>
 
         <div class="item01_item">
-          <figure class="item_photo flower-r"><img src="img/sapporo-gift/items/YEF5DT.png" alt="ヱビス4種の味わいセット YEF5DT"></figure>
+          <figure class="item_photo flower-r"><img loading="lazy" decoding="async" src="img/sapporo-gift/items/YEF5DT.webp" alt="ヱビス4種の味わいセット YEF5DT"></figure>
           <h3>ヱビス4種の味わいセット</h3>
           <p class="item_no">YEF5DT</p>
           <p class="item_price">4,522円<small>税込・送料無料</small></p>
@@ -1003,11 +944,11 @@
 
     <!-- ヱビスビール -->
     <section class="item02">
-      <h2><img src="img/sapporo-gift/item02_ttl_01.svg" alt="定番のゴールドで一年を祝う ヱビスビール">ヱビスビール 缶セット</h2>
+      <h2><img loading="lazy" decoding="async" src="img/sapporo-gift/item02_ttl_01.svg" alt="定番のゴールドで一年を祝う ヱビスビール">ヱビスビール 缶セット</h2>
       <div class="item02_list">
 
         <div class="item02_item">
-          <figure class="item_photo"><img src="img/sapporo-gift/items/YE3D.png" alt="ヱビスビール缶セット(12本) YE3D"></figure>
+          <figure class="item_photo"><img loading="lazy" decoding="async" src="img/sapporo-gift/items/YE3D.webp" alt="ヱビスビール缶セット(12本) YE3D"></figure>
           <h3>ヱビスビール缶セット(12本)</h3>
           <p class="item_no">YE3D</p>
           <p class="item_price">2,998円<small>税込・送料無料</small></p>
@@ -1019,7 +960,7 @@
         </div>
 
         <div class="item02_item">
-          <figure class="item_photo"><img src="img/sapporo-gift/items/YE4DN.png" alt="ヱビスビール缶セット(15本) YE4DN"></figure>
+          <figure class="item_photo"><img loading="lazy" decoding="async" src="img/sapporo-gift/items/YE4DN.webp" alt="ヱビスビール缶セット(15本) YE4DN"></figure>
           <h3>ヱビスビール缶セット(15本)</h3>
           <p class="item_no">YE4DN</p>
           <p class="item_price">3,899円<small>税込・送料無料</small></p>
@@ -1031,7 +972,7 @@
         </div>
 
         <div class="item02_item">
-          <figure class="item_photo"><img src="img/sapporo-gift/items/YE5DT.png" alt="ヱビスビール缶セット(20本) YE5DT"></figure>
+          <figure class="item_photo"><img loading="lazy" decoding="async" src="img/sapporo-gift/items/YE5DT.webp" alt="ヱビスビール缶セット(20本) YE5DT"></figure>
           <h3>ヱビスビール缶セット(20本)</h3>
           <p class="item_no">YE5DT</p>
           <p class="item_price">4,469円<small>税込・送料無料</small></p>
@@ -1047,9 +988,9 @@
 
     <!-- 黒ラベル -->
     <section class="item03">
-      <h2><img src="img/sapporo-gift/item03_ttl_01.svg" alt="一年を締めくくる、大人の儀式 サッポロ生ビール黒ラベル">サッポロ生ビール黒ラベル</h2>
+      <h2><img loading="lazy" decoding="async" src="img/sapporo-gift/item03_ttl_01.svg" alt="一年を締めくくる、大人の儀式 サッポロ生ビール黒ラベル">サッポロ生ビール黒ラベル</h2>
       <div class="item03_item">
-        <figure class="item_photo"><img src="img/sapporo-gift/items/KS3D.png" alt="サッポロ生ビール黒ラベル缶セット(12本) KS3D"></figure>
+        <figure class="item_photo"><img loading="lazy" decoding="async" src="img/sapporo-gift/items/KS3D.webp" alt="サッポロ生ビール黒ラベル缶セット(12本) KS3D"></figure>
         <div class="item03_body">
           <h3>サッポロ生ビール<br>黒ラベル缶セット(12本)</h3>
           <p class="item_no">KS3D</p>
@@ -1060,6 +1001,30 @@
             <li>サッポロ生ビール黒ラベル 缶500ml×2本</li>
           </ul>
           <a href="https://item.rakuten.co.jp/bigbossshibazaki/4901880859725/" class="item_btn_gold" target="_blank" rel="noopener">購入はこちら</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ご注文の流れ・お届けについて -->
+    <section class="flow" id="flow">
+      <div class="flow-inner">
+        <div class="flow-head"><div class="eyebrow">HOW TO ORDER</div><h2 class="serif">ご注文の流れ・お届けについて</h2></div>
+        <ol class="flow-steps">
+          <li><span class="no">STEP 01</span><h3>贈る相手に合わせて選ぶ</h3><p>いつものビールがわかれば、そのメーカーを。迷ったら飲み比べセット、ご家族にはジュース入りを。</p></li>
+          <li><span class="no">STEP 02</span><h3>のしを選ぶ</h3><p>年末の感謝には「御歳暮」、新年のご挨拶には「御年賀」。商品ページの選択肢からお選びください。</p></li>
+          <li><span class="no">STEP 03</span><h3>お届け日を指定</h3><p>ご希望のお届け日を商品ページでご指定ください。ご指定がない場合は、準備でき次第の発送となります。</p></li>
+        </ol>
+        <div class="deliv">
+          <div class="ttl">年中無休で発送</div>
+          <ul>
+            <li><b>土日祝も</b><span>休まず発送</span></li>
+            <li><b>お届け日</b><span>ご指定いただけます</span></li>
+            <li><b>予約商品</b><span>発売日以降に発送</span></li>
+          </ul>
+        </div>
+        <div class="corp">
+          <div><b>会社・団体でまとめて贈りたい方へ</b><p>複数のお届け先・大口のご注文も、お気軽にご相談ください。</p></div>
+          <a href="https://www.rakuten.co.jp/bigbossshibazaki/info.html" target="_blank" rel="noopener">お問い合わせ先を見る</a>
         </div>
       </div>
     </section>

@@ -226,29 +226,38 @@
   .coupon h2 > span .en span:nth-child(2){line-height:1;font-size:84.18px;}
   .coupon h2 > span img{display:inline-block;width:260px;vertical-align:-1px;}
 
-  /* 「クーポンを獲得する」ボタンがどどーんと出るアニメーション（5回） */
-  .coupon_btn{opacity:0;}
-  .coupon.show .coupon_btn{animation:dodon .8s cubic-bezier(.2,.9,.3,1.2) 5 both;}
-  @keyframes dodon{
-    0%{opacity:0;transform:scale(2.2);filter:blur(5px);}
-    22%{opacity:1;transform:scale(.88);filter:blur(0);}
-    34%{transform:scale(1.08) rotate(-1.5deg);}
-    46%{transform:scale(.97) rotate(1deg);}
-    58%{transform:scale(1.02);}
-    70%,100%{opacity:1;transform:scale(1);}
-  }
-  .coupon.show .coupon_btn::before{
+  /* 「クーポンを獲得する」ボタンが上から落ちてポンと跳ねるアニメーション（5回） */
+  .coupon_btn_wrap{position:relative;}
+  .coupon_btn_wrap::after{
     content:"";
     position:absolute;
-    inset:0;
-    border-radius:inherit;
-    pointer-events:none;
-    animation:dodon_flash .8s ease-out 5;
+    left:50%;
+    bottom:-14px;
+    width:500px;
+    max-width:80%;
+    height:14px;
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:rgba(0,0,0,.18);
+    filter:blur(4px);
+    opacity:0;
   }
-  @keyframes dodon_flash{
-    0%,18%{box-shadow:0 0 0 0 rgba(255,239,65,0);}
-    30%{box-shadow:0 0 0 8px rgba(255,239,65,.9),0 0 28px 10px rgba(255,255,255,.8);}
-    70%,100%{box-shadow:0 0 0 18px rgba(255,239,65,0);}
+  .coupon_btn{opacity:0;}
+  .coupon.show .coupon_btn{animation:pon .9s cubic-bezier(.3,.6,.4,1) 5 both;}
+  .coupon.show .coupon_btn_wrap::after{animation:pon_shadow .9s cubic-bezier(.3,.6,.4,1) 5 both;}
+  @keyframes pon{
+    0%{transform:translateY(-60px);opacity:0;}
+    30%{transform:translateY(0) scale(1.06,.9);opacity:1;}
+    45%{transform:translateY(-20px) scale(.98,1.03);}
+    60%{transform:translateY(0) scale(1.03,.96);}
+    75%{transform:translateY(-6px);}
+    90%,100%{transform:translateY(0) scale(1);opacity:1;}
+  }
+  @keyframes pon_shadow{
+    0%{opacity:0;transform:translateX(-50%) scale(.5);}
+    30%{opacity:.6;transform:translateX(-50%) scale(1.05);}
+    45%{opacity:.35;transform:translateX(-50%) scale(.85);}
+    60%,100%{opacity:.5;transform:translateX(-50%) scale(1);}
   }
 
   .coupon_count{text-align:center;font-size:20px;letter-spacing:1px;font-weight:700;margin:-11px 0 11px;}
@@ -666,7 +675,7 @@
   .copyright{color:#888;font-size:11px;margin-top:20px;}
 
   @media (prefers-reduced-motion:reduce){
-    .coupon.show .coupon_btn,.coupon.show .coupon_btn::before{animation:none;opacity:1;}
+    .coupon.show .coupon_btn,.coupon.show .coupon_btn_wrap::after{animation:none;opacity:1;}
   }
 
   /* ===== スマホ ===== */
@@ -786,7 +795,9 @@
       <div class="coupon_inner">
         <h2><img src="img/sapporo-gift/campaign_ttl_01.svg" alt="感謝の気持ちを贅沢なビールで">対象アイテムに使える<span><span class="en"><span>5</span><span>%</span>OFF</span><img src="img/sapporo-gift/campaign_ttl_02.svg" alt="クーポン"></span></h2>
         <p class="coupon_count">先着利用 3,500回</p>
-        <a href="https://maker-showroom.rakuten.co.jp/sapporo/campaign/oseibo/?l-id=adsol_2509_shop_bigbossshibazaki#coupon" class="coupon_btn" target="_blank" rel="noopener">クーポンを獲得する</a>
+        <div class="coupon_btn_wrap">
+          <a href="https://maker-showroom.rakuten.co.jp/sapporo/campaign/oseibo/?l-id=adsol_2509_shop_bigbossshibazaki#coupon" class="coupon_btn" target="_blank" rel="noopener">クーポンを獲得する</a>
+        </div>
         <p class="coupon_note_01">※メルマガ購読がキャンペーンの応募条件になります。</p>
         <dl class="coupon_period">
           <dt>クーポン獲得・利用期間</dt>

@@ -1,0 +1,9 @@
+{
+  "excel_folder": "D:\\楽天claude\\楽天夜売価",
+  "excel_file": "",
+  "early_minutes": 5,
+  "min_ratio": 0.5,
+  "max_items": 50,
+  "max_attempts": 3,
+  "avoid": ["06:10-06:50"]
+}

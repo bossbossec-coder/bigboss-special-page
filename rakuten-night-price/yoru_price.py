@@ -284,13 +284,20 @@ def list_pages():
 
 
 class Page:
-    def __init__(self, target):
+    def __init__(self, target, first_timeout=None):
         import websocket
         self.id = target["id"]
         self.ws = websocket.create_connection(target["webSocketDebuggerUrl"], timeout=90, suppress_origin=True)
         self._n = 0
         self.dialogs = []
-        self.call("Page.enable")
+        if first_timeout:
+            self.ws.settimeout(first_timeout)  # 反応しないタブで長く待たないように
+        try:
+            self.call("Page.enable")
+        except Exception:
+            self.detach()
+            raise
+        self.ws.settimeout(90)
 
     def call(self, method, **params):
         self._n += 1
@@ -364,11 +371,21 @@ def popup_gone(pid, timeout=30):
 
 # ================================================================ 商品一括処理の画面
 def find_crossmall_page():
+    """クロスモールのタブにつなぐ。反応しないタブ(別の自動化が使用中・止まっている・休止中など)は飛ばし、
+    どのタブも反応しなければ、新しいタブで商品一括処理を開いて使う。"""
     for t in list_pages():
-        if SITE_KEY in t.get("url", ""):
-            return Page(t)
-    logging.info("クロスモールのタブがないため、新しいタブで開きます")
-    p = Page(http_json("/json/new?" + ITEM_BATCH_URL, method="PUT"))
+        if SITE_KEY not in t.get("url", ""):
+            continue
+        try:
+            urllib.request.urlopen(BASE + "/json/activate/" + t["id"], timeout=10).read()  # 前面に出して起こす
+        except Exception:
+            pass
+        try:
+            return Page(t, first_timeout=15)
+        except Exception as e:
+            logging.warning("クロスモールのタブが反応しないため、別のタブを試します: %s", e)
+    logging.info("使えるクロスモールのタブがないため、新しいタブで開きます")
+    p = Page(http_json("/json/new?" + ITEM_BATCH_URL, method="PUT"), first_timeout=60)
     p.wait_for("document.readyState==='complete'", 60)
     return p
 

@@ -138,6 +138,8 @@ def read_excel(path):
         for i, (a, b, c, d) in enumerate(ws.iter_rows(min_row=2, min_col=1, max_col=4, values_only=True), start=2):
             if all(x is None or str(x).strip() == "" for x in (a, b, c, d)):
                 continue
+            if all(x is None or str(x).strip() == "" for x in (c, d)):
+                continue  # 日時が両方空欄の行は「使わない行」(過去の行など)。何も言わずに飛ばす
             try:
                 code = str(a or "").strip()
                 if not code:

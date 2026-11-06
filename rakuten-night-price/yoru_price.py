@@ -64,6 +64,7 @@ DEFAULT_CONFIG = {
 }
 
 ATTENTION_FILE = "要確認.txt"
+IN_PROGRESS = ("changing", "changed_edit", "changed", "change_failed", "reverting", "revert_edit")
 
 
 class LoginRequired(Exception):
@@ -205,6 +206,12 @@ def plan(rows, state, now, early):
     for r in rows:
         st = state.get(r["key"], {}).get("status", "")
         if st in ("reverted", "expired", "failed"):
+            continue
+        if r.get("orphan"):  # Excelから消えた値下げ中の行は、戻すだけ
+            if st == "revert_edit":
+                upload_only.append(r)
+            elif now >= r["end"] - lead:
+                revert.append(r)
             continue
         if st == "":  # まだ何もしていない
             if now >= r["end"] - lead:
@@ -831,6 +838,19 @@ def main():
         attention(cfg, ["Excelを読めません: %s" % e])
         return 1
     state = load_state()
+    # 価格を変えたあとで、Excelの行が消えた・日時が書き換えられた場合も、記録した戻す日時に必ず元へ戻す
+    keys = {r["key"] for r in rows}
+    for k, s in state.items():
+        if k.startswith("_") or k in keys or s.get("status") not in IN_PROGRESS:
+            continue
+        code, st_s, en_s = k.split("|")
+        r = {"row": s.get("row", 0), "code": code, "price": s.get("sale_price"), "key": k, "orphan": True,
+             "start": datetime.datetime.strptime(st_s, "%Y%m%d%H%M"),
+             "end": datetime.datetime.strptime(en_s, "%Y%m%d%H%M")}
+        rows.append(r)
+        row_errors.append("お知らせ %s: 値下げ中の行がExcelから消えたか、日時が書き換えられました。"
+                          "記録してある戻す日時(%s)に、元の価格(%s円)へ戻します"
+                          % (code, fmt_dt(r["end"]), s.get("original_price")))
 
     if a.list:
         for r in rows:

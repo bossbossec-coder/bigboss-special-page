@@ -58,7 +58,9 @@ DEFAULT_CONFIG = {
     "min_ratio": 0.5,           # 変更後の価格が、元の価格のこの割合より安ければ、打ち間違いとみなして実行しない
     "max_items": 50,            # 1回に処理する上限。超えたら実行しない
     "max_attempts": 3,          # 同じ行がこの回数失敗したら、それ以上やり直さず「要確認」にする
-    "avoid": ["06:10-06:50"],   # この時間帯は動かない(毎朝6:15の予約テキスト削除とぶつからないように)
+    # この時間帯は動かない。6:10〜6:50 は毎朝6:15の予約テキスト削除、ほかは売上CSVの取得
+    # (サントリー版 ○:25 / ギフトALL ○:30)と、クロスモールへの同時ログインでぶつからないように
+    "avoid": ["06:10-06:50", "07:20-07:50", "10:20-10:50", "14:20-14:50", "17:20-17:50", "19:20-19:50", "21:20-21:50", "23:20-23:50"],
 }
 
 ATTENTION_FILE = "要確認.txt"
@@ -808,6 +810,14 @@ def main():
         return 0
 
     # Excelの行の間違いは、1回だけ知らせる(5分ごとに同じことを書かないように)
+    # 動かない時間帯にかかる行は、遅れて実行されることを1回だけ知らせる(実行はする)
+    lead = datetime.timedelta(minutes=cfg["early_minutes"])
+    for r in rows:
+        for label, t in (("変更する日時", r["start"]), ("戻す日時", r["end"])):
+            w = in_avoid(t - lead, cfg["avoid"])
+            if w and t > now:
+                row_errors.append("お知らせ Excel %d行目: %s(%s)は、動かない時間帯(%s)にかかるため、%s以降に行います"
+                                  % (r["row"], label, fmt_dt(t), w, w.split("-")[1]))
     reported = state.setdefault("_reported_errors", [])
     new_errors = [e for e in row_errors if e not in reported]
     change, revert, upload_only, expired = plan(rows, state, now, cfg["early_minutes"])

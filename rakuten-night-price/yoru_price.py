@@ -52,7 +52,7 @@ ALL_SHOPS = [("5255", "ビッグボス楽天"), ("5256", "ドリームクラフ�
              ("8581", "wine.com"), ("8014", "Wowma"), ("9365", "Wowma2店舗目")]
 
 DEFAULT_CONFIG = {
-    "excel_folder": r"D:\楽天claude\楽天夜売価",
+    "excel_folder": r"D:\rakuten_yoru",
     "excel_file": "",           # 空なら、フォルダ内の .xlsx が1つだけのとき、それを使う
     "early_minutes": 5,         # 楽天への反映に数分かかるため、指定時刻の何分前から処理を始めるか
     "min_ratio": 0.5,           # 変更後の価格が、元の価格のこの割合より安ければ、打ち間違いとみなして実行しない

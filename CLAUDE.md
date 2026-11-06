@@ -26,5 +26,5 @@
 
 - クロスモール経由で、ビッグボス楽天(店舗ID 5255)の価格だけを、Excel指定の時刻に変更→元に戻して出品するツール。使い方は README。
 - **楽天とYahooなどは価格がそれぞれ違う**。楽天以外の店舗の価格には絶対に触らない。
-- Excel(`D:\楽天claude\楽天夜売価`)は A〜D列だけ読む。**F列・G列はユーザーのメモ。価格を引用しない**。
+- Excel(`D:\rakuten_yoru`)は A〜D列だけ読む。**F列・G列はユーザーのメモ。価格を引用しない**。
 - クロスモールの操作の癖は、`claude/wonderful-faraday-7yxwvv` ブランチの `crossmall-reservation-cleanup/crossmall_knowhow.md` を参照。

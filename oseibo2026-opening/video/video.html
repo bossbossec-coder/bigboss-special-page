@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><title>お歳暮オープニング 15s</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;600;700&family=Cormorant+Garamond:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#02040f;--gold:#c8a456;--cream:#f7f0de}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
+.sc{position:absolute;inset:0;overflow:hidden;opacity:0;font-family:"Shippori Mincho B1",serif;color:var(--cream);
+  background:radial-gradient(80% 90% at 50% 45%,#0f1c58 0%,#081035 45%,var(--ink) 100%)}
+.abs{position:absolute}
+.en{font-family:"Cormorant Garamond",serif;letter-spacing:.42em;font-weight:500}
+.gt{background:linear-gradient(180deg,#fff6d2 0%,#f0d58d 30%,#c8a456 55%,#8e6f2a 75%,#e9cf8a 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero{filter:drop-shadow(0 40px 50px rgba(0,0,0,.7))}
+.refl{-webkit-box-reflect:below -2px linear-gradient(transparent 72%,rgba(255,255,255,.22))}
+.atmo{position:absolute;background:url(../storyboard/assets/noshi-pattern.png) 0 0/390px auto repeat;
+  filter:grayscale(1) sepia(1) saturate(1.6) brightness(.55) contrast(1.25) blur(1.5px);mix-blend-mode:screen;opacity:.35}
+.floor{position:absolute;left:0;right:0;height:300px;bottom:0;background:linear-gradient(180deg,rgba(200,164,86,0),rgba(200,164,86,.08) 30%,rgba(0,0,0,.6))}
+.floorline{position:absolute;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(243,223,166,.7),transparent)}
+.bk{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,240,200,.95) 0%,rgba(243,223,166,.4) 35%,rgba(200,164,86,0) 70%)}
+.vign{position:absolute;inset:0;background:radial-gradient(100% 85% at 50% 50%,transparent 50%,rgba(0,0,0,.75) 100%);pointer-events:none;z-index:40}
+.shine{position:absolute;-webkit-mask-size:100% 100%;mask-size:100% 100%;mix-blend-mode:screen}
+.rule{display:inline-block;width:80px;height:1px;background:var(--gold);vertical-align:middle;margin:0 24px}
+#dust{position:absolute;inset:0;z-index:45;pointer-events:none}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#7d6224" stop-opacity="0"/><stop offset=".2" stop-color="#c8a456"/><stop offset=".55" stop-color="#fff3c8"/><stop offset=".8" stop-color="#c8a456"/><stop offset="1" stop-color="#f3dfa6"/></linearGradient>
+ <linearGradient id="gs" x1="0" x2="1"><stop offset="0" stop-color="#7d6224"/><stop offset=".5" stop-color="#f3dfa6"/><stop offset="1" stop-color="#c8a456"/></linearGradient>
+ <filter id="bl"><feGaussianBlur stdDeviation="8"/></filter><filter id="bl2"><feGaussianBlur stdDeviation="24"/></filter>
+ <clipPath id="c1"><rect id="c1r" x="0" y="0" width="0" height="1080"/></clipPath>
+ <clipPath id="c2"><rect id="c2r" x="0" y="0" width="0" height="1080"/></clipPath>
+ <clipPath id="c6"><rect id="c6r" x="0" y="0" width="0" height="1080"/></clipPath>
+</defs></svg>
+
+<!-- S1 -->
+<section class="sc" id="s1" style="background:var(--ink)">
+  <div class="abs" id="s1lit" style="left:0;top:0;width:1920px;height:1080px;background:radial-gradient(70% 80% at 45% 50%,#1b2c7a 0%,#0b1545 50%,#02040f 100%)">
+    <img class="abs hero" id="s1can" src="../storyboard/assets/can-pm.png" style="left:620px;top:-60px;height:1250px">
+    <div class="shine" id="s1shine" style="left:620px;top:-60px;width:520px;height:1250px;-webkit-mask-image:url(../storyboard/assets/can-pm.png);mask-image:url(../storyboard/assets/can-pm.png)"></div>
+  </div>
+  <div class="abs" id="s1glow" style="top:0;width:340px;height:1080px;background:linear-gradient(90deg,transparent,rgba(243,223,166,.16) 80%,rgba(255,246,210,.42))"></div>
+  <div class="abs" id="s1dark" style="top:0;width:2600px;height:1080px;background:linear-gradient(90deg,rgba(2,4,15,.5),#02040f 260px)"></div>
+  <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+    <g clip-path="url(#c1)"><g id="s1thread"></g></g>
+    <circle id="s1h1" r="120" fill="#fff3c8" opacity=".35" filter="url(#bl2)"/>
+    <circle id="s1h2" r="9" fill="#fff"/>
+    <path id="s1h3" stroke="#fff" stroke-width="1.5" opacity=".7"/>
+  </svg>
+  <div class="abs" id="s1txt" style="left:120px;top:150px;opacity:0">
+    <div class="en gt" style="font-size:30px">THE PREMIUM MALT'S</div>
+    <div class="en" style="font-size:22px;margin-top:18px;color:#c8a456">WINTER GIFT 2026</div>
+  </div>
+</section>
+
+<!-- S2 -->
+<section class="sc" id="s2">
+  <div class="atmo" id="s2atmo" style="inset:-60px;-webkit-mask:radial-gradient(60% 70% at 50% 40%,transparent 30%,#000 80%);mask:radial-gradient(60% 70% at 50% 40%,transparent 30%,#000 80%)"></div>
+  <div class="abs" style="inset:0;background:radial-gradient(40% 45% at 50% 52%,rgba(243,223,166,.22),transparent 70%)"></div>
+  <div class="floor"></div><div class="floorline" style="bottom:258px"></div>
+  <div class="abs" id="s2cam" style="inset:0;transform-origin:50% 60%">
+    <img class="abs hero refl" src="../storyboard/assets/gift-pm.png" style="left:420px;top:240px;width:1080px">
+    <svg class="abs" style="left:0;top:0" width="1920" height="1080"><g clip-path="url(#c2)">
+      <path d="M-20 880 C 300 860, 500 900, 760 840 S 1300 770, 1520 640 S 1760 470, 1940 470" stroke="url(#g)" stroke-width="4" fill="none"/>
+      <path d="M-20 888 C 300 868, 500 908, 760 848 S 1300 778, 1520 648 S 1760 478, 1940 478" stroke="#a8102a" stroke-width="2" fill="none"/>
+    </g></svg>
+  </div>
+  <div class="abs" id="s2txt" style="left:0;width:1920px;top:110px;text-align:center;opacity:0">
+    <div class="gt" id="s2copy" style="font-size:70px;font-weight:600;letter-spacing:.3em">一年の、ありがとうを。</div>
+  </div>
+</section>
+
+<!-- S3 -->
+<section class="sc" id="s3" style="background:radial-gradient(80% 90% at 60% 45%,#1a1450 0%,#0a0c33 45%,var(--ink) 100%)">
+  <div class="atmo" style="left:-200px;top:-100px;width:1000px;height:700px;opacity:.28;transform:rotate(-8deg);-webkit-mask:radial-gradient(closest-side,#000,transparent);mask:radial-gradient(closest-side,#000,transparent)"></div>
+  <div class="abs" style="left:330px;top:-180px;width:1400px;height:1400px;border-radius:50%;background:radial-gradient(circle,rgba(243,223,166,.32),transparent 60%)"></div>
+  <img class="abs" id="s3back" src="../storyboard/assets/can-etok.png" style="left:1440px;top:250px;height:600px;filter:blur(5px) brightness(.6)">
+  <div class="floorline" style="bottom:150px;opacity:.6"></div>
+  <div class="abs" id="s3hero" style="left:760px;top:60px;width:533px;height:920px;transform-origin:50% 90%">
+    <img class="abs hero refl" src="../storyboard/assets/can-eto.png" style="left:0;top:0;height:920px">
+    <div class="shine" id="s3shine" style="left:0;top:0;width:533px;height:920px;-webkit-mask-image:url(../storyboard/assets/can-eto.png);mask-image:url(../storyboard/assets/can-eto.png)"></div>
+  </div>
+  <div class="abs" id="s3txt" style="left:140px;top:300px">
+    <div class="en gt s3l" style="font-size:28px">NEW YEAR 2027</div>
+    <div class="gt s3l" style="font-size:170px;font-weight:600;line-height:1.1;margin-top:18px;letter-spacing:.08em">迎春</div>
+    <div class="s3l" style="font-size:40px;margin-top:30px;letter-spacing:.3em">干支デザイン缶</div>
+    <div class="en s3l" style="font-size:20px;margin-top:22px;color:#c8a456">YEAR OF THE SHEEP</div>
+  </div>
+</section>
+
+<!-- S4 -->
+<section class="sc" id="s4" style="background:radial-gradient(60% 80% at 52% 45%,#2a2558 0%,#0b1440 45%,var(--ink) 100%)">
+  <div class="abs" id="s4rays" style="left:0;top:-520px;width:2000px;height:2000px;opacity:.12;background:repeating-conic-gradient(#f3dfa6 0 1.2deg,transparent 1.2deg 9deg);-webkit-mask:radial-gradient(circle,#000 5%,transparent 55%);mask:radial-gradient(circle,#000 5%,transparent 55%)"></div>
+  <div class="abs" style="left:640px;top:180px;width:700px;height:800px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,120,.45),transparent)"></div>
+  <img class="abs" id="s4back" src="../storyboard/assets/can-pm.png" style="left:260px;top:330px;height:620px;filter:blur(4px) brightness(.55)">
+  <div class="floorline" style="bottom:70px;opacity:.5"></div>
+  <div class="abs" id="s4cam" style="left:790px;top:-40px;width:450px;height:1110px;transform-origin:50% 40%">
+    <img class="abs hero" src="../storyboard/assets/glass.png" style="left:0;top:0;height:1110px">
+    <div class="abs" id="s4bub" style="inset:0"></div>
+  </div>
+  <div class="abs" style="left:1440px;top:250px;writing-mode:vertical-rl;font-size:62px;font-weight:600;letter-spacing:.28em;line-height:1.7">
+    <span class="gt s4l">いつもより、</span><br><span class="s4l">少しいいビールを。</span></div>
+</section>
+
+<!-- S5 -->
+<section class="sc" id="s5">
+  <div class="atmo" style="inset:0;opacity:.2;-webkit-mask:linear-gradient(180deg,#000,transparent 55%);mask:linear-gradient(180deg,#000,transparent 55%)"></div>
+  <div class="abs" style="inset:0;background:radial-gradient(45% 50% at 50% 58%,rgba(243,223,166,.25),transparent 70%)"></div>
+  <div class="floor"></div><div class="floorline" style="bottom:200px"></div>
+  <img class="abs" id="s5l" src="../storyboard/assets/gift-pm.png" style="left:-60px;top:470px;width:640px">
+  <img class="abs" id="s5r" src="../storyboard/assets/gift-mix.png" style="left:1370px;top:470px;width:620px">
+  <img class="abs hero refl" id="s5c" src="../storyboard/assets/gift-5.png" style="left:480px;top:330px;width:960px;transform-origin:50% 80%">
+  <div class="abs" style="left:0;width:1920px;top:110px;text-align:center">
+    <div class="en gt s5t" style="font-size:26px">SPECIAL GIFT SELECTION</div>
+    <div class="s5t" style="font-size:64px;font-weight:600;letter-spacing:.3em;margin-top:22px">お歳暮に、<span class="gt">プレモル。</span></div>
+  </div>
+</section>
+
+<!-- S6 -->
+<section class="sc" id="s6" style="background:radial-gradient(70% 80% at 50% 62%,#14226a 0%,#081035 45%,var(--ink) 100%)">
+  <div class="atmo" style="inset:0;opacity:.18;-webkit-mask:radial-gradient(70% 70% at 50% 60%,transparent 35%,#000 85%);mask:radial-gradient(70% 70% at 50% 60%,transparent 35%,#000 85%)"></div>
+  <div class="abs" id="s6spot" style="left:560px;top:420px;width:800px;height:700px;border-radius:50%;background:radial-gradient(closest-side,rgba(243,223,166,.35),transparent)"></div>
+  <div class="floor" style="height:200px"></div><div class="floorline" style="bottom:120px"></div>
+  <div class="abs" id="s6prod" style="inset:0">
+    <img class="abs hero refl" src="../storyboard/assets/can-pm.png" style="left:770px;top:440px;height:520px;transform:rotate(-3deg)">
+    <img class="abs hero refl" src="../storyboard/assets/glass.png" style="left:960px;top:400px;height:560px">
+  </div>
+  <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+    <g clip-path="url(#c6)"><path d="M-20 968 C 500 958, 800 978, 960 968 S 1500 953, 1940 963" stroke="url(#g)" stroke-width="4" fill="none"/></g>
+    <g id="s6bow" transform="translate(960 968) scale(.6)" fill="none" stroke-width="3.5" stroke-linecap="round" opacity="0">
+      <path d="M0 0 C -30 -45,-95 -45,-95 0 C -95 45,-30 45,0 0" stroke="url(#gs)"/><path d="M0 0 C 30 -45, 95 -45, 95 0 C 95 45, 30 45, 0 0" stroke="url(#gs)"/>
+      <path d="M0 0 C -20 -28,-60 -28,-60 0 C -60 28,-20 28,0 0" stroke="#a8102a"/><path d="M0 0 C 20 -28, 60 -28, 60 0 C 60 28, 20 28, 0 0" stroke="#a8102a"/>
+    </g>
+  </svg>
+  <div class="abs" style="left:0;width:1920px;top:100px;text-align:center">
+    <div class="en gt s6t" style="font-size:26px">THANK YOU, WITH PREMIUM MALT'S.</div>
+    <div class="s6t" style="font-size:60px;font-weight:600;letter-spacing:.3em;margin-top:34px;line-height:1.5">一年のありがとうを、</div>
+    <div class="gt s6t" style="font-size:78px;font-weight:700;letter-spacing:.18em;line-height:1.45">とっておきのプレミアムビールで。</div>
+  </div>
+  <div class="abs s6t" style="left:0;width:1920px;bottom:14px;text-align:center;font-size:22px;letter-spacing:.4em;color:#c8a456">2026 お歳暮<span class="rule"></span>酒のビッグボス 楽天市場店</div>
+</section>
+
+<div id="dust"></div>
+<div class="vign"></div>
+
+<script>
+const $=id=>document.getElementById(id), C=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const P=(t,a,b)=>C((t-a)/(b-a)); // progress
+const eo=x=>1-Math.pow(1-x,3), eio=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2, lerp=(a,b,x)=>a+(b-a)*x;
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+// thread in S1
+const ty=x=>748+16*Math.sin(x/260)+6*Math.sin(x/97);
+(function(){let d=[0,-8,8];let cols=['#a8102a','url(#g)','#f7f0de'],w=[3,5,2.5];let g=$('s1thread');
+ let mk=o=>{let s='';for(let x=-20;x<=1940;x+=10)s+=(x<0?'M':'L')+x+' '+(ty(x)+o).toFixed(1)+' ';return s};
+ g.innerHTML=`<path d="${mk(0)}" stroke="#fff3c8" stroke-width="26" fill="none" opacity=".35" filter="url(#bl)"/>`+
+   d.map((o,i)=>`<path d="${mk(o)}" stroke="${cols[i]}" stroke-width="${w[i]}" fill="none"/>`).join('');})();
+// global dust
+const dust=[];for(let i=0;i<46;i++){const e=document.createElement('div');e.className='bk';const s=4+rnd()*rnd()*30;
+ e.style.width=e.style.height=s+'px';$('dust').appendChild(e);dust.push({e,x:rnd()*1920,y:rnd()*1080,v:10+rnd()*35,ph:rnd()*6.28,a:.25+rnd()*.6});}
+// bubbles in glass
+const bub=[];for(let i=0;i<34;i++){const e=document.createElement('div');e.className='bk';const s=4+rnd()*9;e.style.width=e.style.height=s+'px';
+ $('s4bub').appendChild(e);bub.push({e,x:110+rnd()*230,y0:480+rnd()*560,v:120+rnd()*200,ph:rnd()});}
+const W=[[0,2.5],[2.5,5],[5,7.5],[7.5,10],[10,12.5],[12.5,15.1]],F=.3;
+function sceneOp(k,t){const[a,b]=W[k];let o=1;if(k>0)o=Math.min(o,P(t,a-F,a+F));if(k<5)o=Math.min(o,1-P(t,b-F,b+F));return o}
+function shine(el,u,w){ // moving specular band, u 0..1
+ const x=lerp(-60,160,u);el.style.background=`linear-gradient(105deg,transparent ${x-25}%,rgba(255,250,230,.0) ${x-18}%,rgba(255,250,230,.55) ${x}%,rgba(255,250,230,0) ${x+18}%,transparent ${x+25}%)`;}
+window.render=function(t){
+ for(let k=0;k<6;k++){const s=$('s'+(k+1)),o=sceneOp(k,t);s.style.opacity=o;s.style.visibility=o>0?'visible':'hidden';}
+ // S1
+ { const u=t; const hx=lerp(-40,1960,eio(P(u,.1,2.0)));
+   $('c1r').setAttribute('width',Math.max(0,hx));
+   const hy=ty(hx);$('s1h1').setAttribute('cx',hx);$('s1h1').setAttribute('cy',hy);$('s1h2').setAttribute('cx',hx);$('s1h2').setAttribute('cy',hy);
+   const fl=P(u,.1,.25)*(1-P(u,1.9,2.2));$('s1h1').setAttribute('opacity',.35*fl);$('s1h2').setAttribute('opacity',fl);
+   const cr=150*fl;$('s1h3').setAttribute('d',`M${hx} ${hy-cr} L${hx} ${hy+cr} M${hx-cr} ${hy} L${hx+cr} ${hy}`);$('s1h3').setAttribute('opacity',.7*fl);
+   $('s1glow').style.left=(hx-340)+'px';$("s1glow").style.opacity=.75*fl;$('s1dark').style.left=hx+'px';
+   const sc=lerp(1.1,1.0,eo(P(u,0,2.8)));$('s1can').style.transform=`scale(${sc}) rotate(${lerp(-8,-5,P(u,0,2.8))}deg)`;
+   $('s1shine').style.transform=$('s1can').style.transform;shine($('s1shine'),P(u,1.2,2.4));
+   $('s1txt').style.opacity=eo(P(u,1.3,2.0));$('s1txt').style.transform=`translateY(${lerp(14,0,eo(P(u,1.3,2.0)))}px)`;}
+ // S2
+ { const u=t-2.5; $('s2cam').style.transform=`scale(${lerp(1.0,1.07,eio(P(u,-.3,2.8)))})`;
+   $('c2r').setAttribute('width',lerp(0,1960,eio(P(u,-.2,1.6))));
+   const a=eo(P(u,.5,1.5));$('s2txt').style.opacity=a;$('s2copy').style.letterSpacing=lerp(.45,.3,a)+'em';
+   $('s2atmo').style.transform=`translate(${lerp(0,-40,P(u,-.3,2.8))}px,0)`;}
+ // S3
+ { const u=t-5; const p=eio(P(u,-.3,2.8));
+   $('s3hero').style.transform=`rotate(${lerp(-7,-2,p)}deg) scale(${lerp(1.06,1.0,p)}) translateX(${lerp(-30,0,p)}px)`;
+   shine($('s3shine'),P(u,.2,2.2));
+   $('s3back').style.transform=`translateX(${lerp(40,-30,p)}px) rotate(6deg)`;
+   document.querySelectorAll('.s3l').forEach((e,i)=>{const a=eo(P(u,.3+i*.18,1.0+i*.18));e.style.opacity=a;e.style.transform=`translateY(${lerp(18,0,a)}px)`;});}
+ // S4
+ { const u=t-7.5; $('s4cam').style.transform=`scale(${lerp(1.0,1.07,eio(P(u,-.3,2.8)))})`;
+   $('s4rays').style.transform=`rotate(${u*3}deg)`;
+   $('s4back').style.transform=`translateX(${lerp(20,-20,P(u,-.3,2.8))}px) rotate(-5deg)`;
+   bub.forEach(b=>{let y=b.y0-((u+.3)*b.v+b.ph*500)%480;b.e.style.left=(b.x+6*Math.sin(u*3+b.ph*9))+'px';b.e.style.top=y+'px';b.e.style.opacity=C((y-330)/80)*.9;});
+   document.querySelectorAll('.s4l').forEach((e,i)=>{const a=eo(P(u,.4+i*.5,1.3+i*.5));e.style.opacity=a;e.style.display='inline-block';e.style.transform=`translateY(${lerp(-20,0,a)}px)`;});}
+ // S5
+ { const u=t-10; const f=eio(P(u,-.1,.9));
+   $('s5c').style.filter=`blur(${lerp(7,0,f)}px) drop-shadow(0 40px 50px rgba(0,0,0,.7))`;
+   $('s5c').style.transform=`scale(${lerp(1.0,1.05,eio(P(u,-.3,2.8)))})`;
+   const side=`blur(${lerp(1.5,5,f)}px) brightness(${lerp(.75,.5,f)})`;$('s5l').style.filter=side;$('s5r').style.filter=side;
+   $('s5l').style.transform=`translateX(${lerp(0,-30,P(u,-.3,2.8))}px)`;$('s5r').style.transform=`translateX(${lerp(0,30,P(u,-.3,2.8))}px)`;
+   document.querySelectorAll('.s5t').forEach((e,i)=>{const a=eo(P(u,.4+i*.3,1.2+i*.3));e.style.opacity=a;});}
+ // S6
+ { const u=t-12.5; const a=eo(P(u,-.3,.9));
+   $('s6prod').style.transform=`translateY(${lerp(30,0,a)}px)`;$('s6spot').style.opacity=lerp(.3,1,eo(P(u,0,1.2)));
+   $('c6r').setAttribute('width',lerp(0,1960,eio(P(u,.2,1.4))));
+   const bw=eo(P(u,.8,1.4));$('s6bow').setAttribute('opacity',bw);$('s6bow').setAttribute('transform',`translate(960 968) scale(${.6*lerp(.4,1,bw)})`);
+   document.querySelectorAll('.s6t').forEach((e,i)=>{const b=eo(P(u,.3+i*.35,1.1+i*.35));e.style.opacity=b;e.style.transform=`translateY(${lerp(12,0,b)}px)`;});}
+ // dust
+ const dOp=P(t,.6,1.6);
+ dust.forEach(d=>{let y=((d.y-t*d.v)%1180+1180)%1180-50;d.e.style.left=(d.x+20*Math.sin(t*.6+d.ph))+'px';d.e.style.top=y+'px';
+   d.e.style.opacity=d.a*dOp*(.6+.4*Math.sin(t*2+d.ph));});
+};
+window.render(+(new URLSearchParams(location.search).get('t')||0));
+</script>
+</body></html>

@@ -523,6 +523,30 @@ def write_price(page, code, new_price, expect_old):
         pop.close()
 
 
+DISMISS_JS = r"""(()=>{
+  const vis=e=>e && e.offsetParent!==null && getComputedStyle(e).visibility!=='hidden';
+  const boxes=[...document.querySelectorAll('.x-window,.x-message-box,[role=dialog],[role=alertdialog]')].filter(vis);
+  for(const w of boxes){
+    const text=(w.innerText||'').trim();
+    if(!/出品中の商品が選択されています/.test(text)) continue;
+    const ok=[...w.querySelectorAll('a,button,input[type=button],span')].filter(vis)
+      .find(b=>((b.value||b.textContent||'').trim())==='OK');
+    if(!ok) continue;
+    (ok.closest('a.x-btn,button,.x-btn') || ok).click();
+    return text.replace(/\s+/g,' ').slice(0,100);
+  }
+  return null;
+})()"""
+
+
+def dismiss_cm_alert(page):
+    """クロスモールの画面内のお知らせ「出品中の商品が選択されています。」だけOKを押す。押したら文を返す。"""
+    try:
+        return page.ev(DISMISS_JS)
+    except Exception:
+        return None
+
+
 def bulk_upload_rakuten(page, codes):
     """商品コードで絞って表示し、その行だけ選んで、ビッグボス楽天だけに一括出品処理する。戻り値: 出品した商品コード"""
     assert_rakuten(page)
@@ -545,7 +569,16 @@ def bulk_upload_rakuten(page, codes):
     assert_rakuten(page)
     before = {t["id"] for t in list_pages()}
     page.ev("onMultiMallUpload()")
-    pop = wait_for_popup(before, 15)
+    # 出品中の商品を選ぶと、画面の中に「CROSS MALL / 出品中の商品が選択されています。」の箱が出る(OKだけ)。
+    # ブラウザのダイアログではないので、OKを押してから、確認画面を待つ
+    pop, end = None, time.time() + 30
+    while time.time() < end and pop is None:
+        msg = dismiss_cm_alert(page)
+        if msg:
+            logging.info("  クロスモールのお知らせ(OKを押しました): %s", msg)
+        pop = wait_for_popup(before, 2)
+        if pop is None and page.ev("!!document.querySelector('input[value=\"処理開始\"]')"):
+            break
     target = pop or page
     try:
         if not target.wait_for("!!document.querySelector('input[value=\"処理開始\"]')", 30):

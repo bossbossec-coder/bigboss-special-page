@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>お歳暮オープニング 絵コンテ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1745; --deep:#050a24; --gold:#c9a24a; --gold2:#f4dc95; --gold3:#8a6a22;
+  --red:#b5122f; --red2:#e0334f; --cream:#fbf4e2;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#000}
+.f{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:none;
+  font-family:"Shippori Mincho B1",serif;color:var(--cream);
+  background:radial-gradient(120% 90% at 50% 40%,#16245e 0%,var(--navy) 45%,var(--deep) 100%)}
+.f.on{display:block}
+.abs{position:absolute}
+.en{font-family:"Cormorant Garamond",serif;letter-spacing:.32em}
+.gold-text{background:linear-gradient(180deg,#fff3c4 0%,#f1d07a 35%,#c9a24a 60%,#f6e3a6 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.glow{filter:drop-shadow(0 0 18px rgba(244,220,149,.55))}
+.shadow{filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
+/* seigaiha pattern layer */
+.wa{position:absolute;inset:0;opacity:.13;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='40' viewBox='0 0 80 40'%3E%3Cg fill='none' stroke='%23f4dc95' stroke-width='1.6'%3E%3Cg id='a'%3E%3Ccircle cx='40' cy='40' r='38'/%3E%3Ccircle cx='40' cy='40' r='29'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='11'/%3E%3C/g%3E%3Cg transform='translate(-40 -20)'%3E%3Ccircle cx='40' cy='40' r='38'/%3E%3Ccircle cx='40' cy='40' r='29'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='11'/%3E%3C/g%3E%3Cg transform='translate(40 -20)'%3E%3Ccircle cx='40' cy='40' r='38'/%3E%3Ccircle cx='40' cy='40' r='29'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='11'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");background-size:80px 40px}
+.vign{position:absolute;inset:0;background:radial-gradient(90% 80% at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%);pointer-events:none}
+.spark{position:absolute;border-radius:50%;background:radial-gradient(circle,#fff 0%,#f4dc95 35%,rgba(201,162,74,0) 70%)}
+/* annotations */
+.anno{display:none}
+body.annotate .anno{display:block}
+.badge{position:absolute;left:36px;top:30px;padding:10px 22px;background:rgba(0,0,0,.72);border:2px solid #fff;
+  font:700 30px/1.2 "Shippori Mincho B1",serif;color:#fff;letter-spacing:.06em;z-index:50}
+.badge b{color:#ffd76a;margin-right:14px}
+.arrow{position:absolute;z-index:49;pointer-events:none}
+.note{position:absolute;z-index:50;background:rgba(255,255,255,.92);color:#111;font:600 24px/1.45 "Shippori Mincho B1",serif;
+  padding:8px 16px;border-left:6px solid #e0334f}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="gGold" x1="0" x2="1">
+      <stop offset="0" stop-color="#8a6a22"/><stop offset=".35" stop-color="#f4dc95"/>
+      <stop offset=".6" stop-color="#c9a24a"/><stop offset="1" stop-color="#fff3c4"/>
+    </linearGradient>
+    <linearGradient id="gGoldV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#c9a24a"/><stop offset="1" stop-color="#8a6a22"/>
+    </linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10z" fill="#ffffff"/>
+    </marker>
+  </defs>
+</svg>
+
+<!-- ============ CUT 1 : 0.0–2.5s 幕を右へ引く ============ -->
+<section class="f" id="f1" style="background:var(--deep)">
+  <!-- revealed area (left of curtain edge) -->
+  <div class="abs" style="left:0;top:0;width:1240px;height:1080px;overflow:hidden;
+     background:radial-gradient(80% 90% at 30% 50%,#fff1c2 0%,#e9c36d 28%,#b88a32 55%,#5a3f12 100%)">
+    <div class="wa" style="opacity:.28;filter:hue-rotate(0deg) brightness(.6)"></div>
+    <div class="abs en" style="left:170px;top:250px;font-size:44px;color:#5a3a0c;letter-spacing:.5em">2026 WINTER GIFT</div>
+    <div class="abs" style="left:166px;top:320px;font-size:120px;font-weight:800;color:#3a2306;letter-spacing:.18em;opacity:.92">お歳暮</div>
+  </div>
+  <!-- curtain being pulled to the right -->
+  <div class="abs" style="left:1240px;top:0;width:700px;height:1080px;
+     background:linear-gradient(90deg,#030719 0%,#0b1745 18%,#0d1b52 60%,#08123a 100%);box-shadow:-40px 0 80px rgba(0,0,0,.6)">
+    <div class="wa" style="opacity:.08"></div>
+    <!-- curtain folds -->
+    <div class="abs" style="inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 30px,rgba(0,0,0,.12) 30px 70px)"></div>
+    <!-- gold edge -->
+    <div class="abs" style="left:0;top:0;width:10px;height:1080px;background:linear-gradient(180deg,#8a6a22,#f4dc95,#c9a24a,#f4dc95,#8a6a22)"></div>
+  </div>
+  <!-- mizuhiki strands pulling -->
+  <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+    <g filter="url(#soft)" opacity=".7">
+      <path d="M-20 548 C 400 520, 800 575, 1250 540" stroke="#fff3c4" stroke-width="22" fill="none"/>
+    </g>
+    <path d="M-20 530 C 400 502, 800 557, 1250 524" stroke="#e0334f" stroke-width="7" fill="none"/>
+    <path d="M-20 545 C 400 517, 800 572, 1250 540" stroke="url(#gGold)" stroke-width="9" fill="none"/>
+    <path d="M-20 560 C 400 532, 800 587, 1250 556" stroke="#fbf4e2" stroke-width="7" fill="none"/>
+    <!-- head spark -->
+    <circle cx="1250" cy="540" r="70" fill="#fff3c4" opacity=".35" filter="url(#soft)"/>
+    <circle cx="1250" cy="540" r="16" fill="#fff"/>
+    <!-- speed lines -->
+    <g stroke="#fff3c4" stroke-linecap="round" opacity=".55">
+      <line x1="820" y1="470" x2="1130" y2="470" stroke-width="3"/>
+      <line x1="700" y1="612" x2="1080" y2="612" stroke-width="2"/>
+      <line x1="940" y1="420" x2="1180" y2="420" stroke-width="2"/>
+      <line x1="880" y1="660" x2="1160" y2="660" stroke-width="3"/>
+    </g>
+  </svg>
+  <div class="spark" style="left:1180px;top:470px;width:40px;height:40px"></div>
+  <div class="spark" style="left:1120px;top:600px;width:22px;height:22px"></div>
+  <div class="spark" style="left:1060px;top:430px;width:16px;height:16px"></div>
+  <div class="spark" style="left:980px;top:640px;width:12px;height:12px"></div>
+  <div class="spark" style="left:900px;top:500px;width:10px;height:10px"></div>
+  <div class="vign"></div>
+
+  <div class="anno badge"><b>CUT 1</b>0.0 – 2.5s ｜ 引く</div>
+  <svg class="anno arrow" style="left:0;top:0" width="1920" height="1080">
+    <path d="M1300 300 L1700 300" stroke="#fff" stroke-width="8" stroke-dasharray="22 14" marker-end="url(#ah)"/>
+    <path d="M1300 780 L1700 780" stroke="#fff" stroke-width="8" stroke-dasharray="22 14" marker-end="url(#ah)"/>
+  </svg>
+  <div class="anno note" style="left:1330px;top:200px">紅白金の水引が幕を右へ引き開ける</div>
+  <div class="anno note" style="left:1330px;top:820px">光と金粉が左からあふれる</div>
+</section>
+
+<!-- ============ CUT 2 : 2.5–5.0s 結ぶ（熨斗） ============ -->
+<section class="f" id="f2">
+  <div class="wa"></div>
+  <div class="abs" style="left:0;top:0;width:1920px;height:1080px;background:radial-gradient(50% 55% at 50% 47%,rgba(244,220,149,.35),transparent 70%)"></div>
+  <!-- strand coming in from left, flowing into card -->
+  <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+    <path d="M-20 700 C 250 700, 330 520, 520 480" stroke="#e0334f" stroke-width="7" fill="none"/>
+    <path d="M-20 716 C 250 716, 340 535, 520 496" stroke="url(#gGold)" stroke-width="9" fill="none"/>
+    <path d="M-20 732 C 250 732, 350 550, 520 512" stroke="#fbf4e2" stroke-width="7" fill="none"/>
+  </svg>
+  <img class="abs shadow" src="assets/noshi-card.png" style="left:460px;top:160px;width:1000px;transform:rotate(-2.5deg)">
+  <div class="abs gold-text glow" style="left:0;width:1920px;top:850px;text-align:center;font-size:84px;font-weight:800;letter-spacing:.22em">一年の、ありがとうを。</div>
+  <div class="spark" style="left:420px;top:180px;width:26px;height:26px"></div>
+  <div class="spark" style="left:1500px;top:260px;width:34px;height:34px"></div>
+  <div class="spark" style="left:1560px;top:740px;width:18px;height:18px"></div>
+  <div class="spark" style="left:360px;top:620px;width:14px;height:14px"></div>
+  <div class="vign"></div>
+
+  <div class="anno badge"><b>CUT 2</b>2.5 – 5.0s ｜ 結ぶ</div>
+  <svg class="anno arrow" style="left:0;top:0" width="1920" height="1080">
+    <path d="M140 640 C 260 560, 320 480, 430 450" stroke="#fff" stroke-width="7" stroke-dasharray="20 12" fill="none" marker-end="url(#ah)"/>
+    <path d="M1500 300 A 90 90 0 1 1 1500 480" stroke="#fff" stroke-width="7" stroke-dasharray="20 12" fill="none" marker-end="url(#ah)"/>
+  </svg>
+  <div class="anno note" style="left:60px;top:780px">引いた水引がそのまま熨斗に巻きつき、<br>あわじ結びにキュッと締まる</div>
+  <div class="anno note" style="left:1480px;top:520px">熨斗はZ軸で奥から<br>ふわっと回転着地</div>
+</section>
+
+<!-- ============ CUT 3 : 5.0–7.5s 開く（ギフト箱） ============ -->
+<section class="f" id="f3" style="background:linear-gradient(90deg,#5e0716 0%,#9b0f28 40%,#b5122f 60%,#6a0918 100%)">
+  <div class="wa" style="opacity:.16"></div>
+  <!-- gold diagonal band -->
+  <div class="abs" style="left:-200px;top:690px;width:2400px;height:170px;transform:rotate(-6deg);
+     background:linear-gradient(90deg,#8a6a22,#f4dc95 30%,#c9a24a 55%,#fff3c4 75%,#8a6a22)"></div>
+  <!-- noshi exiting right with blur -->
+  <img class="abs" src="assets/noshi-card.png" style="left:1560px;top:120px;width:620px;filter:blur(7px);opacity:.85;transform:skewX(-8deg)">
+  <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+    <g stroke="#fff3c4" opacity=".5" stroke-linecap="round">
+      <line x1="1150" y1="190" x2="1520" y2="190" stroke-width="3"/>
+      <line x1="1100" y1="330" x2="1530" y2="330" stroke-width="2"/>
+      <line x1="1200" y1="450" x2="1540" y2="450" stroke-width="3"/>
+    </g>
+  </svg>
+  <img class="abs shadow" src="assets/gift-5.png" style="left:260px;top:250px;width:1150px">
+  <div class="abs" style="left:1500px;top:560px;writing-mode:vertical-rl;font-size:76px;font-weight:800;letter-spacing:.2em;color:#fff7e0;text-shadow:0 4px 18px rgba(0,0,0,.4)">お歳暮に、<br>プレモル。</div>
+  <div class="spark" style="left:300px;top:200px;width:30px;height:30px"></div>
+  <div class="spark" style="left:1300px;top:240px;width:20px;height:20px"></div>
+  <div class="spark" style="left:220px;top:880px;width:18px;height:18px"></div>
+  <div class="vign"></div>
+
+  <div class="anno badge"><b>CUT 3</b>5.0 – 7.5s ｜ 開く</div>
+  <svg class="anno arrow" style="left:0;top:0" width="1920" height="1080">
+    <path d="M1380 120 L1800 120" stroke="#fff" stroke-width="8" stroke-dasharray="22 14" marker-end="url(#ah)"/>
+    <path d="M120 560 L300 560" stroke="#fff" stroke-width="8" stroke-dasharray="22 14" marker-end="url(#ah)"/>
+  </svg>
+  <div class="anno note" style="left:1200px;top:30px">熨斗が右へスライドアウト（CUT1と同じ方向）</div>
+  <div class="anno note" style="left:60px;top:600px">背景が紺→紅にワイプ。<br>ギフト箱が左から追従して止まる</div>
+</section>
+
+<!-- ============ CUT 4 : 7.5–10.0s 並ぶ（干支缶） ============ -->
+<section class="f" id="f4">
+  <div class="wa"></div>
+  <div class="abs" style="inset:0;background:radial-gradient(45% 60% at 55% 55%,rgba(244,220,149,.28),transparent 70%)"></div>
+  <!-- gold thread linking the cans -->
+  <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+    <path d="M-20 900 C 400 880, 700 940, 1000 900 S 1600 860, 1940 900" stroke="#e0334f" stroke-width="6" fill="none"/>
+    <path d="M-20 914 C 400 894, 700 954, 1000 914 S 1600 874, 1940 914" stroke="url(#gGold)" stroke-width="8" fill="none"/>
+    <path d="M-20 928 C 400 908, 700 968, 1000 928 S 1600 888, 1940 928" stroke="#fbf4e2" stroke-width="6" fill="none"/>
+  </svg>
+  <img class="abs shadow" src="assets/can-pm.png" style="left:640px;top:210px;height:700px;transform:rotate(-4deg)">
+  <img class="abs shadow" src="assets/can-eto.png" style="left:1010px;top:160px;height:740px">
+  <img class="abs shadow" src="assets/can-etok.png" style="left:1400px;top:200px;height:700px;transform:rotate(4deg)">
+  <div class="abs" style="left:150px;top:230px">
+    <div class="en gold-text" style="font-size:40px">NEW YEAR 2027</div>
+    <div style="font-size:150px;font-weight:800;line-height:1.05;margin-top:16px;color:#fff7e0">迎春</div>
+    <div class="gold-text" style="font-size:52px;font-weight:700;margin-top:24px;letter-spacing:.12em">干支デザイン缶</div>
+    <div style="font-size:34px;margin-top:14px;opacity:.85;letter-spacing:.18em">未年ラベル</div>
+  </div>
+  <div class="spark" style="left:980px;top:150px;width:28px;height:28px"></div>
+  <div class="spark" style="left:1360px;top:200px;width:20px;height:20px"></div>
+  <div class="spark" style="left:1780px;top:520px;width:16px;height:16px"></div>
+  <div class="vign"></div>
+
+  <div class="anno badge"><b>CUT 4</b>7.5 – 10.0s ｜ 並ぶ</div>
+  <svg class="anno arrow" style="left:0;top:0" width="1920" height="1080">
+    <path d="M620 1010 L1780 1010" stroke="#fff" stroke-width="8" stroke-dasharray="22 14" marker-end="url(#ah)"/>
+    <path d="M790 120 L790 200" stroke="#fff" stroke-width="7" marker-end="url(#ah)"/>
+    <path d="M1180 70 L1180 150" stroke="#fff" stroke-width="7" marker-end="url(#ah)"/>
+    <path d="M1560 110 L1560 190" stroke="#fff" stroke-width="7" marker-end="url(#ah)"/>
+  </svg>
+  <div class="anno note" style="left:1060px;top:960px">水引が床ラインに。缶は左→右へ0.15sずつ時差で着地</div>
+</section>
+
+<!-- ============ CUT 5 : 10.0–12.5s 注ぐ ============ -->
+<section class="f" id="f5" style="background:radial-gradient(70% 90% at 50% 45%,#2a2a6a 0%,#0b1745 50%,var(--deep) 100%)">
+  <div class="abs" style="inset:0;background:radial-gradient(28% 50% at 50% 50%,rgba(255,222,140,.55),transparent 75%)"></div>
+  <div class="wa" style="opacity:.08"></div>
+  <!-- light rays -->
+  <div class="abs" style="left:960px;top:540px;width:0;height:0">
+    <div class="abs" style="left:-900px;top:-900px;width:1800px;height:1800px;opacity:.18;
+      background:repeating-conic-gradient(from 0deg,#f4dc95 0deg 3deg,transparent 3deg 15deg);
+      -webkit-mask:radial-gradient(circle,#000 10%,transparent 60%);mask:radial-gradient(circle,#000 10%,transparent 60%)"></div>
+  </div>
+  <img class="abs shadow" src="assets/glass.png" style="left:760px;top:70px;height:950px">
+  <img class="abs shadow" src="assets/can-pm.png" style="left:1180px;top:430px;height:560px;transform:rotate(3deg)">
+  <!-- rising bubbles -->
+  <div class="spark" style="left:870px;top:420px;width:14px;height:14px"></div>
+  <div class="spark" style="left:930px;top:330px;width:10px;height:10px"></div>
+  <div class="spark" style="left:980px;top:520px;width:12px;height:12px"></div>
+  <div class="spark" style="left:900px;top:600px;width:9px;height:9px"></div>
+  <div class="spark" style="left:690px;top:180px;width:30px;height:30px"></div>
+  <div class="spark" style="left:1150px;top:130px;width:22px;height:22px"></div>
+  <div class="abs" style="left:150px;top:300px;writing-mode:vertical-rl;font-size:72px;font-weight:800;letter-spacing:.2em;line-height:1.5">
+    <span class="gold-text">いつもより、</span><br><span style="color:#fff7e0">少しいいビールを。</span>
+  </div>
+  <div class="abs en gold-text" style="right:120px;top:150px;font-size:36px;writing-mode:vertical-rl">A LITTLE BETTER</div>
+  <div class="vign"></div>
+
+  <div class="anno badge"><b>CUT 5</b>10.0 – 12.5s ｜ 注ぐ</div>
+  <svg class="anno arrow" style="left:0;top:0" width="1920" height="1080">
+    <path d="M700 640 L700 300" stroke="#fff" stroke-width="7" stroke-dasharray="18 12" marker-end="url(#ah)"/>
+    <path d="M1080 120 C 1180 60, 1300 60, 1380 120" stroke="#fff" stroke-width="7" stroke-dasharray="18 12" fill="none" marker-end="url(#ah)"/>
+  </svg>
+  <div class="anno note" style="left:420px;top:700px">缶の金粉が泡に変わって<br>グラスの中を上昇</div>
+  <div class="anno note" style="left:1350px;top:40px">泡がこんもり盛り上がる<br>（スローモーション）</div>
+</section>
+
+<!-- ============ CUT 6 : 12.5–15.0s 贈る（締め） ============ -->
+<section class="f" id="f6">
+  <div class="wa"></div>
+  <div class="abs" style="inset:0;background:radial-gradient(60% 50% at 50% 30%,rgba(244,220,149,.3),transparent 70%)"></div>
+  <div class="abs" style="left:0;width:1920px;top:110px;text-align:center">
+    <div class="en gold-text" style="font-size:38px">THANK YOU, WITH PREMIUM MALT'S.</div>
+    <div style="font-size:84px;font-weight:800;margin-top:34px;letter-spacing:.14em;color:#fff7e0;line-height:1.4">一年のありがとうを、</div>
+    <div class="gold-text glow" style="font-size:96px;font-weight:800;letter-spacing:.1em;line-height:1.35">とっておきのプレミアムビールで。</div>
+  </div>
+  <!-- strand underline tying a bow on the right -->
+  <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+    <path d="M200 520 C 600 505, 1100 535, 1600 515" stroke="#e0334f" stroke-width="5" fill="none"/>
+    <path d="M200 532 C 600 517, 1100 547, 1600 527" stroke="url(#gGold)" stroke-width="7" fill="none"/>
+    <path d="M200 544 C 600 529, 1100 559, 1600 539" stroke="#fbf4e2" stroke-width="5" fill="none"/>
+    <g transform="translate(1600 530)" fill="none" stroke-width="6" stroke-linecap="round">
+      <path d="M0 0 C 30 -60, 90 -60, 90 0 C 90 60, 30 60, 0 0" stroke="url(#gGold)"/>
+      <path d="M0 0 C 30 -40, 70 -40, 70 0 C 70 40, 30 40, 0 0" stroke="#e0334f"/>
+      <path d="M0 0 C 40 30, 70 70, 100 110" stroke="url(#gGold)"/>
+      <path d="M0 0 C 30 40, 50 80, 60 120" stroke="#fbf4e2"/>
+    </g>
+  </svg>
+  <img class="abs shadow" src="assets/gift-pm.png" style="left:100px;top:600px;width:560px">
+  <img class="abs shadow" src="assets/gift-5.png" style="left:680px;top:585px;width:580px">
+  <img class="abs shadow" src="assets/gift-mix.png" style="left:1280px;top:590px;width:550px">
+  <div class="abs" style="left:0;width:1920px;bottom:30px;text-align:center;font-size:30px;letter-spacing:.3em;color:#f4dc95">
+    2026 お歳暮 ｜ 酒のビッグボス 楽天市場店
+  </div>
+  <div class="spark" style="left:240px;top:120px;width:24px;height:24px"></div>
+  <div class="spark" style="left:1660px;top:200px;width:30px;height:30px"></div>
+  <div class="spark" style="left:980px;top:470px;width:14px;height:14px"></div>
+  <div class="vign"></div>
+
+  <div class="anno badge"><b>CUT 6</b>12.5 – 15.0s ｜ 贈る</div>
+  <svg class="anno arrow" style="left:0;top:0" width="1920" height="1080">
+    <path d="M220 470 L1560 470" stroke="#fff" stroke-width="7" stroke-dasharray="22 14" marker-end="url(#ah)"/>
+  </svg>
+  <div class="anno note" style="left:40px;top:430px">最後にもう一度、水引が左→右へ走り<br>右端でリボン結び → 静止 1.0s</div>
+</section>
+
+<script>
+const q=new URLSearchParams(location.search);
+document.getElementById('f'+(q.get('f')||'1')).classList.add('on');
+if(q.get('anno')==='1')document.body.classList.add('annotate');
+</script>
+</body>
+</html>

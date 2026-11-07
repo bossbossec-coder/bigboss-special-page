@@ -166,10 +166,11 @@ def clean_name(name, dates):
 
 
 def clean_name_yahoo(name, dates):
-    """Yahoo/wine.com: '<日付>限定発売' と直後の半角スペース1つだけ消す。他のスペースは絶対に触らない。"""
+    """Yahoo/wine.com: '<日付>限定発売' / '<日付>新発売' / '<日付>以降発送' と、直後に半角スペースがあれば1つだけ消す
+    (スペースがない場合もある)。他のスペースは絶対に触らない。"""
     new = name
     for ds in map(jp_date, dates):
-        new = re.sub(re.escape(ds) + r"(?:限定発売|新発売) ?", "", new, count=1)
+        new = re.sub(re.escape(ds) + r"(?:限定発売|新発売|以降発送) ?", "", new, count=1)
     return new
 
 

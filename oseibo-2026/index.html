@@ -1149,7 +1149,7 @@ const released=w=>{const m=/(\d{4})年(\d{1,2})月(\d{1,2})日/.exec(w||'');retu
 const whenTag=w=>w==='now'||released(w)?'<span class="tag now">発売中</span>':w?`<span class="tag when">予約・${w}</span>`:'';
 document.querySelectorAll('[data-when]').forEach(el=>{if(released(el.dataset.when))el.outerHTML=whenTag('now')});
 /* ===== メーカー別の商品（サッポロ・アサヒ・キリン・サントリー）=====
-   掲載順＝この並び順（シリーズごとに型番順）。価格は税込・2026年11月3日時点、セット内容は楽天の各商品ページより。
+   掲載順＝この並び順（シリーズごとに型番順）。価格は税込・2026年11月8日時点、セット内容は楽天の各商品ページより。
    url：楽天の商品ページID（item.rakuten.co.jp/bigbossshibazaki/〇〇/ の〇〇）。null の間はメーカーのカテゴリページ（makers の cat）に飛びます
    img：商品ページの最後にある「ロゴなし・白背景」の画像（img フォルダ）
    rid：楽天のお気に入り登録用の商品番号（あればハートのボタンを表示）／id：型番（あれば表示）
@@ -1164,7 +1164,7 @@ const makers={
 const makerProducts=[
  {mk:'sapporo',rid:'10023585',id:'YEF3D',name:'ヱビス 4種飲み比べセット',cans:12,inside:'ヱビス3・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:2966,rv:{s:4.71,n:310},tag:'飲み比べ',img:'sapporo-yef3d.png',w:352,h:500,url:'4901880884147-nsi'},
  {mk:'sapporo',rid:'10023601',id:'YEF4D',name:'ヱビス 4種飲み比べセット',cans:15,inside:'ヱビス6・プレミアムエール3・プレミアムブラック3・麦紡ぐ3',price:3639,rv:{s:4.55,n:92},tag:'飲み比べ',img:'sapporo-yef4d.png',w:434,h:500,url:'4901880884130-nsi'},
- {mk:'sapporo',rid:'10016311',id:'YEF5DT',name:'ヱビス 4種飲み比べセット',cans:20,inside:'ヱビス8・プレミアムエール6・プレミアムブラック3・麦紡ぐ3',price:4522,rv:{s:4.59,n:266},tag:'飲み比べ',img:'sapporo-yef5dt.png',w:500,h:354,url:'4901880884123-asu'},
+ {mk:'sapporo',rid:'10016311',id:'YEF5DT',name:'ヱビス 4種飲み比べセット',cans:20,inside:'ヱビス8・プレミアムエール6・プレミアムブラック3・麦紡ぐ3',price:4522,rv:{s:4.59,n:267},tag:'飲み比べ',img:'sapporo-yef5dt.png',w:500,h:354,url:'4901880884123-asu'},
  {mk:'sapporo',rid:'10005090',id:'YE3D',name:'ヱビスビール セット',cans:12,inside:'ヱビスビール12',price:2998,rv:{s:4.69,n:305},tag:'定番',img:'sapporo-ye3d.png',w:349,h:500,url:'10005090'},
  {mk:'sapporo',rid:'10016148',id:'YE4DN',name:'ヱビスビール セット',cans:15,inside:'ヱビスビール15',price:3899,rv:{s:3.86,n:28},tag:'定番',img:'sapporo-ye4dn.png',w:432,h:500,url:'4901880879952'},
  {mk:'sapporo',rid:'10000967',id:'YE5DT',name:'ヱビスビール セット',cans:20,inside:'ヱビスビール20',price:4469,rv:{s:4.69,n:212},tag:'定番',img:'sapporo-ye5dt.png',w:500,h:356,url:'10000981'},
@@ -1174,9 +1174,9 @@ const makerProducts=[
  {mk:'asahi',rid:'10018562',id:'AVG-3',name:'アサヒビール 5種セット',cans:12,spec:'350ml×8缶・340ml×2缶・500ml×2缶',inside:'スーパードライ4（うち500ml2）・生ジョッキ缶2・ドライクリスタル2・マルエフ2・ゴールド2',price:2945,rv:{s:4.65,n:191},tag:'飲み比べ',img:'asahi-avg3.png',w:320,h:500,url:'4901004045874'},
  {mk:'asahi',rid:'10034766',id:'AVG-4',name:'アサヒビール 5種セット',cans:15,spec:'350ml×8缶・340ml×2缶・500ml×5缶',inside:'スーパードライ7（うち500ml5）・生ジョッキ缶2・ドライクリスタル2・マルエフ2・ゴールド2',price:3899,tag:'飲み比べ',img:'asahi-avg4.png',w:392,h:500,url:'4901004068293'},
  {mk:'asahi',rid:'10029488',id:'AVG-5',name:'アサヒビール 5種セット',cans:21,spec:'350ml×17缶・340ml×4缶',inside:'スーパードライ7・生ジョッキ缶4・ドライクリスタル3・マルエフ4・ゴールド3',price:4688,rv:{s:4.78,n:36},tag:'飲み比べ',img:'asahi-avg5.png',w:500,h:499,url:'4901004059345'},
- {mk:'asahi',rid:'10000980',id:'AS-3N',name:'スーパードライ セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'スーパードライ12',price:2846,rv:{s:4.6,n:477},tag:'定番',img:'asahi-as3n.png',w:320,h:500,url:'10000983'},
+ {mk:'asahi',rid:'10000980',id:'AS-3N',name:'スーパードライ セット',cans:12,spec:'350ml×10缶・500ml×2缶',inside:'スーパードライ12',price:2844,rv:{s:4.6,n:477},tag:'定番',img:'asahi-as3n.png',w:320,h:500,url:'10000983'},
  {mk:'asahi',rid:'10017346',id:'AS-4G',name:'スーパードライ セット',cans:15,spec:'350ml×10缶・500ml×5缶',inside:'スーパードライ15',price:3899,rv:{s:4.71,n:86},tag:'定番',img:'asahi-as4g.png',w:399,h:500,url:'4901004008350-g'},
- {mk:'asahi',rid:'10010679',id:'AS-5N',name:'スーパードライ セット',cans:21,inside:'スーパードライ21',price:4446,tag:'定番',img:'asahi-as5n.png',w:500,h:489,url:'10010679'},
+ {mk:'asahi',rid:'10010679',id:'AS-5N',name:'スーパードライ セット',cans:21,inside:'スーパードライ21',price:4442,tag:'定番',img:'asahi-as5n.png',w:500,h:489,url:'10010679'},
  {mk:'asahi',rid:'10030862',id:'AS-NK',name:'スーパードライ 大容量セット',cans:42,inside:'スーパードライ42',price:8999,tag:'たっぷり42本',img:'asahi-asnk.png',w:500,h:403,url:'4901004062222'},
  {mk:'asahi',rid:'10029487',id:'SJ-3N',name:'スーパードライ 生ジョッキ缶セット',cans:12,spec:'340ml×10缶・485ml×2缶',inside:'生ジョッキ缶12',price:3039,tag:'生ジョッキ缶',img:'asahi-sj3n.png',w:321,h:500,url:'4901004057426'},
  {mk:'asahi',rid:'10017347',id:'FS-3G',name:'スーパードライ＆ウェルチ ファミリーセット',cans:14,spec:'ビール8缶＋ジュース6本',inside:'スーパードライ8（うち500ml4）・ウェルチ100%（グレープ・マスカット・マンゴー）各2',price:2966,rv:{s:4.66,n:68},tag:'ファミリー',img:'asahi-fs3g.png',w:500,h:421,url:'4901004038975'},
@@ -1192,12 +1192,12 @@ const makerProducts=[
  {mk:'suntory',rid:'10011006',id:'BPF3S',name:'ザ・プレミアム・モルツ ギフトセット',cans:12,inside:'プレモル12',price:2839,rv:{s:4.67,n:141},tag:'定番',img:'suntory-bpf3s.png',w:500,h:326,url:'10011006'},
  {mk:'suntory',rid:'10033072',id:'BPF4S',name:'ザ・プレミアム・モルツ ギフトセット',cans:15,inside:'プレモル15',price:3659,tag:'定番',img:'suntory-bpf4s.png',w:500,h:422,url:'4901777394346'},
  {mk:'suntory',rid:'10005886',id:'BPF5S',name:'ザ・プレミアム・モルツ ギフトセット',cans:19,inside:'プレモル19',price:4497,rv:{s:4.68,n:47},tag:'定番',img:'suntory-bpf5s.png',w:500,h:309,url:'10005886'},
- {mk:'suntory',rid:'10013845',id:'VM3S',name:'プレモル 5種セット',cans:11,inside:'プレモル4・香るエール3・黒2・マスターズドリーム1・<b>水泉動1</b>',price:2839,rv:{s:4.59,n:625},tag:'限定醸造入り',img:'suntory-vm3s.png',w:500,h:321,url:'4901777297517'},
+ {mk:'suntory',rid:'10013845',id:'VM3S',name:'プレモル 5種セット',cans:11,inside:'プレモル4・香るエール3・黒2・マスターズドリーム1・<b>水泉動1</b>',price:2839,rv:{s:4.59,n:626},tag:'限定醸造入り',img:'suntory-vm3s.png',w:500,h:321,url:'4901777297517'},
  {mk:'suntory',rid:'10015074',id:'VM4S',name:'プレモル 5種セット',cans:14,inside:'プレモル4・香るエール3・黒3・マスターズドリーム2・<b>水泉動2</b>',price:3677,rv:{s:4.59,n:97},tag:'限定醸造入り',img:'suntory-vm4s.png',w:500,h:365,url:'4901777302709'},
  {mk:'suntory',rid:'10013846',id:'VM5S',name:'プレモル 5種セット',cans:18,inside:'プレモル4・香るエール4・黒4・マスターズドリーム3・<b>水泉動3</b>',price:4633,rv:{s:4.69,n:127},tag:'限定醸造入り',img:'suntory-vm5s.png',w:500,h:448,url:'4901777297494'},
- {mk:'suntory',rid:'10016846',id:'DMD3S',name:'「夢」マスターズドリーム ダブルセット',cans:10,inside:'マスターズドリーム5・<b>水泉動5</b>',price:2899,rv:{s:4.56,n:36},tag:'限定醸造入り',img:'suntory-dmd3s.png',w:403,h:500,url:'4901777319035'},
- {mk:'suntory',rid:'10018694',id:'BP3AG',name:'サントリー 6種飲み比べセット',cans:11,inside:'<b>干支デザイン3</b>・香るエール2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:2966,rv:{s:4.7,n:320},tag:'干支デザイン',img:'suntory-bp3ag.png',w:500,h:356,url:'4901777323834'},
- {mk:'suntory',rid:'10030886',id:'BP5AG',name:'サントリー 7種飲み比べセット',cans:18,inside:'<b>干支デザイン8</b>・香るエール2・黒2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:4899,rv:{s:4.98,n:49},tag:'干支デザイン',img:'suntory-bp5ag.png',w:500,h:406,url:'4901777419131'},
+ {mk:'suntory',rid:'10016846',id:'DMD3S',name:'「夢」マスターズドリーム ダブルセット',cans:10,inside:'マスターズドリーム5・<b>水泉動5</b>',price:2899,rv:{s:4.56,n:37},tag:'限定醸造入り',img:'suntory-dmd3s.png',w:403,h:500,url:'4901777319035'},
+ {mk:'suntory',rid:'10018694',id:'BP3AG',name:'サントリー 6種飲み比べセット',cans:11,inside:'<b>干支デザイン3</b>・香るエール2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:2828,rv:{s:4.7,n:320},tag:'干支デザイン',img:'suntory-bp3ag.png',w:500,h:356,url:'4901777323834'},
+ {mk:'suntory',rid:'10030886',id:'BP5AG',name:'サントリー 7種飲み比べセット',cans:18,inside:'<b>干支デザイン8</b>・香るエール2・黒2・余白の贅沢2・純生2・生ビール1・東京クラフト1',price:4389,rv:{s:4.98,n:49},tag:'干支デザイン',img:'suntory-bp5ag.png',w:500,h:406,url:'4901777419131'},
  {mk:'suntory',rid:'10031645',id:'BPCK3S',name:'プレモル 干支デザインセット',cans:12,inside:'<b>干支デザイン缶12</b>',price:2798,tag:'干支デザイン',img:'suntory-bpck3s.png',w:500,h:329,url:'4901777423923'},
  {mk:'suntory',rid:'10034294',id:'PM6B',name:'プレモル 2種6缶セット',cans:6,inside:'<b>干支デザイン3・香るエール 干支デザイン3</b>（ビッグボスのオリジナル箱）',price:2398,tag:'干支デザイン',img:'set-pm6b.jpg',w:500,h:500,url:'2180000000410',when:'2026年11月25日発売'},
  {mk:'suntory',rid:'10027543',id:'FJ3S',name:'プレモル ファミリーセット',cans:15,spec:'ビール9缶＋ジュース6缶',inside:'プレモル5・香るエール4・なっちゃんプレミアム100（オレンジ・りんご・白ぶどう）各2',price:2966,rv:{s:4.51,n:41},tag:'ファミリー',img:'suntory-fj3s.png',w:500,h:340,url:'4901777271487'}

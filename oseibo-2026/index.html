@@ -814,6 +814,21 @@ footer{background:#0f3b2a;color:#cfe0d6}
   .original .product .price{font-size:21px;margin-top:6px}.original .product .price small{font-size:11px}.original .product .ship{font-size:10px}
   .original .product .btn-row{margin-top:auto;padding-top:10px;gap:6px}.original .product .btn-row .buy{font-size:11.5px;padding:6px 4px;min-height:38px}
   .original .product .btn-row .btn.fav{width:34px!important;min-width:34px!important;height:34px;min-height:34px!important}}
+/* ---------- 送料（価格の上）・ポイント表示（価格の下） ---------- */
+.product .ship{margin:8px 0 0}
+.product .ship+.price{margin-top:0}
+.product p.pt{margin-bottom:14px}
+.product .pt{color:#bf0000;font-weight:700;font-size:15px;line-height:1.4;margin:2px 0 4px}
+.product .pt span{font-weight:500;font-size:.86em}
+.pt-entry{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:4px 12px 4px 14px;border-radius:999px;background:linear-gradient(180deg,#e8231e,#b80d0a);color:#fff;font-size:.86em;font-weight:700;line-height:1.4;text-decoration:none;white-space:nowrap;box-shadow:0 3px 8px #b80d0a40;transition:filter .2s,transform .2s}
+.pt-entry::after{content:"";width:6px;height:6px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg)}
+.pt-entry:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.pt .pt-entry{display:flex;width:fit-content}
+.pt-entry.y{background:linear-gradient(180deg,#ffe14a,#f5c400);color:#3a2a00;box-shadow:0 3px 8px #c99a0040}
+.pickup .pt{color:#bf0000;font-weight:700;font-size:18px;line-height:1.4;margin:4px 0 0}
+.pickup .pt span{font-weight:500;font-size:.8em}
+@media(max-width:760px){.pickup .pt{font-size:15px}.pt-entry{gap:4px}.product .pt-entry{font-size:10.5px;padding:3px 7px 3px 8px;gap:3px;letter-spacing:-.02em;max-width:100%;white-space:normal}.maker .grid,.budget-results .grid,.original .grid{grid-template-columns:repeat(2,minmax(0,1fr))}.product .pt-entry::after{width:5px;height:5px}}
+@media(max-width:760px){.product .pt{font-size:12.5px}}
 /* 商品カードの「商品ページを見る」は緑 */
 .product .btn.dark{background:linear-gradient(180deg,#2f7a4c 0%,#1b5a35 55%,#0f4024 100%);border-color:#1b5a35}
 .product .btn.dark:hover{background:linear-gradient(180deg,#378a57,#1f6a3f 55%,#124d2c);border-color:#1f6a3f}
@@ -1014,7 +1029,7 @@ footer{background:#0f3b2a;color:#cfe0d6}
       <ul><li>350ml × 12缶</li><li>ヱビス3・プレミアムエール3・プレミアムブラック3・麦紡ぐ3</li></ul>
       <p class="note">定番のヱビスに、華やかなプレミアムエール、コクのあるプレミアムブラック、麦紡ぐ。ヱビスの味わいの違いを楽しめる飲み比べセットです。</p>
       <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="239" alt="" loading="lazy"><p>ちょっと贅沢なヱビスを、4つの味で楽しめるセット。ビール通の方にも喜ばれますよ。</p></div>
-      <p class="price">2,966<small>円（税込）</small></p>
+      <p class="price">2,966<small>円（税込）</small></p><p class="pt" data-pt="2966" data-mk="sapporo"></p>
       <div class="btn-row"><a class="btn dark buy" href="https://item.rakuten.co.jp/bigbossshibazaki/4901880884147-nsi/" target="_blank" rel="noopener">購入はこちら</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=224915&amp;iid=10023585&amp;itype=1" target="_blank" rel="noopener" aria-label="ヱビス 4種飲み比べセット YEF3Dをお気に入りに登録" title="お気に入りに登録"></a></div>
     </div>
   </div>
@@ -1031,7 +1046,7 @@ footer{background:#0f3b2a;color:#cfe0d6}
       <ul><li>12缶（350ml×8・ジョッキ缶340ml×2・500ml×2）</li><li>スーパードライ350ml2・500ml2・生ジョッキ缶2・ドライクリスタル2・マルエフ2・ゴールド2</li></ul>
       <p class="note">辛口のスーパードライに、泡が湧き出る生ジョッキ缶、アルコール3.5%のドライクリスタル、ゴールド、まろやかなマルエフ。アサヒの味わいをまとめて楽しめるセットです。</p>
       <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="239" alt="" loading="lazy"><p>定番のスーパードライに、生ジョッキ缶やマルエフまで入った飲み比べ。開けるたびに違う味が楽しめますよ。</p></div>
-      <p class="price">2,945<small>円（税込）</small></p>
+      <p class="price">2,945<small>円（税込）</small></p><p class="pt" data-pt="2945" data-mk="asahi"></p>
       <div class="btn-row"><a class="btn dark buy" href="https://item.rakuten.co.jp/bigbossshibazaki/4901004045874/" target="_blank" rel="noopener">購入はこちら</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=224915&amp;iid=10018562&amp;itype=1" target="_blank" rel="noopener" aria-label="アサヒビール 5種セット AVG-3をお気に入りに登録" title="お気に入りに登録"></a></div>
     </div>
   </div>
@@ -1048,7 +1063,7 @@ footer{background:#0f3b2a;color:#cfe0d6}
       <ul><li>12缶（350ml×10・500ml×2）</li><li>一番搾り350ml4・500ml2・晴れ風3・グッドエール3</li></ul>
       <p class="note">麦のうまみの一番搾りに、すっきり爽やかな晴れ風、フルーティーなグッドエール。味わいの違う3種類を楽しめるセットです。</p>
       <div class="bb-say"><img src="img/bigboss-boss.png" width="240" height="239" alt="" loading="lazy"><p>定番の一番搾りに、晴れ風とグッドエールも入った飲み比べ。好みが分かれる方にも喜ばれますよ。</p></div>
-      <p class="price">2,966<small>円（税込）</small></p>
+      <p class="price">2,966<small>円（税込）</small></p><p class="pt" data-pt="2966" data-mk="kirin"></p>
       <div class="btn-row"><a class="btn dark buy" href="https://item.rakuten.co.jp/bigbossshibazaki/4901411132389/" target="_blank" rel="noopener">購入はこちら</a><a class="btn fav" href="https://my.bookmark.rakuten.co.jp/?func=reg&amp;svid=101&amp;shop_bid=224915&amp;iid=10030908&amp;itype=1" target="_blank" rel="noopener" aria-label="キリン 3種飲み比べセット K-IHG3をお気に入りに登録" title="お気に入りに登録"></a></div>
     </div>
   </div>
@@ -1148,6 +1163,21 @@ const yen=n=>n.toLocaleString('ja-JP');
 const released=w=>{const m=/(\d{4})年(\d{1,2})月(\d{1,2})日/.exec(w||'');return !!m&&Date.now()>=Date.UTC(+m[1],m[2]-1,+m[3])-9*3600e3};
 const whenTag=w=>w==='now'||released(w)?'<span class="tag now">発売中</span>':w?`<span class="tag when">予約・${w}</span>`:'';
 document.querySelectorAll('[data-when]').forEach(el=>{if(released(el.dataset.when))el.outerHTML=whenTag('now')});
+/* ===== ポイント表示 =====
+   付与ポイント＝税抜価格の1%（1倍）×（1＋UP倍率）。UP倍率は POINT_UP で変更（0にすると「(1倍)」だけ、null で非表示）
+   例：2,967円 → 税抜2,697円 → 26pt × 3倍 ＝ 78ポイント(1倍+2倍UP)
+*/
+const POINT_UP=2;
+/* エントリーでポイント◯倍（期間中だけ表示。期間は日本時間。終わると自動で消える）。不要なら ENTRY=null */
+const ENTRY={rate:5,start:'2026-11-04T20:00:00+09:00',end:'2026-11-11T01:59:59+09:00',label:'エントリーでポイント5倍',url:'https://event.rakuten.co.jp/incentive/ichiba/henbai/event/202611045x/'};
+/* エントリーでポイント2倍（対象メーカーの商品だけに表示。期間は未設定＝常に表示。end に日付を入れるとその時刻で消える） */
+const ENTRY2={label:'エントリーでポイント2倍',url:'https://event.rakuten.co.jp/liquor/coupon/?scid=wi_ich_ichibaapp_weburl_share',makers:['asahi','sapporo'],start:null,end:null};
+const entry2On=mk=>!!ENTRY2&&ENTRY2.makers.includes(mk)&&(!ENTRY2.start||Date.now()>=Date.parse(ENTRY2.start))&&(!ENTRY2.end||Date.now()<=Date.parse(ENTRY2.end));
+const entryOn=()=>!!ENTRY&&Date.now()>=Date.parse(ENTRY.start)&&Date.now()<=Date.parse(ENTRY.end);
+const ptInner=(price,mk)=>{const base=Math.floor(Math.floor(price/1.1)*0.01);let h=`${yen(base*(1+POINT_UP))}ポイント<span>(1倍${POINT_UP?'+'+POINT_UP+'倍UP':''})</span>`;if(entryOn())h+=`<a class="pt-entry" href="${ENTRY.url}" target="_blank" rel="noopener">${ENTRY.label}</a>`;if(entry2On(mk))h+=`<a class="pt-entry y" href="${ENTRY2.url}" target="_blank" rel="noopener">${ENTRY2.label}</a>`;return h};
+const ptHtml=(price,mk)=>(POINT_UP==null||!price)?'':`<p class="pt">${ptInner(price,mk)}</p>`;
+document.querySelectorAll('.pickup .pt[data-pt]').forEach(el=>{if(POINT_UP==null)el.remove();else el.innerHTML=ptInner(+el.dataset.pt,el.dataset.mk)});
+
 /* ===== メーカー別の商品（サッポロ・アサヒ・キリン・サントリー）=====
    掲載順＝この並び順（シリーズごとに型番順）。価格は税込・2026年11月8日時点、セット内容は楽天の各商品ページより。
    url：楽天の商品ページID（item.rakuten.co.jp/bigbossshibazaki/〇〇/ の〇〇）。null の間はメーカーのカテゴリページ（makers の cat）に飛びます
@@ -1213,7 +1243,8 @@ function makerCard(p){
     <h3>${p.name}</h3>
     <p class="spec">${p.id?p.id+' ｜ ':''}${spec}</p>
     ${p.inside?`<p class="inside">${p.inside}</p>`:''}
-    ${p.price?`<p class="price">${yen(p.price)}<small>円（税込）</small></p>${per}<p class="ship">本州送料無料</p>`:`<p class="price tbd">価格は商品ページで</p><p class="ship">本州送料無料</p>`}
+    <p class="ship">本州送料無料</p>
+    ${p.price?`<p class="price">${yen(p.price)}<small>円（税込）</small></p>${ptHtml(p.price,p.mk)}`:`<p class="price tbd">価格は商品ページで</p>`}
     <div class="btn-row"><a class="btn dark buy" href="${href}" target="_blank" rel="noopener">商品ページを見る</a>${p.rid?`<a class="btn fav" href="${FAV(p.rid)}" target="_blank" rel="noopener" aria-label="${m.name} ${p.name}${p.id?' '+p.id:''}をお気に入りに登録" title="お気に入りに登録"></a>`:''}</div>
   </article>`;
 }
@@ -1251,7 +1282,8 @@ const originals=[
     <h3>${o.name}</h3>
     <p class="spec">${o.id} ｜ ${o.spec}</p>
     <p class="inside">${o.inside}</p>
-    <p class="price">${yen(o.price)}<small>円（税込）</small></p><p class="ship">${o.ship||'本州送料無料'}</p>
+    <p class="ship">${o.ship||'本州送料無料'}</p>
+    <p class="price">${yen(o.price)}<small>円（税込）</small></p>${ptHtml(o.price)}
     <div class="btn-row"><a class="btn dark buy" href="${ITEM+o.url}/" target="_blank" rel="noopener">商品ページを見る</a><a class="btn fav" href="${FAV(o.rid)}" target="_blank" rel="noopener" aria-label="${o.name}をお気に入りに登録" title="お気に入りに登録"></a></div>
   </article>`).join('');
   const cs=[...g.children],bs=[...document.querySelectorAll('.orig-f button')];

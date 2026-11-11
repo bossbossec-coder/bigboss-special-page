@@ -57,7 +57,7 @@ DEFAULT_CONFIG = {
     "early_minutes": 5,         # 楽天への反映に数分かかるため、指定時刻の何分前から処理を始めるか
     "min_ratio": 0.5,           # 変更後の価格が、元の価格のこの割合より安ければ、打ち間違いとみなして実行しない
     "max_items": 50,            # 1回に処理する上限。超えたら実行しない
-    "max_attempts": 3,          # 同じ行がこの回数失敗したら、それ以上やり直さず「要確認」にする
+    "max_attempts": 3,          # 同じ行がこの回数続けて失敗したら「要確認」で知らせる(やり直しは続ける。以後1時間ごとに知らせる)
     # この時間帯は動かない。6:10〜6:50 は毎朝6:15の予約テキスト削除、ほかは売上CSVの取得
     # (サントリー版 ○:25 / ギフトALL ○:30)と、クロスモールへの同時ログインでぶつからないように
     "avoid": ["06:10-06:50", "07:20-07:50", "10:20-10:50", "14:20-14:50", "17:20-17:50", "19:20-19:50", "21:20-21:50", "23:20-23:50"],
@@ -664,18 +664,13 @@ def do_work(page, change, revert, upload_only, state, cfg, dry_run, problems):
         s = state.setdefault(r["key"], {"code": r["code"], "row": r["row"]})
         s["attempts"] = s.get("attempts", 0) + 1
         s["last_error"] = msg
-        if s["attempts"] >= cfg["max_attempts"]:
-            s["status_before_fail"] = s.get("status", "")
-            if s.get("status") in ("changing", "changed_edit"):
-                # 変更の途中で止めた。価格が変わっている可能性があるので、戻す日時には戻しを試みる
-                s["status"] = "change_failed"
-                s["attempts"] = 0
-                problems.append("%s (Excel %d行目): 変更が%d回失敗したため止めました(戻す日時には、元の価格に戻します)。%s"
-                                % (r["code"], r["row"], cfg["max_attempts"], msg))
-            else:
-                s["status"] = "failed"
-                problems.append("%s (Excel %d行目): %d回失敗したため止めました。クロスモールで価格を確認してください。%s"
-                                % (r["code"], r["row"], cfg["max_attempts"], msg))
+        # 止めずに、直るまで5分ごとにやり直す(変更は戻す日時まで、戻しは戻せるまで)。
+        # 知らせは、続けて max_attempts 回失敗したときと、そのあと1時間(12回)ごと
+        n, first = s["attempts"], cfg["max_attempts"]
+        if n == first or (n > first and (n - first) % 12 == 0):
+            what = "元の価格への戻し" if s.get("status") in ("reverting", "revert_edit") else "価格の変更"
+            problems.append("%s (Excel %d行目): %sが%d回続けて失敗しています(直るまで5分ごとにやり直します)。%s"
+                            % (r["code"], r["row"], what, n, msg))
         save_state(state)
 
     to_upload = []
@@ -905,8 +900,13 @@ def main():
     if not a.dry_run:
         reported.extend(new_errors)
         for r in expired:
+            prev = state.get(r["key"], {})
             state[r["key"]] = {"code": r["code"], "row": r["row"], "status": "expired"}
-            problems.append("%s (Excel %d行目): 戻す日時を過ぎていたため、価格を変えずに飛ばしました" % (r["code"], r["row"]))
+            if prev.get("attempts"):
+                problems.append("%s (Excel %d行目): セール期間中に価格を変えられないまま、戻す日時になりました"
+                                "(価格は元のままです)。最後のエラー: %s" % (r["code"], r["row"], prev.get("last_error")))
+            else:
+                problems.append("%s (Excel %d行目): 戻す日時を過ぎていたため、価格を変えずに飛ばしました" % (r["code"], r["row"]))
         save_state(state)
 
     if not (change or revert or upload_only):

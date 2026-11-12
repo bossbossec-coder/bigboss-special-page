@@ -767,7 +767,7 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 .cp-banners a{transition:opacity .2s}
 .cp-banners a:hover{opacity:.85}
 @media(max-width:760px){.cp-banners{grid-template-columns:repeat(2,1fr);gap:8px;padding:20px 12px 0}}
-.cp-banners > :first-child{grid-column:1/-1}
+.cp-banners > :first-child,.cp-banners > .cp-limited + a{grid-column:1/-1}
 /* ---------- ヘッダー・フッター：濃い緑 ---------- */
 header{background:#0f3b2a;border-bottom-color:#d3ab5840}
 footer{background:#0f3b2a;color:#cfe0d6}
@@ -938,8 +938,9 @@ footer{background:#0f3b2a;color:#cfe0d6}
 <nav class="nav" aria-label="メーカーから選ぶ"><a href="#sapporo">サッポロ</a><a href="#asahi">アサヒ</a><a href="#kirin">キリン</a><a href="#suntory">サントリー</a></nav>
 
 <!-- ===== 2. オリジナルのし（ビッグボスの強み：上部に配置） ===== -->
-<!-- ===== 楽天のキャンペーン・クーポン（1行目：200円クーポンを1コマ／2行目：2コマ） ===== -->
+<!-- ===== 楽天のキャンペーン・クーポン（1行目：プレモル500円OFF（11/15で自動終了）／2行目：200円クーポン／3行目：2コマ） ===== -->
 <section class="cp-banners" aria-label="開催中のキャンペーン・クーポン">
+  <a class="cp-limited" data-end="2026-11-15T23:59:59+09:00" href="https://coupon.rakuten.co.jp/getCoupon?getkey=VjJETy0wS1VGLTBLUE8tRkQ4Wg--&amp;rt=" target="_blank" rel="noopener"><img src="img/coupon-premol-500.jpg" width="1200" height="350" alt="プレモルギフト対象品に使える500円OFFクーポン配布中 先着利用100名様 11/15(日)0:00利用開始"></a>
   <a href="https://event.rakuten.co.jp/oseibo/coupon/" target="_blank" rel="noopener"><img src="img/campaign-1.jpg" width="1080" height="210" alt="お歳暮・冬ギフト 対象ショップ限定 最大200円OFFクーポン 2026年11月1日(日)10:00〜12月1日(火)09:59"></a>
   <a href="https://event.rakuten.co.jp/oseibo/special/point/" target="_blank" rel="noopener"><img src="img/campaign-2.jpg" width="1080" height="210" alt="お歳暮・冬ギフトキャンペーン エントリー＆条件達成で3,900ポイントプレゼント 2026年11月1日(日)10:00〜12月29日(火)09:59"></a>
   <a href="https://coupon.rakuten.co.jp/getCoupon?getkey=NkxDUS1PUldaLUtHSkstS09OWA--" target="_blank" rel="noopener"><img src="img/campaign-3.jpg" width="1232" height="240" alt="対象ショップ限定 3,980円以上の購入で使える100円OFFクーポン 2026年11月1日(日)10:00〜11月30日(月)23:59"></a>
@@ -1409,6 +1410,8 @@ new ResizeObserver(()=>{resize();resume()}).observe(hero);new IntersectionObserv
   if(!('IntersectionObserver' in window))return;
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){io.unobserve(e.target);setTimeout(()=>e.target.classList.add('shake'),400)}}),{threshold:.5});
   as.forEach(a=>io.observe(a))})();
+/* 期間限定のバナー：data-end（日本時間）を過ぎたら非表示 */
+document.querySelectorAll('[data-end]').forEach(el=>{if(Date.now()>Date.parse(el.dataset.end))el.remove()});
 /* 右下のページトップボタン：少しスクロールしたら表示、スクロール中は薄く・止まったら濃く */
 (()=>{const t=document.createElement('a');t.href='#top';t.className='pagetop';t.setAttribute('aria-label','ページの最上部へ戻る');document.body.appendChild(t);
   let timer;addEventListener('scroll',()=>{t.classList.toggle('show',scrollY>600);t.classList.add('moving');clearTimeout(timer);timer=setTimeout(()=>t.classList.remove('moving'),250)},{passive:true});

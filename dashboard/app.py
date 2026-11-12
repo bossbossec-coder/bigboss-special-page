@@ -131,14 +131,9 @@ st.markdown(
         [data-testid="stMarkdownContainer"] h1, h1 { font-size: 1.6rem !important; }
         [data-testid="stMarkdownContainer"] h3, [data-testid="stMarkdownContainer"] h4, h3, h4 { font-size: 1.05rem !important; }
 
-        /* 表示店舗・対象日バッジを横並びのまま縮小し、スマホ幅でも1行に収める（高さも揃える） */
-        .hdr-badges-row { flex-wrap: nowrap !important; gap: 8px !important; margin-bottom: 10px !important; align-items: stretch !important; }
-        .hdr-store-badge, .hdr-date-badge { display: flex !important; flex-direction: column !important; }
-        .hdr-badge-label { font-size: 0.72rem !important; margin-bottom: 3px !important; }
-        .hdr-store-box, .hdr-date-box { min-height: 52px !important; box-sizing: border-box !important; flex: 1 1 auto !important; }
-        .hdr-store-box { padding: 8px 12px !important; }
-        .hdr-store-value { font-size: 1.05rem !important; }
-        .hdr-date-box { padding: 8px 14px 8px 26px !important; gap: 5px !important; }
+        /* 対象日バッジを縮小し、スマホ幅でも収まるようにする（表示店舗側のボタンの
+           スタイルはrender_header_badges()内で個別に指定している） */
+        .hdr-date-box { min-height: 52px !important; box-sizing: border-box !important; padding: 8px 14px 8px 26px !important; gap: 5px !important; }
         .hdr-date-flag { border-left-width: 20px !important; border-bottom-width: 20px !important; }
         .hdr-date-year { font-size: 0.8rem !important; }
         .hdr-date-main { font-size: 1.6rem !important; }
@@ -285,6 +280,15 @@ def format_pct(value: float | None) -> str:
     return f"{value:.1f}%"
 
 
+def format_diff_yen(diff: float | None) -> str:
+    """表の「差分」列用。プラスは+、マイナスは▲（三角）で表す。"""
+    if diff is None or pd.isna(diff):
+        return "—"
+    if diff >= 0:
+        return f"+{format_yen(diff)}"
+    return f"▲{format_yen(abs(diff))}"
+
+
 def format_delta(diff: float | None, pct: float | None) -> str | None:
     """st.metricのdelta表示用。前年差分額（億・万円単位）と前年比をまとめる。"""
     if diff is None or pd.isna(diff):
@@ -429,8 +433,8 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             opacity:1; transform:scale(1.03);
           }}
           @keyframes ds-card-in {{
-            from {{ transform:rotateY(90deg); opacity:0; }}
-            to {{ transform:rotateY(0deg); opacity:1; }}
+            from {{ transform:rotateY(0deg); opacity:0.4; }}
+            to {{ transform:rotateY(360deg); opacity:1; }}
           }}
           .ds-cards-grid, .st-key-ds_cards_tap_overlay {{
             display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:10px;
@@ -440,7 +444,7 @@ def render_daily_store_cards(df: pd.DataFrame) -> None:
             color:#ffffff; border-radius:10px;
             padding:14px 10px; text-align:center; min-width:0;
             display:flex; flex-direction:column; justify-content:center;
-            animation: ds-card-in 0.35s ease;
+            animation: ds-card-in 0.5s ease;
           }}
           .ds-card-daily {{ background:{KPI_BLUE}; }}
           .ds-card-monthly {{ background:{ACCENT_COLOR}; }}
@@ -541,49 +545,84 @@ def store_display_label(selected: list[str], all_stores: list[str]) -> str:
 
 def render_header_badges(store_label: str, target_date: date) -> None:
     """右上に「表示店舗」「対象日」の2つのバッジを、幅に応じて並べて表示する。
-    2つを1つのflexコンテナにまとめることで、列幅の制約による表示崩れを避けている。"""
+    「表示店舗」側は実際のボタンにしており、押すと「全店」ボタンが現れ、
+    それを押すと店舗選択を一発で全店舗に戻せる（店舗の絞り込みをポップオーバーの
+    マルチセレクトで1つずつ外すのが押しづらいという声への対応）。"""
     weekday = WEEKDAY_JP[target_date.weekday()]
     st.markdown(
         f"""
-        <div class="hdr-badges-row" style="display:flex; justify-content:flex-end; align-items:flex-start;
-                    gap:16px; flex-wrap:wrap; margin-bottom:28px;">
-          <div class="hdr-store-badge" style="text-align:right;">
-            <div class="hdr-badge-label" style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">表示店舗</div>
-            <div class="hdr-store-box" style="display:inline-flex; align-items:center; justify-content:center;
-                        padding:12px 22px; border-radius:10px; min-height:64px;
-                        background:#fff; border:1px solid #e6e6e6;
-                        box-shadow:0 2px 6px rgba(0,0,0,0.10);">
-              <span class="hdr-store-value" style="font-size:1.5rem; font-weight:800; color:#1a1a1a; white-space:nowrap;">
-                {store_label}
-              </span>
-            </div>
-          </div>
-          <div class="hdr-date-badge" style="text-align:right;">
-            <div class="hdr-badge-label" style="font-size:1rem; color:#8a8a8a; margin-bottom:6px;">対象日</div>
-            <div class="hdr-date-box" style="position:relative; display:inline-flex; align-items:center; gap:10px;
-                        padding:12px 32px 12px 48px; border-radius:10px;
-                        background:#fff; border:1px solid #e6e6e6;
-                        box-shadow:0 2px 6px rgba(0,0,0,0.10);">
-              <div class="hdr-date-flag" style="position:absolute; top:0; left:0; width:0; height:0;
-                          border-left:32px solid {ACCENT_COLOR};
-                          border-bottom:32px solid transparent;
-                          border-top-left-radius:10px;"></div>
-              <span class="hdr-date-year" style="writing-mode:vertical-rl; font-size:1.4rem; font-weight:800;
-                           color:{ACCENT_COLOR}; letter-spacing:1px;">
-                {target_date.year}
-              </span>
-              <span class="hdr-date-main" style="font-size:3rem; font-weight:800; color:#1a1a1a;">
-                {target_date.month}.{target_date.day}
-              </span>
-              <span class="hdr-date-weekday" style="font-size:2.1rem; font-weight:600; color:#555;">
-                [{weekday}]
-              </span>
-            </div>
-          </div>
-        </div>
+        <style>
+          .st-key-hdr_badges_row div[data-testid="stHorizontalBlock"] {{
+            flex-wrap: nowrap !important; align-items: flex-start !important; gap: 16px !important;
+          }}
+          .st-key-hdr_badges_row div[data-testid="stColumn"]:first-child {{
+            flex: 0 1 auto !important; width: auto !important; min-width: 0 !important;
+          }}
+          .st-key-hdr_badges_row div[data-testid="stColumn"]:last-child {{
+            flex: 1 1 auto !important; display: flex !important; justify-content: flex-end !important;
+          }}
+          .hdr-badge-label {{ font-size:1rem; color:#8a8a8a; margin-bottom:6px; text-align:right; }}
+          .st-key-store_badge_btn button {{
+            background:#fff !important; border:1px solid #e6e6e6 !important;
+            box-shadow:0 2px 6px rgba(0,0,0,0.10) !important; border-radius:10px !important;
+            color:#1a1a1a !important; font-size:1.5rem !important; font-weight:800 !important;
+            min-height:64px !important; white-space:nowrap !important;
+          }}
+          .st-key-all_store_confirm_btn button {{
+            background:{ACCENT_COLOR} !important; border:none !important;
+            color:#fff !important; font-weight:700 !important; margin-top:6px !important;
+          }}
+          @media (max-width: 640px) {{
+            .hdr-badge-label {{ font-size:0.8rem !important; margin-bottom:2px !important; }}
+            .st-key-store_badge_btn button {{
+              font-size:1.05rem !important; min-height:0 !important; padding:8px 14px !important;
+            }}
+          }}
+        </style>
         """,
         unsafe_allow_html=True,
     )
+    with st.container(key="hdr_badges_row"):
+        store_col, date_col = st.columns([1, 1])
+        with store_col:
+            st.markdown('<div class="hdr-badge-label">表示店舗</div>', unsafe_allow_html=True)
+            if st.button(store_label, key="store_badge_btn", use_container_width=True):
+                st.session_state["show_all_store_confirm"] = not st.session_state.get(
+                    "show_all_store_confirm", False
+                )
+            if st.session_state.get("show_all_store_confirm", False):
+                if st.button("全店", key="all_store_confirm_btn", use_container_width=True):
+                    st.session_state["pending_reset_stores"] = True
+                    st.session_state["show_all_store_confirm"] = False
+                    st.rerun()
+        with date_col:
+            st.markdown(
+                f"""
+                <div style="text-align:right; width:100%;">
+                  <div class="hdr-badge-label">対象日</div>
+                  <div class="hdr-date-box" style="position:relative; display:inline-flex; align-items:center; gap:10px;
+                              padding:12px 32px 12px 48px; border-radius:10px;
+                              background:#fff; border:1px solid #e6e6e6;
+                              box-shadow:0 2px 6px rgba(0,0,0,0.10);">
+                    <div class="hdr-date-flag" style="position:absolute; top:0; left:0; width:0; height:0;
+                                border-left:32px solid {ACCENT_COLOR};
+                                border-bottom:32px solid transparent;
+                                border-top-left-radius:10px;"></div>
+                    <span class="hdr-date-year" style="writing-mode:vertical-rl; font-size:1.4rem; font-weight:800;
+                                 color:{ACCENT_COLOR}; letter-spacing:1px;">
+                      {target_date.year}
+                    </span>
+                    <span class="hdr-date-main" style="font-size:3rem; font-weight:800; color:#1a1a1a;">
+                      {target_date.month}.{target_date.day}
+                    </span>
+                    <span class="hdr-date-weekday" style="font-size:2.1rem; font-weight:600; color:#555;">
+                      [{weekday}]
+                    </span>
+                  </div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
 
 def _gauge_arc_point(cx: float, cy: float, radius: float, pct_val: float) -> tuple[float, float]:
@@ -748,10 +787,11 @@ def _format_man_unit(man_value: float) -> str:
     return f"{man_value:,.0f}万"
 
 
-def _rescale_chart_to_man(fig: go.Figure) -> tuple[go.Figure, list[float]]:
+def _rescale_chart_to_man(fig: go.Figure, x_suffix: str = "") -> tuple[go.Figure, list[float]]:
     """グラフの複製を作り、全トレースのY値を万円単位に変換する（元の正確な金額は
     customdataに保持し、ホバー表示に使う）。戻り値は複製したFigureと、
-    キリの良い目盛り位置（万単位）のリスト。"""
+    キリの良い目盛り位置（万単位）のリスト。x_suffixを指定すると、吹き出し表示の
+    x軸の値（例: 日付の「1」）の末尾に単位（例: 「日」→「1日」）を付け足す。"""
     fig_scaled = go.Figure(fig)
     scaled_values: list[float] = []
     for trace in fig_scaled.data:
@@ -762,7 +802,7 @@ def _rescale_chart_to_man(fig: go.Figure) -> tuple[go.Figure, list[float]]:
         trace.customdata = original
         scaled = [None if v is None else v / 10000 for v in original]
         trace.y = scaled
-        trace.hovertemplate = "%{x}<br>%{customdata:,.0f}円<extra></extra>"
+        trace.hovertemplate = f"%{{x}}{x_suffix}<br>%{{customdata:,.0f}}円<extra></extra>"
         scaled_values.extend(v for v in scaled if v is not None)
 
     max_value = max(scaled_values) if scaled_values else 0
@@ -779,12 +819,12 @@ def _rescale_chart_to_man(fig: go.Figure) -> tuple[go.Figure, list[float]]:
     return fig_scaled, ticks
 
 
-def to_mobile_chart(fig: go.Figure) -> go.Figure:
+def to_mobile_chart(fig: go.Figure, x_suffix: str = "") -> go.Figure:
     """スマホ向けに、Y軸タイトルを消し、目盛りを万円単位（キリが良ければ千万単位）に
     したグラフの複製を作る（PC版のグラフはそのまま、スマホ版だけ別に描画するための複製）。
     指でスライドした際に意図せずズーム・パンして表示が変わってしまわないよう、
     ドラッグ操作は無効化している（ツールバーを隠しているため元に戻す手段が無いため）。"""
-    fig_m, ticks = _rescale_chart_to_man(fig)
+    fig_m, ticks = _rescale_chart_to_man(fig, x_suffix=x_suffix)
     fig_m.update_xaxes(fixedrange=True)
     fig_m.update_yaxes(
         title=None,
@@ -800,14 +840,14 @@ def to_mobile_chart(fig: go.Figure) -> go.Figure:
 MOBILE_SCROLL_DAY_PX = 36  # スマホで横スクロールするグラフの、1日あたりの幅（約10日分が最初に見える）
 
 
-def to_mobile_scrollable_chart(fig: go.Figure, day_count: int) -> tuple[go.Figure, int]:
+def to_mobile_scrollable_chart(fig: go.Figure, day_count: int, x_suffix: str = "") -> tuple[go.Figure, int]:
     """スマホ向けに、日数分だけ横に長いグラフを作り、画面では横スクロール（スワイプ）で
     全体を見られるようにする。棒が細くなりすぎて見えづらくなるのを防ぐため、
     コンテナ幅に合わせて縮小する`to_mobile_chart`とは別に、1日あたりの幅を固定で
     確保する（最初の画面には約10日分が収まり、残りはスワイプで見られる）。
     Plotly自体のドラッグ操作は`to_mobile_chart`と同様に無効化し、スクロールは
     外側のdiv（CSSのoverflow-x:auto）のネイティブなスワイプで行う。"""
-    fig_m, ticks = _rescale_chart_to_man(fig)
+    fig_m, ticks = _rescale_chart_to_man(fig, x_suffix=x_suffix)
     width_px = max(1, day_count) * MOBILE_SCROLL_DAY_PX
     fig_m.update_xaxes(fixedrange=True, tickmode="linear", dtick=1)
     fig_m.update_yaxes(
@@ -821,10 +861,10 @@ def to_mobile_scrollable_chart(fig: go.Figure, day_count: int) -> tuple[go.Figur
     return fig_m, width_px
 
 
-def apply_pc_chart_style(fig: go.Figure, height_multiplier: float = 1.5) -> go.Figure:
+def apply_pc_chart_style(fig: go.Figure, height_multiplier: float = 1.5, x_suffix: str = "") -> go.Figure:
     """PC向けに、目盛りをスマホ版と同じ万円単位表記にしつつ軸タイトルは残し、
     グラフ高さを拡大した複製を作る。"""
-    fig_p, ticks = _rescale_chart_to_man(fig)
+    fig_p, ticks = _rescale_chart_to_man(fig, x_suffix=x_suffix)
     fig_p.update_yaxes(
         title="売上金額（万円）",
         tickmode="array",
@@ -1480,6 +1520,16 @@ if "as_of" not in st.session_state:
 if "selected_stores" not in st.session_state:
     st.session_state["selected_stores"] = []
 
+if st.session_state.pop("pending_reset_stores", False):
+    # 「表示店舗」バッジの「全店」ボタンから店舗選択をリセットする処理。
+    # selected_stores/stores_popoverはどちらもst.multiselectのkeyに
+    # 紐づいており、ウィジェットが生成された後のスクリプト本体からは
+    # 直接書き換えられない（StreamlitWidgetAlreadyInstantiatedError）ため、
+    # ボタン押下時はこのフラグだけ立てて再実行し、各ウィジェットが
+    # 生成されるより前のこの時点で実際の値を書き換えている。
+    st.session_state["selected_stores"] = []
+    st.session_state["stores_popover"] = []
+
 
 def _sync_as_of_from_sidebar() -> None:
     new_as_of = st.session_state["as_of"]
@@ -1821,9 +1871,11 @@ with left:
         height=380,
     )
     with st.container(key="daily_chart_pc"):
-        st.plotly_chart(apply_pc_chart_style(fig), use_container_width=True, config={"displayModeBar": False})
+        st.plotly_chart(
+            apply_pc_chart_style(fig, x_suffix="日"), use_container_width=True, config={"displayModeBar": False}
+        )
     with st.container(key="daily_chart_mobile"):
-        fig_mobile_scroll, mobile_scroll_width = to_mobile_scrollable_chart(fig, len(series["day"]))
+        fig_mobile_scroll, mobile_scroll_width = to_mobile_scrollable_chart(fig, len(series["day"]), x_suffix="日")
         # StreamlitのstElementContainerには`max-width:100%`が既定でかかっており、
         # widthを指定しても親要素の幅までしか広がらない（横スクロールが働かない）
         # ため、このグラフ分だけ固定幅になるよう上書きする。
@@ -1984,7 +2036,7 @@ fig_ranking.update_layout(
     yaxis_title="売上金額（円）",
     legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     margin=dict(l=10, r=10, t=30, b=10),
-    height=340,
+    height=442,
 )
 with st.container(key="ranking_chart_pc"):
     st.plotly_chart(apply_pc_chart_style(fig_ranking), use_container_width=True, config={"displayModeBar": False})
@@ -1997,6 +2049,7 @@ ranking_display = pd.DataFrame(
         "当月累計売上": ranking["mtd_sales"].map(format_yen),
         "前年同期間売上": ranking["last_year_mtd_sales"].map(format_yen),
         "前年比": ranking["yoy_pct"].map(format_pct),
+        "差分": (ranking["mtd_sales"] - ranking["last_year_mtd_sales"]).map(format_diff_yen),
         "前年売上計": ranking["last_year_full_sales"].map(format_yen),
     }
 )
@@ -2018,6 +2071,7 @@ ranking_display = pd.concat(
                     "当月累計売上": format_yen(ranking_total_mtd_sales),
                     "前年同期間売上": format_yen(ranking_total_last_year_mtd_sales),
                     "前年比": format_pct(ranking_total_yoy_pct),
+                    "差分": format_diff_yen(ranking_total_mtd_sales - ranking_total_last_year_mtd_sales),
                     "前年売上計": format_yen(ranking_total_last_year_full_sales),
                 }
             ]

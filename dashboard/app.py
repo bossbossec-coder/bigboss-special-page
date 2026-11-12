@@ -543,39 +543,70 @@ def store_display_label(selected: list[str], all_stores: list[str]) -> str:
     return f"{selected[0]} 他{len(selected) - 1}店"
 
 
-def render_header_badges(store_label: str, target_date: date) -> None:
-    """右上に「表示店舗」「対象日」の2つのバッジを、幅に応じて並べて表示する。
-    「表示店舗」側は実際のボタンにしており、押すと「全店」ボタンが現れ、
-    それを押すと店舗選択を一発で全店舗に戻せる（店舗の絞り込みをポップオーバーの
-    マルチセレクトで1つずつ外すのが押しづらいという声への対応）。"""
+def render_header_badges(
+    store_label: str, target_date: date, all_stores: list[str], selected_stores: list[str]
+) -> None:
+    """右上に「表示店舗」「対象日」の2つのバッジを、日付バッジのすぐ左に
+    隣り合わせで表示する。「表示店舗」側は実際のボタンにしており、押すと
+    「全店」と各店舗名のボタンが一覧で現れ、タップした店舗（または全店）に
+    一発で切り替えられる（店舗の絞り込みをポップオーバーのマルチセレクトで
+    1つずつ操作するのが押しづらいという声への対応）。"""
     weekday = WEEKDAY_JP[target_date.weekday()]
+    picker_items = ["全店", *all_stores]
+    if not selected_stores or len(selected_stores) == len(all_stores):
+        active_idx = 0
+    elif len(selected_stores) == 1 and selected_stores[0] in picker_items:
+        active_idx = picker_items.index(selected_stores[0])
+    else:
+        active_idx = -1
+    active_style = (
+        f'.st-key-store_pick_btn_{active_idx} button {{'
+        f' background:{ACCENT_COLOR} !important; border-color:{ACCENT_COLOR} !important;'
+        f' color:#fff !important; }}'
+        if active_idx >= 0
+        else ""
+    )
     st.markdown(
         f"""
         <style>
           .st-key-hdr_badges_row div[data-testid="stHorizontalBlock"] {{
             flex-wrap: nowrap !important; align-items: flex-start !important; gap: 16px !important;
+            justify-content: flex-end !important;
           }}
-          .st-key-hdr_badges_row div[data-testid="stColumn"]:first-child {{
-            flex: 0 1 auto !important; width: auto !important; min-width: 0 !important;
-          }}
-          .st-key-hdr_badges_row div[data-testid="stColumn"]:last-child {{
-            flex: 1 1 auto !important; display: flex !important; justify-content: flex-end !important;
+          .st-key-hdr_badges_row div[data-testid="stColumn"] {{
+            flex: 0 0 auto !important; width: auto !important; min-width: 0 !important;
           }}
           .hdr-badge-label {{ font-size:1rem; color:#8a8a8a; margin-bottom:6px; text-align:right; }}
           .st-key-store_badge_btn button {{
             background:#fff !important; border:1px solid #e6e6e6 !important;
-            box-shadow:0 2px 6px rgba(0,0,0,0.10) !important; border-radius:10px !important;
-            color:#1a1a1a !important; font-size:1.5rem !important; font-weight:800 !important;
-            min-height:64px !important; white-space:nowrap !important;
+            box-shadow:0 2px 6px rgba(0,0,0,0.10) !important; border-radius:12px !important;
+            color:#1a1a1a !important; font-size:2rem !important; font-weight:800 !important;
+            min-height:88px !important; padding:16px 32px !important; white-space:nowrap !important;
           }}
-          .st-key-all_store_confirm_btn button {{
-            background:{ACCENT_COLOR} !important; border:none !important;
-            color:#fff !important; font-weight:700 !important; margin-top:6px !important;
+          .st-key-store_picker_panel {{
+            max-width: 480px; margin-top: 10px;
           }}
+          .st-key-store_picker_panel div[data-testid="stHorizontalBlock"] {{
+            flex-wrap: wrap !important; gap: 8px !important; row-gap: 8px !important;
+            justify-content: flex-start !important;
+          }}
+          .st-key-store_picker_panel div[data-testid="stColumn"] {{
+            flex: 0 0 auto !important; width: auto !important; min-width: 0 !important;
+          }}
+          .st-key-store_picker_panel button {{
+            border-radius: 999px !important; font-weight:700 !important; font-size:1rem !important;
+            padding: 8px 18px !important; white-space: nowrap !important;
+            background:#fff !important; border:1px solid #e6e6e6 !important; color:#333 !important;
+            box-shadow:0 1px 4px rgba(0,0,0,0.06) !important; min-height:0 !important;
+          }}
+          {active_style}
           @media (max-width: 640px) {{
             .hdr-badge-label {{ font-size:0.8rem !important; margin-bottom:2px !important; }}
             .st-key-store_badge_btn button {{
               font-size:1.05rem !important; min-height:0 !important; padding:8px 14px !important;
+            }}
+            .st-key-store_picker_panel button {{
+              font-size:0.85rem !important; padding:6px 12px !important;
             }}
           }}
         </style>
@@ -587,14 +618,44 @@ def render_header_badges(store_label: str, target_date: date) -> None:
         with store_col:
             st.markdown('<div class="hdr-badge-label">表示店舗</div>', unsafe_allow_html=True)
             if st.button(store_label, key="store_badge_btn", use_container_width=True):
-                st.session_state["show_all_store_confirm"] = not st.session_state.get(
-                    "show_all_store_confirm", False
+                st.session_state["show_store_picker"] = not st.session_state.get(
+                    "show_store_picker", False
                 )
-            if st.session_state.get("show_all_store_confirm", False):
-                if st.button("全店", key="all_store_confirm_btn", use_container_width=True):
-                    st.session_state["pending_reset_stores"] = True
-                    st.session_state["show_all_store_confirm"] = False
-                    st.rerun()
+            if st.session_state.get("show_store_picker", False):
+                with st.container(key="store_picker_panel"):
+                    picker_cols = st.columns(len(picker_items))
+                    for i, (col, name) in enumerate(zip(picker_cols, picker_items)):
+                        with col:
+                            if st.button(name, key=f"store_pick_btn_{i}"):
+                                st.session_state["pending_set_stores"] = (
+                                    [] if name == "全店" else [name]
+                                )
+                                st.session_state["show_store_picker"] = False
+                                st.rerun()
+                # 店舗ピッカーを開いている間だけ、スマホ幅では「表示店舗」側を1行
+                # まるごと使うようにする（閉じているときの横並びレイアウトは
+                # そのまま維持）。これをしないと、ピッカー内の店舗ボタン一覧が
+                # 対象日バッジとの横並びの幅に収まりきらず、見切れてしまう。
+                # ※ボタンのクリック判定（上のif st.button）は、押された瞬間の
+                # この同じスクリプト実行内でshow_store_pickerを更新するため、
+                # このCSSは必ずその判定より後ろに置く（先に置くと、クリック直後の
+                # 実行では更新前の古い値を見てしまい反映が1テンポ遅れる）。
+                st.markdown(
+                    """
+                    <style>
+                      @media (max-width: 640px) {
+                        .st-key-hdr_badges_row div[data-testid="stHorizontalBlock"] {
+                          flex-wrap: wrap !important;
+                        }
+                        .st-key-hdr_badges_row div[data-testid="stColumn"]:first-child {
+                          flex-basis: 100% !important; width: 100% !important;
+                        }
+                        .st-key-store_picker_panel { max-width: 100% !important; }
+                      }
+                    </style>
+                    """,
+                    unsafe_allow_html=True,
+                )
         with date_col:
             st.markdown(
                 f"""
@@ -1520,15 +1581,16 @@ if "as_of" not in st.session_state:
 if "selected_stores" not in st.session_state:
     st.session_state["selected_stores"] = []
 
-if st.session_state.pop("pending_reset_stores", False):
-    # 「表示店舗」バッジの「全店」ボタンから店舗選択をリセットする処理。
+if "pending_set_stores" in st.session_state:
+    # 「表示店舗」バッジの店舗ボタンから店舗選択を切り替える処理。
     # selected_stores/stores_popoverはどちらもst.multiselectのkeyに
     # 紐づいており、ウィジェットが生成された後のスクリプト本体からは
     # 直接書き換えられない（StreamlitWidgetAlreadyInstantiatedError）ため、
     # ボタン押下時はこのフラグだけ立てて再実行し、各ウィジェットが
     # 生成されるより前のこの時点で実際の値を書き換えている。
-    st.session_state["selected_stores"] = []
-    st.session_state["stores_popover"] = []
+    _new_selected_stores = st.session_state.pop("pending_set_stores")
+    st.session_state["selected_stores"] = _new_selected_stores
+    st.session_state["stores_popover"] = _new_selected_stores
 
 
 def _sync_as_of_from_sidebar() -> None:
@@ -1774,7 +1836,7 @@ header_title_col, header_badges_col = st.columns([1, 2])
 with header_title_col:
     st.subheader("売上サマリー")
 with header_badges_col:
-    render_header_badges(store_display_label(selected_stores, all_stores), as_of)
+    render_header_badges(store_display_label(selected_stores, all_stores), as_of, all_stores, selected_stores)
 
 edit_row = st.container(key="edit_button_row")
 with edit_row:

@@ -1,0 +1,23 @@
+name: ダッシュボードのスリープ防止
+
+# Streamlit Community Cloudは約12時間アクセスが無いとアプリをスリープさせるため、
+# 4時間おきに実際のブラウザでダッシュボードを開いてスリープを防ぐ。
+on:
+  schedule:
+    - cron: "17 */4 * * *"
+  workflow_dispatch:
+
+jobs:
+  wake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install playwright==1.48.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python .github/scripts/wake_streamlit.py
+        env:
+          APP_URL: ${{ secrets.STREAMLIT_APP_URL }}

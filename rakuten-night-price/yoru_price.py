@@ -390,19 +390,30 @@ def find_crossmall_page():
     return p
 
 
+# 商品一括処理の画面かどうか(店舗の選択欄があるだけでは不十分。別の画面にも同じ欄がある)
+BULK_READY = ("!!document.getElementById('shop_id') && typeof chngShop==='function' "
+              "&& typeof onSrch==='function' && typeof onMultiMallUpload==='function'")
+
+
 def open_bulk_page(page):
     if "login" in page.ev("location.href").lower():
         raise LoginRequired()
-    if page.wait_for("!!document.getElementById('shop_id') || !!document.querySelector('input[type=password]')", 30):
+    if page.wait_for("(%s) || !!document.querySelector('input[type=password]')" % BULK_READY, 30):
         if page.ev("!!document.querySelector('input[type=password]')"):
             raise LoginRequired()
         return
-    page.ev("(()=>{const h=document.getElementById('menu2_header_hd'); if(h) h.click();})()")
-    time.sleep(1)
-    page.ev("""(()=>{const e=[...document.querySelectorAll('.menu_sub')]
-        .find(x=>x.textContent.trim()==='商品一括処理'); if(!e) throw new Error('商品一括処理メニューなし'); e.click();})()""")
-    if not page.wait_for("!!document.getElementById('shop_id')", 60):
-        if "login" in page.ev("location.href").lower():
+    try:  # 左メニューから開く
+        page.ev("(()=>{const h=document.getElementById('menu2_header_hd'); if(h) h.click();})()")
+        time.sleep(1)
+        page.ev("""(()=>{const e=[...document.querySelectorAll('.menu_sub')]
+            .find(x=>x.textContent.trim()==='商品一括処理'); if(!e) throw new Error('商品一括処理メニューなし'); e.click();})()""")
+        if page.wait_for(BULK_READY, 60):
+            return
+    except Exception as e:
+        logging.info("メニューから開けないため、商品一括処理のURLを直接開きます: %s", e)
+    page.ev("location.href=%s" % json.dumps(ITEM_BATCH_URL))  # 別の画面が開いていた場合
+    if not page.wait_for(BULK_READY, 60):
+        if "login" in page.ev("location.href").lower() or page.ev("!!document.querySelector('input[type=password]')"):
             raise LoginRequired()
         raise RuntimeError("商品一括処理画面が開きません")
 

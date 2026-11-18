@@ -767,8 +767,10 @@ button.budget-card{font:inherit;cursor:pointer;width:100%}
 .cp-banners a{transition:opacity .2s}
 .cp-banners a:hover{opacity:.85}
 @media(max-width:760px){.cp-banners{grid-template-columns:repeat(2,1fr);gap:8px;padding:20px 12px 0}}
-.cp-banners > :first-child,.cp-banners > .cp-limited + a{grid-column:1/-1}
-/* プレモル500円クーポン：画面に入ったら台風のようにぐるぐる回って、パッと開く（1回だけ） */
+/* 期間限定の新しいバナー（横1コマ・元画像の大きさまで）と、200円クーポン（横1コマ） */
+.cp-banners > a.cp-new{grid-column:1/-1;justify-self:center;width:100%;max-width:760px}
+.cp-banners > a[href="https://event.rakuten.co.jp/oseibo/coupon/"]{grid-column:1/-1}
+/* ポイント5倍バナー：画面に入ったら台風のようにぐるぐる回って、パッと開く（1回だけ） */
 .cp-banners a.typhoon.ty-wait{opacity:0;-webkit-transform:scale(0);transform:scale(0)}
 .cp-banners a.typhoon.ty-go{-webkit-animation:typhoon 1.9s cubic-bezier(.3,.7,.3,1) 1 both;animation:typhoon 1.9s cubic-bezier(.3,.7,.3,1) 1 both}
 @-webkit-keyframes typhoon{0%{opacity:0;-webkit-transform:scale(0) rotate(-1080deg)}70%{opacity:1;-webkit-transform:scale(.35) rotate(-180deg)}85%{-webkit-transform:scale(1.12) rotate(0)}91%{-webkit-transform:scale(.96)}96%{-webkit-transform:scale(1.03)}100%{opacity:1;-webkit-transform:scale(1) rotate(0)}}
@@ -944,9 +946,10 @@ footer{background:#0f3b2a;color:#cfe0d6}
 <nav class="nav" aria-label="メーカーから選ぶ"><a href="#sapporo">サッポロ</a><a href="#asahi">アサヒ</a><a href="#kirin">キリン</a><a href="#suntory">サントリー</a></nav>
 
 <!-- ===== 2. オリジナルのし（ビッグボスの強み：上部に配置） ===== -->
-<!-- ===== 楽天のキャンペーン・クーポン（1行目：プレモル500円OFF（11/15で自動終了）／2行目：200円クーポン／3行目：2コマ） ===== -->
+<!-- ===== 楽天のキャンペーン・クーポン（割引クーポン＆エントリー2倍 → ポイント5倍（回転して開く）：11/25 01:59で自動終了／200円クーポン／2コマ） ===== -->
 <section class="cp-banners" aria-label="開催中のキャンペーン・クーポン">
-  <a class="cp-limited typhoon" data-end="2026-11-15T23:59:59+09:00" href="https://coupon.rakuten.co.jp/getCoupon?getkey=VjJETy0wS1VGLTBLUE8tRkQ4Wg--&amp;rt=" target="_blank" rel="noopener"><img src="img/coupon-premol-500.jpg" width="1200" height="350" alt="プレモルギフト対象品に使える500円OFFクーポン配布中 先着利用100名様 11/15(日)0:00利用開始"></a>
+  <a class="cp-new" data-end="2026-11-25T01:59:59+09:00" href="https://event.rakuten.co.jp/liquor/point/?scid=we_ich_ev_liq_cpn_bn_bigbossshibazaki" target="_blank" rel="noopener"><img src="img/cp-liquor-2x.jpg" width="616" height="120" alt="対象アイテム限定 ビール・発泡酒・新ジャンル・チューハイ・カクテル・ノンアルコール・ギフト 割引クーポン さらにエントリーでポイント2倍 2026年11月19日(木)20:00〜11月25日(水)01:59"></a>
+  <a class="cp-new typhoon" data-end="2026-11-25T01:59:59+09:00" href="https://event.rakuten.co.jp/incentive/ichiba/henbai/event/202611195x/" target="_blank" rel="noopener"><img src="img/cp-point-5x.jpg" width="750" height="300" alt="お得にお買い物！エントリー＆掲載ショップ限定 対象ショップ ポイント5倍 2026年11月19日(木)20:00〜11月25日(水)01:59"></a>
   <a href="https://event.rakuten.co.jp/oseibo/coupon/" target="_blank" rel="noopener"><img src="img/campaign-1.jpg" width="1080" height="210" alt="お歳暮・冬ギフト 対象ショップ限定 最大200円OFFクーポン 2026年11月1日(日)10:00〜12月1日(火)09:59"></a>
   <a href="https://event.rakuten.co.jp/oseibo/special/point/" target="_blank" rel="noopener"><img src="img/campaign-2.jpg" width="1080" height="210" alt="お歳暮・冬ギフトキャンペーン エントリー＆条件達成で3,900ポイントプレゼント 2026年11月1日(日)10:00〜12月29日(火)09:59"></a>
   <a href="https://coupon.rakuten.co.jp/getCoupon?getkey=NkxDUS1PUldaLUtHSkstS09OWA--" target="_blank" rel="noopener"><img src="img/campaign-3.jpg" width="1232" height="240" alt="対象ショップ限定 3,980円以上の購入で使える100円OFFクーポン 2026年11月1日(日)10:00〜11月30日(月)23:59"></a>
@@ -1180,7 +1183,7 @@ const POINT_UP=2; // 互換用（未使用）
 const POINT_END='2026-11-11T01:59:59+09:00';
 const ptUpOn=()=>Date.now()<=Date.parse(POINT_END);
 /* エントリーでポイント◯倍（期間中だけ表示。期間は日本時間。終わると自動で消える）。不要なら ENTRY=null */
-const ENTRY=null; // エントリーでポイント5倍：終了
+const ENTRY={rate:5,start:'2026-11-18T00:00:00+09:00',end:'2026-11-25T01:59:59+09:00',label:'エントリーでポイント5倍',url:'https://event.rakuten.co.jp/incentive/ichiba/henbai/event/202611195x/'};
 /* エントリーでポイント2倍（対象メーカーの商品だけに表示。end の時刻（日本時間）で自動で消える） */
 const ENTRY2={label:'エントリーでポイント2倍',url:'https://event.rakuten.co.jp/liquor/coupon/?scid=wi_ich_ichibaapp_weburl_share',makers:['asahi','sapporo'],start:null,end:'2026-11-11T01:59:59+09:00'};
 const entry2On=mk=>!!ENTRY2&&ENTRY2.makers.includes(mk)&&(!ENTRY2.start||Date.now()>=Date.parse(ENTRY2.start))&&(!ENTRY2.end||Date.now()<=Date.parse(ENTRY2.end));
@@ -1418,7 +1421,7 @@ new ResizeObserver(()=>{resize();resume()}).observe(hero);new IntersectionObserv
   as.forEach(a=>io.observe(a))})();
 /* 期間限定のバナー：data-end（日本時間）を過ぎたら非表示 */
 document.querySelectorAll('[data-end]').forEach(el=>{if(Date.now()>Date.parse(el.dataset.end))el.remove()});
-/* プレモル500円クーポン：画面に3割以上入ったら1回だけ回転して開く */
+/* ポイント5倍バナー：画面に3割以上入ったら1回だけ回転して開く */
 (()=>{const a=document.querySelector('.cp-banners a.typhoon');if(!a||!('IntersectionObserver' in window)||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   a.classList.add('ty-wait');
   const io=new IntersectionObserver(es=>{if(es[0].isIntersecting){io.disconnect();a.classList.remove('ty-wait');a.classList.add('ty-go')}},{threshold:.3});

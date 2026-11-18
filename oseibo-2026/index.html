@@ -1184,11 +1184,11 @@ const POINT_END='2026-11-11T01:59:59+09:00';
 const ptUpOn=()=>Date.now()<=Date.parse(POINT_END);
 /* エントリーでポイント◯倍（期間中だけ表示。期間は日本時間。終わると自動で消える）。不要なら ENTRY=null */
 const ENTRY={rate:5,start:'2026-11-18T00:00:00+09:00',end:'2026-11-25T01:59:59+09:00',label:'エントリーでポイント5倍',url:'https://event.rakuten.co.jp/incentive/ichiba/henbai/event/202611195x/'};
-/* エントリーでポイント2倍（対象メーカーの商品だけに表示。end の時刻（日本時間）で自動で消える） */
-const ENTRY2={label:'エントリーでポイント2倍',url:'https://event.rakuten.co.jp/liquor/coupon/?scid=wi_ich_ichibaapp_weburl_share',makers:['asahi','sapporo'],start:null,end:'2026-11-11T01:59:59+09:00'};
-const entry2On=mk=>!!ENTRY2&&ENTRY2.makers.includes(mk)&&(!ENTRY2.start||Date.now()>=Date.parse(ENTRY2.start))&&(!ENTRY2.end||Date.now()<=Date.parse(ENTRY2.end));
+/* クーポン＆ポイント2倍（黄色ボタン。makers:null＝全商品、配列なら対象メーカーだけ。start〜end（日本時間）の間だけ表示） */
+const ENTRY2={label:'クーポン＆ポイント2倍',url:'https://event.rakuten.co.jp/liquor/point/?scid=we_ich_ev_liq_cpn_bn_bigbossshibazaki',makers:null,start:'2026-11-18T00:00:00+09:00',end:'2026-11-25T01:59:59+09:00'};
+const entry2On=mk=>!!ENTRY2&&(!ENTRY2.makers||ENTRY2.makers.includes(mk))&&(!ENTRY2.start||Date.now()>=Date.parse(ENTRY2.start))&&(!ENTRY2.end||Date.now()<=Date.parse(ENTRY2.end));
 const entryOn=()=>!!ENTRY&&Date.now()>=Date.parse(ENTRY.start)&&Date.now()<=Date.parse(ENTRY.end);
-const ptInner=(price,mk,pr)=>{const base=Math.floor(Math.floor(price/1.1)*0.01);const r=ptUpOn()&&pr>1?pr:1;let h=`${yen(base*r)}ポイント<span>(1倍${r>1?'+'+(r-1)+'倍UP':''})</span>`;if(entryOn())h+=`<a class="pt-entry" href="${ENTRY.url}" target="_blank" rel="noopener">${ENTRY.label}</a>`;if(entry2On(mk))h+=`<a class="pt-entry y" href="${ENTRY2.url}" target="_blank" rel="noopener">${ENTRY2.label}</a>`;return h};
+const ptInner=(price,mk,pr)=>{const base=Math.floor(Math.floor(price/1.1)*0.01);const r=ptUpOn()&&pr>1?pr:1;let h=`${yen(base*r)}ポイント<span>(1倍${r>1?'+'+(r-1)+'倍UP':''})</span>`;if(entry2On(mk))h+=`<a class="pt-entry y" href="${ENTRY2.url}" target="_blank" rel="noopener">${ENTRY2.label}</a>`;if(entryOn())h+=`<a class="pt-entry" href="${ENTRY.url}" target="_blank" rel="noopener">${ENTRY.label}</a>`;return h};
 const ptHtml=(price,mk,pr)=>!price?'':`<p class="pt">${ptInner(price,mk,pr)}</p>`;
 document.querySelectorAll('.pickup .pt[data-pt]').forEach(el=>{el.innerHTML=ptInner(+el.dataset.pt,el.dataset.mk,+el.dataset.pr)});
 

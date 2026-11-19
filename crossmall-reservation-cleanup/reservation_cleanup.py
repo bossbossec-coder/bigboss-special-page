@@ -222,22 +222,26 @@ def find_crossmall_page():
     return _PAGE
 
 
+BULK_READY_JS = "typeof chngShop==='function' && typeof onSrch==='function' && !!document.getElementById('shop_id')"
+LOGIN_JS = "document.querySelector('input[type=password]')!==null"
+
+
 def open_bulk_page(page):
+    """商品一括処理の画面を開く。クロスモールのタブが別の画面(ダウンロード画面など)を表示していても、
+    その画面に shop_id という欄があることがあるため、画面の関数(chngShop/onSrch)があるかで判定し、
+    なければ商品一括処理のURLへ移動する。"""
     url = page.ev("location.href")
     if "login" in url.lower():
         raise LoginRequired(url)
-    if page.wait_for("!!document.getElementById('shop_id') || document.querySelector('input[type=password]')!==null", 30):
-        if page.ev("document.querySelector('input[type=password]')!==null"):
-            raise LoginRequired("ログイン画面が表示されました")
+    if page.ev(BULK_READY_JS):
         return
-    page.ev("(()=>{const h=document.getElementById('menu2_header_hd'); if(h) h.click();})()")
-    time.sleep(1)
-    page.ev("""(()=>{const e=[...document.querySelectorAll('.menu_sub')]
-        .find(x=>x.textContent.trim()==='商品一括処理'); if(!e) throw new Error('商品一括処理メニューなし'); e.click();})()""")
-    if not page.wait_for("!!document.getElementById('shop_id')", 60):
-        if "login" in page.ev("location.href").lower():
-            raise LoginRequired()
+    logging.info("商品一括処理の画面へ移動します(今の画面: %s)", url)
+    page.call("Page.navigate", url=ITEM_BATCH_URL)
+    time.sleep(2)
+    if not page.wait_for("(%s) || %s" % (BULK_READY_JS, LOGIN_JS), 60):
         raise RuntimeError("商品一括処理画面が開きません")
+    if page.ev(LOGIN_JS):
+        raise LoginRequired("ログイン画面が表示されました")
 
 
 def switch_shop(page, shop_id):

@@ -423,7 +423,7 @@ def edit_one(page, idx, kind, dates, dry_run):
             pass
 
 
-def process_shop(page, shop, dates, dry_run, errors):
+def process_shop(page, shop, dates, dry_run, errors, name_search=False):
     sid, name, kind = shop
     logging.info("=== %s (%s) ===", name, sid)
     switch_shop(page, sid)
@@ -448,6 +448,21 @@ def process_shop(page, shop, dates, dry_run, errors):
         n = search(page)
         logging.info("%s 検索(Mark有): %d件", name, n)
         updated += run_items(page, n, kind, dates, dry_run, errors, name)
+        if name_search:
+            # 楽天側はもう消えていて、この店舗にだけ残っている予約テキストを拾う(さかのぼり用)。
+            # 店舗商品名を日付(例 2026年11月15日)で検索し、Markを付けてから名前を直す。
+            for d in dates:
+                key = jp_date(d)
+                set_conditions(page, key, False)
+                n = search(page)
+                logging.info("%s 検索(店舗商品名 %s): %d件", name, key, n)
+                if n == 0:
+                    continue
+                if not dry_run:
+                    tick_marks_and_update(page)
+                    set_conditions(page, key, False)
+                    n = search(page)
+                updated += run_items(page, n, kind, dates, dry_run, errors, name)
     return updated
 
 
@@ -645,6 +660,8 @@ def _main():
     ap.add_argument("--date", help="基準日(YYYY-MM-DD)。省略時は今日")
     ap.add_argument("--reserve-offset", type=int, default=0,
                     help="予約テキストの対象とする発売日が、実行日の何日前か。0=当日(既定)、1=前日")
+    ap.add_argument("--name-search", action="store_true",
+                    help="楽天以外の店舗でも、店舗商品名を日付で検索して、残っている予約テキストを消す(さかのぼり用。時間がかかる)")
     ap.add_argument("--reserve-only", action="store_true",
                     help="出荷日表記・楽天の最強配送の処理は行わず、予約テキストの削除だけ行う")
     ap.add_argument("--ship-offset", type=int, default=0,
@@ -693,13 +710,16 @@ def _main():
         if not a.ship_only:
             for shop in SHOPS:
                 try:
-                    total += process_shop(page, shop, dates, a.dry_run, errors)
+                    total += process_shop(page, shop, dates, a.dry_run, errors, a.name_search)
                 except LoginRequired:
                     raise
                 except Exception as e:
                     logging.error("店舗処理失敗 %s: %s", shop[1], e)
                     errors.append("%s: %s" % (shop[1], e))
             if total and not a.dry_run:
+                # 出品対象は、Markの付いた商品全部(最後に表示していた検索結果ではなく、Mark有で表示し直す)
+                set_conditions(page, "", True)
+                logging.info("出品対象 Mark有: %d件", search(page))
                 bulk_upload(page)
                 if not errors:  # 失敗があった日はMarkを残し、翌日以降に再実行できるようにする
                     clear_marks(page)

@@ -58,12 +58,11 @@ DEFAULT_CONFIG = {
     "min_ratio": 0.5,           # 変更後の価格が、元の価格のこの割合より安ければ、打ち間違いとみなして実行しない
     "max_items": 50,            # 1回に処理する上限。超えたら実行しない
     "max_attempts": 3,          # 同じ行がこの回数続けて失敗したら「要確認」で知らせる(やり直しは続ける。以後1時間ごとに知らせる)
-    # この時間帯は動かない。6:10〜6:50 は予約テキスト削除、○:20〜○:50 は売上CSVの取得、
-    # ほかの5分間は、クロスモールを使うほかの自動化が始まる直前(始まる前に、こちらが終わっているように)
-    "avoid": ["01:15-01:20", "05:15-05:20", "06:10-06:50", "07:15-07:50", "09:15-09:20", "10:20-10:50", "11:15-11:20", "12:00-12:05", "12:15-12:20", "12:30-12:35", "14:20-14:50", "15:15-15:20", "15:40-15:45", "17:15-17:50", "18:15-18:20", "19:15-19:50", "20:15-20:20", "20:45-20:50", "21:15-21:50", "22:15-22:20", "22:45-22:50", "23:15-23:50"],
-    # クロスモールを使うほかの自動化(タスクスケジューラの名前)。どれかが「実行中」の間は動かない
-    "watch_tasks": ["予約テキスト削除", "クロスモール自動アップロード", "クロスモールアップロード確認",
-                    "入荷予定カレンダー自動更新", "購入商品レポート取得"],
+    # この時間帯は新しく始めない: クロスモールを使うほかの自動化が始まる直前の5分間
+    # (売上CSVはサントリー版 ○:25・ギフトALL ○:30 なので ○:20〜○:30)
+    "avoid": ["01:15-01:20", "05:15-05:20", "06:10-06:15", "07:15-07:30", "09:15-09:30", "10:20-10:30", "11:15-11:20", "12:00-12:05", "12:15-12:35", "14:20-14:30", "15:15-15:20", "15:40-15:45", "17:15-17:30", "18:15-18:20", "19:15-19:30", "20:15-20:30", "20:45-20:50", "21:15-21:30", "21:45-21:50", "22:15-22:20", "22:45-22:50", "23:15-23:30"],
+    # クロスモールを使うほかの自動化(タスクスケジューラ)。どれかが「実行中」の間は動かず、途中で始まったらやめる
+    "watch_tasks": ["予約テキスト削除", "クロスモール自動アップロード", "クロスモールアップロード確認", "入荷予定カレンダー自動更新", "購入商品レポート取得", "\\GiftReport\\Realtime_", "\\GiftAllReport\\Realtime_"],
 }
 
 ATTENTION_FILE = "要確認.txt"
@@ -80,17 +79,35 @@ class OthersRunning(Exception):
 
 
 def others_running(cfg):
-    """watch_tasks のうち、タスクスケジューラで「実行中」のものの名前を返す(Windows 以外では空)。"""
+    """watch_tasks のうち、タスクスケジューラで「実行中」のものの名前を返す(Windows 以外では空)。
+    watch_tasks の書き方: タスク名(例「予約テキスト削除」)、または「\\フォルダ名\\」で始まる前方一致
+    (例「\\GiftReport\\Realtime_」はサントリー版の売上CSVの全部の時刻)。1回の呼び出しで全部まとめて確かめる。"""
+    watch = cfg.get("watch_tasks", [])
+    if not watch:
+        return []
+    try:
+        r = subprocess.run(["schtasks", "/query", "/fo", "csv", "/nh"], capture_output=True, timeout=30,
+                           creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+    except Exception:
+        return []  # schtasks がない・応答しないときは、時間帯の決まりだけで守る
+    raw = r.stdout
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError:
+        text = raw.decode("cp932", "ignore")
+    import csv, io
     found = []
-    for name in cfg.get("watch_tasks", []):
-        try:
-            r = subprocess.run(["schtasks", "/query", "/tn", name, "/fo", "csv", "/nh"], capture_output=True,
-                               timeout=20, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
-        except Exception:
-            continue  # schtasks がない・応答しないときは、時間帯の決まりだけで守る
-        out = r.stdout.decode("cp932", "ignore") + r.stdout.decode("utf-8", "ignore")
-        if r.returncode == 0 and ("実行中" in out or "Running" in out):
-            found.append(name)
+    for row in csv.reader(io.StringIO(text)):
+        if len(row) < 3:
+            continue
+        path, status = row[0].strip(), row[-1].strip()
+        if status not in ("実行中", "Running"):
+            continue
+        base = path.rsplit("\\", 1)[-1]
+        for w in watch:
+            if (w.startswith("\\") and path.startswith(w)) or base == w:
+                found.append(path.lstrip("\\"))
+                break
     return found
 
 

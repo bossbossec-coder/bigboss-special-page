@@ -58,9 +58,12 @@ DEFAULT_CONFIG = {
     "min_ratio": 0.5,           # 変更後の価格が、元の価格のこの割合より安ければ、打ち間違いとみなして実行しない
     "max_items": 50,            # 1回に処理する上限。超えたら実行しない
     "max_attempts": 3,          # 同じ行がこの回数続けて失敗したら「要確認」で知らせる(やり直しは続ける。以後1時間ごとに知らせる)
-    # この時間帯は動かない。6:10〜6:50 は毎朝6:15の予約テキスト削除、ほかは売上CSVの取得
-    # (サントリー版 ○:25 / ギフトALL ○:30)と、クロスモールへの同時ログインでぶつからないように
-    "avoid": ["06:10-06:50", "07:20-07:50", "10:20-10:50", "14:20-14:50", "17:20-17:50", "19:20-19:50", "21:20-21:50", "23:20-23:50"],
+    # この時間帯は動かない。6:10〜6:50 は予約テキスト削除、○:20〜○:50 は売上CSVの取得、
+    # ほかの5分間は、クロスモールを使うほかの自動化が始まる直前(始まる前に、こちらが終わっているように)
+    "avoid": ["01:15-01:20", "05:15-05:20", "06:10-06:50", "07:15-07:50", "09:15-09:20", "10:20-10:50", "11:15-11:20", "12:00-12:05", "12:15-12:20", "12:30-12:35", "14:20-14:50", "15:15-15:20", "15:40-15:45", "17:15-17:50", "18:15-18:20", "19:15-19:50", "20:15-20:20", "20:45-20:50", "21:15-21:50", "22:15-22:20", "22:45-22:50", "23:15-23:50"],
+    # クロスモールを使うほかの自動化(タスクスケジューラの名前)。どれかが「実行中」の間は動かない
+    "watch_tasks": ["予約テキスト削除", "クロスモール自動アップロード", "クロスモールアップロード確認",
+                    "入荷予定カレンダー自動更新", "購入商品レポート取得"],
 }
 
 ATTENTION_FILE = "要確認.txt"
@@ -69,6 +72,32 @@ IN_PROGRESS = ("changing", "changed_edit", "changed", "change_failed", "revertin
 
 class LoginRequired(Exception):
     pass
+
+
+class OthersRunning(Exception):
+    """クロスモールを使うほかの自動化が動いている。今回はここでやめて、次の回に続きを行う。"""
+    pass
+
+
+def others_running(cfg):
+    """watch_tasks のうち、タスクスケジューラで「実行中」のものの名前を返す(Windows 以外では空)。"""
+    found = []
+    for name in cfg.get("watch_tasks", []):
+        try:
+            r = subprocess.run(["schtasks", "/query", "/tn", name, "/fo", "csv", "/nh"], capture_output=True,
+                               timeout=20, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
+        except Exception:
+            continue  # schtasks がない・応答しないときは、時間帯の決まりだけで守る
+        out = r.stdout.decode("cp932", "ignore") + r.stdout.decode("utf-8", "ignore")
+        if r.returncode == 0 and ("実行中" in out or "Running" in out):
+            found.append(name)
+    return found
+
+
+def check_others(cfg):
+    names = others_running(cfg)
+    if names:
+        raise OthersRunning("、".join(names))
 
 
 # ================================================================ 設定・Excel・記録
@@ -688,6 +717,7 @@ def do_work(page, change, revert, upload_only, state, cfg, dry_run, problems):
     switch_shop(page, RAKUTEN_SHOP)
 
     for r in change:
+        check_others(cfg)  # 途中でほかの自動化が始まったら、ここでやめる(続きは次の回)
         s = state.get(r["key"], {})
         try:
             if dry_run:
@@ -717,6 +747,7 @@ def do_work(page, change, revert, upload_only, state, cfg, dry_run, problems):
             fail(r, str(e))
 
     for r in revert:
+        check_others(cfg)
         s = state.get(r["key"], {})
         orig, sale = s.get("original_price"), s.get("sale_price")
         try:
@@ -743,6 +774,7 @@ def do_work(page, change, revert, upload_only, state, cfg, dry_run, problems):
     to_upload += upload_only
     if not to_upload:
         return
+    check_others(cfg)  # 価格の保存は記録済みなので、やめても次の回に出品だけ行う
     codes = sorted({r["code"] for r in to_upload})
     try:
         done = set(bulk_upload_rakuten(page, codes))
@@ -934,17 +966,28 @@ def main():
         logging.info("%s は動かない時間帯のため、次の回に回します", w)
         attention(cfg, problems)
         return 0
+    busy = others_running(cfg)
+    if busy and not a.dry_run:
+        logging.info("ほかの自動化(%s)が動いているため、次の回に回します", "、".join(busy))
+        attention(cfg, problems)
+        return 0
     lock = acquire_lock()
     if not lock:
         logging.info("前の回がまだ動いているため、今回は何もしません")
         return 0
 
-    page = None
+    page = page_for_reset = None
     try:
         ensure_chrome()
         page = find_crossmall_page()
+        page_for_reset = page
         open_bulk_page(page)
         do_work(page, change, revert, upload_only, state, cfg, a.dry_run, problems)
+    except OthersRunning as e:
+        page_for_reset = None  # ほかの自動化の画面を乱さないよう、検索条件のリセットもしない
+        logging.info("ほかの自動化(%s)が始まったため、ここでやめます。続きは次の回に行います", e)
+        attention(cfg, problems)
+        return 0
     except LoginRequired:
         msg = "クロスモールのログインが切れています。自動化用のChromeでログインし直してください"
         logging.error(msg)
@@ -955,7 +998,7 @@ def main():
         attention(cfg, problems + ["プログラムが途中で止まりました。logs のログを確認してください"])
         return 1
     finally:
-        reset_search_form(page)
+        reset_search_form(page_for_reset)
         if page:
             page.detach()
         try:

@@ -674,6 +674,8 @@ def _main():
     ap.add_argument("--ship-only", action="store_true",
                     help="予約テキストの処理を飛ばし、出荷日表記(+楽天の最強配送)の処理だけ行う")
     ap.add_argument("--only-codes", help="この商品コードだけ処理する(カンマ区切り。テスト用)")
+    ap.add_argument("--upload-marked", action="store_true",
+                    help="商品名の処理はせず、Markの付いた商品を全店舗に一括出品してからMarkを外す(途中で止まった実行の後始末用)")
     ap.add_argument("--clear-marks-only", action="store_true",
                     help="商品名の処理はせず、残っているMark(予約Claude)を外すだけ")
     a = ap.parse_args()
@@ -690,11 +692,17 @@ def _main():
     logging.info("開始 対象発売日: %s 出荷日表記: %s dry_run=%s", [jp_date(d) for d in dates],
                  [ship_text(d) for d in ship_dates], a.dry_run)
 
-    if a.clear_marks_only:
+    if a.clear_marks_only or a.upload_marked:
         try:
             ensure_chrome()
             page = find_crossmall_page()
             open_bulk_page(page)
+            if a.upload_marked:
+                set_conditions(page, "", True)
+                n = search(page)
+                logging.info("出品対象 Mark有: %d件", n)
+                if n:
+                    bulk_upload(page)
             clear_marks(page)
         except LoginRequired:
             logging.error("ログインが切れています。自動化用Chromeでログインし直してください")

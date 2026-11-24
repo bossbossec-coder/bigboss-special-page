@@ -422,11 +422,7 @@ def find_crossmall_page():
     for t in list_pages():
         if SITE_KEY not in t.get("url", ""):
             continue
-        try:
-            urllib.request.urlopen(BASE + "/json/activate/" + t["id"], timeout=10).read()  # 前面に出して起こす
-        except Exception:
-            pass
-        try:
+        try:  # 前面には出さない(作業中の画面の邪魔をしないため)。反応しなければ新しいタブを使う
             return Page(t, first_timeout=15)
         except Exception as e:
             logging.warning("クロスモールのタブが反応しないため、別のタブを試します: %s", e)

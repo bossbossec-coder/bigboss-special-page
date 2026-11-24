@@ -73,6 +73,11 @@ class LoginRequired(Exception):
     pass
 
 
+class PriceMismatch(Exception):
+    """今の価格が、変更後の価格とも元の価格とも違う(手で変えられた等)。やり直しても直らないので止める。"""
+    pass
+
+
 class OthersRunning(Exception):
     """クロスモールを使うほかの自動化が動いている。今回はここでやめて、次の回に続きを行う。"""
     pass
@@ -106,7 +111,9 @@ def others_running(cfg):
         base = path.rsplit("\\", 1)[-1]
         for w in watch:
             if (w.startswith("\\") and path.startswith(w)) or base == w:
-                found.append(path.lstrip("\\"))
+                name = path.lstrip("\\")
+                if name not in found:
+                    found.append(name)
                 break
     return found
 
@@ -253,7 +260,7 @@ def plan(rows, state, now, early):
     change, revert, upload_only, expired = [], [], [], []
     for r in rows:
         st = state.get(r["key"], {}).get("status", "")
-        if st in ("reverted", "expired", "failed"):
+        if st in ("reverted", "expired", "failed", "superseded"):
             continue
         if r.get("orphan"):  # Excelから消えた値下げ中の行は、戻すだけ
             if st == "revert_edit":
@@ -587,7 +594,7 @@ def write_price(page, code, new_price, expect_old):
             logging.info("  %s すでに %d 円のため保存は不要", code, new_price)
             return old
         if expect_old is not None and old not in expect_old:
-            raise RuntimeError("今の価格(%d円)が想定(%s)と違うため、触りません。手で変えられた可能性があります"
+            raise PriceMismatch("今の価格(%d円)が想定(%s)と違うため、触りません。手で変えられた可能性があります"
                                % (old, "・".join("%d円" % x for x in sorted(expect_old))))
         pop.ev("""(()=>{const e=document.querySelector('%s'); e.value=%s;
           e.dispatchEvent(new Event('input',{bubbles:true})); e.dispatchEvent(new Event('change',{bubbles:true}));})()"""
@@ -726,6 +733,16 @@ def do_work(page, change, revert, upload_only, state, cfg, dry_run, problems):
                             % (r["code"], r["row"], what, n, msg))
         save_state(state)
 
+    def stop(r, what, e):
+        """手で価格が変えられているときは、上書きもやり直しもしない(5分ごとに画面を動かさないため)。1回だけ知らせる。"""
+        logging.error("  中止 %s (Excel %d行目): %s", r["code"], r["row"], e)
+        if dry_run:
+            problems.append("%s: %s" % (r["code"], e))
+            return
+        mark(r, status="failed", last_error=str(e))
+        problems.append("%s (Excel %d行目): %sをやめました。%s。これ以上やり直しません。クロスモールで価格を確認してください"
+                        % (r["code"], r["row"], what, e))
+
     to_upload = []
     switch_shop(page, RAKUTEN_SHOP)
 
@@ -742,20 +759,39 @@ def do_work(page, change, revert, upload_only, state, cfg, dry_run, problems):
                 continue
             if s.get("status") == "changing":  # 前回、保存の途中で止まった
                 orig = s["original_price"]
+                expect = s.get("expect") or [orig]
             else:
-                orig = read_price(page, r["code"])
+                # 同じ商品で、まだ戻していない別の行(日時を書き換えた前の行など)があれば、今の価格は値下げ中の価格。
+                # 元の価格は、その行の記録を引き継ぐ(今の価格を元の価格と取り違えないように)
+                prev = [(k, v) for k, v in state.items()
+                        if not k.startswith("_") and k != r["key"] and isinstance(v, dict)
+                        and v.get("code") == r["code"] and v.get("status") in IN_PROGRESS
+                        and v.get("original_price") is not None]
+                if prev:
+                    orig = prev[0][1]["original_price"]
+                    expect = sorted({orig} | {v["sale_price"] for _, v in prev if v.get("sale_price")})
+                    logging.info("  %s 値下げ中の別の記録があるため、元の価格はその記録(%d円)を引き継ぎます", r["code"], orig)
+                else:
+                    orig = read_price(page, r["code"])
+                    expect = [orig]
                 if r["price"] < orig * cfg["min_ratio"]:
                     mark(r, status="failed", original_price=orig)
                     problems.append("%s (Excel %d行目): 変更後の価格(%d円)が元の価格(%d円)の%d%%より安いため、"
                                     "打ち間違いとみなして実行しませんでした"
                                     % (r["code"], r["row"], r["price"], orig, cfg["min_ratio"] * 100))
                     continue
-                mark(r, status="changing", original_price=orig, sale_price=r["price"])  # 書き換える前に元の価格を記録
-            write_price(page, r["code"], r["price"], {orig})
+                mark(r, status="changing", original_price=orig, sale_price=r["price"], expect=expect,
+                     takes_over=[k for k, _ in prev])  # 書き換える前に元の価格を記録
+            write_price(page, r["code"], r["price"], set(expect))
+            for k in state.get(r["key"], {}).get("takes_over", []):  # 前の記録の戻しは、この行が引き受ける
+                if k in state and state[k].get("status") in IN_PROGRESS:
+                    state[k]["status"] = "superseded"
             mark(r, status="changed_edit")
             to_upload.append(r)
         except LoginRequired:
             raise
+        except PriceMismatch as e:
+            stop(r, "値下げ", e)
         except Exception as e:
             fail(r, str(e))
 
@@ -777,6 +813,8 @@ def do_work(page, change, revert, upload_only, state, cfg, dry_run, problems):
             to_upload.append(r)
         except LoginRequired:
             raise
+        except PriceMismatch as e:
+            stop(r, "元の価格への戻し", e)
         except Exception as e:
             fail(r, str(e))
 

@@ -47,3 +47,12 @@ auメルマガ・rakuten_yoru・予約テキスト削除・売上Excelアップ�
   （AppActivate が失敗する）ため、「見つからなくても Ctrl+Enter を押す」動きを変えない（2026-11-18 に変えて送信が止まった）。
 - **二重送信・在庫の二重加算を絶対に起こさない**：自動で送り直す・アップロードし直す仕組みは作らない。
   エラーは haraguchi@bigbossliquor.com へメールで知らせるだけにする。
+
+## au PAY マーケット 大感謝セール特集（作成予定）
+
+- 場所：`au-daikansha-2026/`（ユーザーが「au大感謝セール特集」「auの大感謝セール」と言ったらここ）
+- **ベース**：`au-daikansha-2026/base-blackfriday.html`（2026-11-24 にユーザーから受け取った、楽天ブラックフライデー 2026 特集ページ。ドリームクラフト＆ビッグボス 楽天市場店）
+  - 黒・金・ネオンイエロー（`--pink:#dcff2b`）配色、Jost / Archivo / Dela Gothic One / Noto Sans JP
+  - セクション：FV（電球マーキー）→ `#calendar` → `#p5`(hidden) → `#p20` → `#lottery` → `#best` → `#oseibo` → `#popular`
+  - 楽天固有の部分（item.rakuten.co.jp のリンク、楽天イベントURL、ポイント倍率、RAT/pa3.min.js 計測タグ、my.bookmark.rakuten.co.jp）は au PAY マーケット用に差し替えが必要
+- ベースファイルは参照用として残し、特集ページは別ファイル（`index.html`）で作る

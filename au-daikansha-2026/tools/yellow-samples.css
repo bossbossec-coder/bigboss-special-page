@@ -1,0 +1,36 @@
+/* 共通：黄色地での文字色 */
+.pz.y{--beam:#fff;background:#ffd400;color:var(--ink)}
+.pz.y::before{display:none}
+.pz.y .burst{background:repeating-conic-gradient(from 0deg,#ffffff55 0 4deg,transparent 4deg 15deg)}
+.pz.y .pz-en{-webkit-text-stroke:2px var(--red);text-shadow:none}
+.pz.y .pz-lead{color:var(--ink)}
+.pz.y .pz-prize{color:var(--red-d);text-shadow:0 2px 0 #fff,0 0 18px #fff}
+.pz.y .pz-ttl{background:linear-gradient(180deg,#ff4a3a 0%,#d4101c 55%,#8e0710 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 5px 0 #7c0910) drop-shadow(0 0 20px #fff8)}
+@keyframes glowY{50%{filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 5px 0 #7c0910)}}
+.pz.y .pz-ttl{animation-name:glowY}
+.pz.y .pz-period{background:var(--red);color:var(--white)}
+.pz.y .pz-period i{background:var(--white);color:var(--red)}
+.pz.y .pz-win{color:var(--ink)}
+.pz.y .pz-win .n{color:var(--red);text-shadow:0 3px 0 #fff}
+.pz.y .pz-card{box-shadow:0 0 0 3px var(--red),0 18px 34px #8a5a0055}
+.pz.y .pz-tg h3{color:var(--red-d);border-color:var(--red)}
+.pz.y .card{box-shadow:0 0 0 2px var(--red),0 10px 20px #8a5a0044}
+.pz.y .notes{color:#5a3200}
+/* A：放射（サンバースト） */
+.pz.y1{background:radial-gradient(circle at 50% 22%,#fff8c8 0,#ffe24a 22%,transparent 60%),repeating-conic-gradient(from 0deg at 50% 22%,#ffd000 0 7.5deg,#ffe23d 7.5deg 15deg)}
+/* B：青海波 */
+.pz.y2{--a:#00000000;--l:#e8a80055;background-color:#ffd400;
+  background-image:radial-gradient(ellipse 70% 40% at 50% 22%,#fff6b0cc,transparent 70%),
+    radial-gradient(circle at 100% 150%,var(--a) 24%,var(--l) 24%,var(--l) 28%,var(--a) 28%,var(--a) 36%,var(--l) 36%,var(--l) 40%,transparent 40%),
+    radial-gradient(circle at 0 150%,var(--a) 24%,var(--l) 24%,var(--l) 28%,var(--a) 28%,var(--a) 36%,var(--l) 36%,var(--l) 40%,transparent 40%),
+    radial-gradient(circle at 50% 100%,var(--l) 10%,var(--a) 10%,var(--a) 23%,var(--l) 23%,var(--l) 30%,var(--a) 30%,var(--a) 43%,var(--l) 43%,var(--l) 50%,var(--a) 50%,var(--a) 63%,var(--l) 63%,var(--l) 71%,transparent 71%),
+    radial-gradient(circle at 100% 50%,var(--l) 5%,var(--a) 5%,var(--a) 15%,var(--l) 15%,var(--l) 20%,var(--a) 20%,var(--a) 29%,var(--l) 29%,var(--l) 34%,var(--a) 34%,var(--a) 44%,var(--l) 44%,var(--l) 49%,transparent 49%),
+    radial-gradient(circle at 0 50%,var(--l) 5%,var(--a) 5%,var(--a) 15%,var(--l) 15%,var(--l) 20%,var(--a) 20%,var(--a) 29%,var(--l) 29%,var(--l) 34%,var(--a) 34%,var(--a) 44%,var(--l) 44%,var(--l) 49%,transparent 49%);
+  background-size:100% 100%,72px 36px,72px 36px,72px 36px,72px 36px,72px 36px}
+/* C：水玉（ポップ）＋上下に赤白の幕 */
+.pz.y3{background-color:#ffd400;
+  background-image:radial-gradient(ellipse 70% 40% at 50% 22%,#fff6b0,transparent 70%),radial-gradient(circle,#ffffff8c 0 5px,transparent 5.5px),radial-gradient(circle,#ffffff8c 0 5px,transparent 5.5px);
+  background-size:100% 100%,32px 32px,32px 32px;background-position:0 0,0 0,16px 16px}
+.pz.y3::after{content:"";position:absolute;left:0;right:0;top:0;height:22px;background:repeating-linear-gradient(90deg,var(--red) 0 40px,#fff 40px 80px);clip-path:polygon(0 0,100% 0,100% 100%,0 100%);
+  -webkit-mask:radial-gradient(circle 20px at 50% 0,#000 98%,#0000) 0 0/40px 22px repeat-x;mask:radial-gradient(circle 22px at 50% 0,#000 98%,#0000) 0 0/40px 22px repeat-x}

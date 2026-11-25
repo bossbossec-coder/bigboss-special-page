@@ -69,3 +69,9 @@ auメルマガ・rakuten_yoru・予約テキスト削除・売上Excelアップ�
   対象：黒ラベル350 1ケース `/item/480887381`・2ケース `/item/480887384`、黒ラベル500 `/item/480887430`（容量・価格は未受領なので「商品ページを見る」）
 - フォント埋め込みの作り直し：`python3 au-daikansha-2026/tools/embed_fonts.py au-daikansha-2026/index.html <ttfフォルダ>`
   （ttf は Google Fonts の css2 API から古い User-Agent で取得：Dela Gothic One / Archivo wdth125 800,900 / Jost 500〜800）
+- **PC（1240px以上）**：真ん中を640px の1カラムにして、左右に固定の欄（`.side-l`：ロゴ・タイトル・期間・目次・ショップトップへ／
+  `.side-r`：開催までの日数・PRESENT の小さなカード・ボタン2つ）。ベースのブラックフライデーと同じ形（2026-11-25 ユーザー指示）。
+  中身の大きさは `.col` を基準にした `cqw` と `@container` で決めている（画面幅の `vw`・`@media` に戻さない）
+- `#present` には光線（`.beams`：回る放射＋ピュンと飛ぶ光）と、「あげちゃうキャンペーン」が光る動きを入れている
+- `#present` の背景を黄色（模様付き）にする案のサンプル3つ（A 放射／B 青海波／C 水玉＋紅白の幕）が `tools/yellow-samples.css`。
+  `#present` に `y y1`〜`y y3` のクラスを付けると切り替わる。ユーザーの選択待ち（2026-11-25）

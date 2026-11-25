@@ -1,4 +1,4 @@
-# 使い方: python3 embed.py <index.html> <フォントttfのあるフォルダ>
+# 使い方: python3 embed.py <sale.html> <フォントttfのあるフォルダ>
 import sys,re,base64,io,os
 from fontTools import subset
 from fontTools.ttLib import TTFont

@@ -721,6 +721,19 @@ footer p{margin-top:16px;font-size:12px;color:#d9a89a}
 .sr6 .side-pz p{color:#555}
 .sr6 .side-btn.y{background:#f07800;color:#fff}
 .sr6 .side-btn.w{background:#3c3c3c;color:#fff}
+
+/* 右の欄：PRESENT の案内をクリックでキャンペーンへ（A 白と赤に決定） */
+a.side-pz{display:block;text-decoration:none;transition:transform .15s,box-shadow .15s}
+a.side-pz:hover{transform:translateY(-3px);box-shadow:0 12px 26px #0004}
+.side-pz .go{display:block;margin-top:12px;padding:9px;border-radius:99px;font-weight:900;font-size:14px;background:#d40f19;color:#fff}
+/* ポイント3倍：「3」をもっと大きく、ふちを太く */
+.p3n.d3 .p3n-pt .n{font-size:clamp(170px,50cqw,340px);
+  text-shadow:3.0px 0.0px 0 #111,2.8px 1.1px 0 #111,2.1px 2.1px 0 #111,1.1px 2.8px 0 #111,0.0px 3.0px 0 #111,-1.1px 2.8px 0 #111,-2.1px 2.1px 0 #111,-2.8px 1.1px 0 #111,-3.0px 0.0px 0 #111,-2.8px -1.1px 0 #111,-2.1px -2.1px 0 #111,-1.1px -2.8px 0 #111,-0.0px -3.0px 0 #111,1.1px -2.8px 0 #111,2.1px -2.1px 0 #111,2.8px -1.1px 0 #111,6.0px 0.0px 0 #111,5.5px 2.3px 0 #111,4.2px 4.2px 0 #111,2.3px 5.5px 0 #111,0.0px 6.0px 0 #111,-2.3px 5.5px 0 #111,-4.2px 4.2px 0 #111,-5.5px 2.3px 0 #111,-6.0px 0.0px 0 #111,-5.5px -2.3px 0 #111,-4.2px -4.2px 0 #111,-2.3px -5.5px 0 #111,-0.0px -6.0px 0 #111,2.3px -5.5px 0 #111,4.2px -4.2px 0 #111,5.5px -2.3px 0 #111,0 13px 0 #111,4px 12px 0 #111,-4px 12px 0 #111}
+/* あげちゃうキャンペーンの光線：太く・はっきり */
+.pz.y .burst{background:repeating-conic-gradient(from 0deg,#ffffffb3 0 6deg,transparent 6deg 15deg)}
+.pz .beams i{height:6px;border-radius:6px;width:300px;background:linear-gradient(90deg,transparent,#fff 60%,#fffbe0);box-shadow:0 0 10px #fff}
+.pz .beams i:nth-child(3),.pz .beams i:nth-child(5),.pz .beams i:nth-child(12),.pz .beams i:nth-child(13){width:220px}
+.pz .beams i:nth-child(9){height:8px}
 </style>
 </head>
 <body>
@@ -741,15 +754,14 @@ footer p{margin-top:16px;font-size:12px;color:#d9a89a}
 <aside class="side side-r sr1" aria-label="キャンペーン">
   <div class="side-in">
     <p class="side-st" id="sideSt">大感謝祭SALE 12/13（日）スタート！</p>
-    <div class="side-pz">
+    <a class="side-pz" href="#present" aria-label="プレゼントキャンペーンを見る">
       <p class="k">PRESENT</p>
       <p class="t">サッポロビール満喫！<br>飲み比べセットが当たる！</p>
       <img src="img/present-set.webp" alt="サッポロビール満喫！飲み比べセット" width="640" height="622" loading="lazy">
       <span class="b">抽選で<b>30</b>名様</span>
       <p>12/1（火）〜12/29（火）<br>対象の黒ラベルお買い上げで自動応募</p>
-    </div>
-    <a class="side-btn y" href="#coupon">最大500円OFFクーポンはこちら</a>
-    <a class="side-btn w" href="#items">対象商品を見る</a>
+      <span class="go">キャンペーンを見る ›</span>
+    </a>
   </div>
 </aside>
 <div class="col bgC">

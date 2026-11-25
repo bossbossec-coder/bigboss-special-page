@@ -333,7 +333,7 @@ footer p{margin-top:16px;font-size:12px;color:#d9a89a}
 .side-st.end{background:#ffffff1a;color:var(--sub)}
 .side-pz{position:relative;margin-top:16px;border:2px solid var(--gold);border-radius:14px;padding:18px 16px 16px;text-align:center;background:#5e060c;box-shadow:0 0 22px #ffcf5a55,inset 0 0 20px #ffcf5a22}
 .side-pz .k{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:900;font-size:12px;letter-spacing:.3em;color:var(--white)}
-.side-pz .t{margin-top:6px;font-family:"Dela Gothic One",sans-serif;font-size:19px;line-height:1.45;color:var(--gold-l)}
+.side-pz .t{margin-top:6px;font-weight:900;font-size:17px;line-height:1.5;color:var(--gold-l)}
 .side-pz img{margin:12px auto 0;border-radius:10px;background:var(--cream);padding:6px}
 .side-pz .b{display:inline-block;margin-top:12px;background:var(--gold);color:var(--red-dd);font-weight:900;font-size:14px;border-radius:99px;padding:6px 18px;box-shadow:0 0 16px #ffcf5a88}
 .side-pz .b b{font-family:Jost,sans-serif;font-size:1.6em;margin:0 2px;vertical-align:-.1em}
@@ -341,6 +341,27 @@ footer p{margin-top:16px;font-size:12px;color:#d9a89a}
 .side-btn{display:flex;align-items:center;justify-content:center;margin-top:12px;min-height:54px;text-decoration:none;font-weight:900;font-size:15px;border-radius:6px}
 .side-btn.y{background:var(--gold);color:var(--red-dd)}
 .side-btn.w{background:linear-gradient(135deg,#fff4cf,#f2cd6b 45%,#fff1bf 70%,#e0b052);color:var(--red-d)}
+/* ---------- プレゼント枠：黄色地（A 放射） ---------- */
+.pz.y{--beam:#fff;background:#ffd400;color:var(--ink)}
+.pz.y::before{display:none}
+.pz.y .burst{background:repeating-conic-gradient(from 0deg,#ffffff55 0 4deg,transparent 4deg 15deg)}
+.pz.y .pz-en{-webkit-text-stroke:2px var(--red);text-shadow:none}
+.pz.y .pz-lead{color:var(--ink)}
+.pz.y .pz-prize{color:var(--red-d);text-shadow:0 2px 0 #fff,0 0 18px #fff}
+.pz.y .pz-ttl{background:linear-gradient(180deg,#ff4a3a 0%,#d4101c 55%,#8e0710 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 5px 0 #7c0910) drop-shadow(0 0 20px #fff8)}
+@keyframes glowY{50%{filter:drop-shadow(2px 0 0 #fff) drop-shadow(-2px 0 0 #fff) drop-shadow(0 2px 0 #fff) drop-shadow(0 -2px 0 #fff) drop-shadow(0 5px 0 #7c0910)}}
+.pz.y .pz-ttl{animation-name:glowY}
+.pz.y .pz-period{background:var(--red);color:var(--white)}
+.pz.y .pz-period i{background:var(--white);color:var(--red)}
+.pz.y .pz-win{color:var(--ink)}
+.pz.y .pz-win .n{color:var(--red);text-shadow:0 3px 0 #fff}
+.pz.y .pz-card{box-shadow:0 0 0 3px var(--red),0 18px 34px #8a5a0055}
+.pz.y .pz-tg h3{color:var(--red-d);border-color:var(--red)}
+.pz.y .card{box-shadow:0 0 0 2px var(--red),0 10px 20px #8a5a0044}
+.pz.y .notes{color:#5a3200}
+/* A：放射（サンバースト） */
+.pz.y1{background:radial-gradient(circle at 50% 22%,#fff8c8 0,#ffe24a 22%,transparent 60%),repeating-conic-gradient(from 0deg at 50% 22%,#ffd000 0 7.5deg,#ffe23d 7.5deg 15deg)}
 </style>
 </head>
 <body>
@@ -466,7 +487,7 @@ footer p{margin-top:16px;font-size:12px;color:#d9a89a}
 
 <!-- ========== 商品 ========== -->
 <!-- ========== キャンペーン（対象商品お買い上げでプレゼント） ========== -->
-<section class="sec pz" id="present">
+<section class="sec pz y y1" id="present">
   <div class="beams" aria-hidden="true"><span class="burst"></span><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <div class="wrap">
     <p class="pz-en" aria-hidden="true">PRESENT</p>

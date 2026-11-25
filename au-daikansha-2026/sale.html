@@ -508,6 +508,30 @@ footer p{margin-top:16px;font-size:12px;color:#d9a89a}
 .col[class*=bg] .catnav{background:var(--bgc)}
 .col[class*=bg] footer{background:var(--bgdd)}
 .col[class*=bg] .day{background:var(--bgdd)}
+
+/* ステージ：下の金の舞台を外した分、下の余白を詰める */
+.stage{padding-bottom:clamp(30px,8cqw,48px)}
+/* ===== ポイント3倍 デザイン3案（.p3n の d1 / d2 / d3） ===== */
+/* d2：白地に赤い太枠・赤丸の「3」 */
+.p3n.d2{background:#fff radial-gradient(#e600121a 2px,transparent 2.5px) 0 0/16px 16px;box-shadow:0 0 0 6px #e60012,0 12px 28px #1f2a5533}
+.p3n.d2 .p3n-t{background:#e60012;color:#fff;text-shadow:none;padding:12px 10px;font-size:clamp(26px,7.6cqw,46px)}
+.p3n.d2 .p3n-t em{color:#ffe100}
+.p3n.d2 .p3n-pt .w{color:#1f2a55;text-shadow:none}
+.p3n.d2 .p3n-pt .n{color:#fff;text-shadow:0 5px 0 #8e0710;margin:0 .16em;font-size:clamp(92px,26cqw,170px)}
+.p3n.d2 .p3n-main{padding-top:clamp(22px,6cqw,34px);padding-bottom:clamp(26px,7cqw,40px)}
+.p3n.d2 .p3n-burst{clip-path:none;border-radius:50%;width:1.02em;top:48%;background:radial-gradient(circle at 40% 35%,#ff4a3a,#e60012 60%,#b30d16);box-shadow:0 0 0 6px #ffe100,0 0 0 10px #e60012}
+.p3n.d2 .p3n-tag{background:#e60012;color:#fff;box-shadow:none}
+.p3n.d2 .p3n-bot{background:#fff3c4;color:#e60012;font-style:normal;border-top:2px dashed #e60012}
+/* d3：黄色地のチラシ風・黒ふち */
+.p3n.d3{border-radius:6px;background:#ffe100 repeating-linear-gradient(135deg,transparent 0 18px,#ffffff55 18px 36px);box-shadow:0 0 0 4px #111,0 12px 28px #1f2a5533}
+.p3n.d3 .p3n-t{display:inline-block;margin-top:clamp(16px,4.6cqw,24px);padding:6px clamp(18px,5cqw,30px);background:#e60012;color:#fff;transform:skewX(-10deg);font-size:clamp(24px,7cqw,42px);
+  text-shadow:none;box-shadow:5px 5px 0 #111}
+.p3n.d3 .p3n-t em{color:#ffe100}
+.p3n.d3 .p3n-pt .w,.p3n.d3 .p3n-pt .n{color:#e60012;
+  text-shadow:3px 0 0 #111,-3px 0 0 #111,0 3px 0 #111,0 -3px 0 #111,2px 2px 0 #111,-2px 2px 0 #111,2px -2px 0 #111,-2px -2px 0 #111,0 8px 0 #111}
+.p3n.d3 .p3n-burst{background:#fff;width:1.12em}
+.p3n.d3 .p3n-tag{background:#111;color:#ffe100;box-shadow:none;border-radius:50%;padding:10px 8px}
+.p3n.d3 .p3n-bot{background:#111;color:#ffe100;font-style:normal}
 </style>
 </head>
 <body>
@@ -571,7 +595,6 @@ footer p{margin-top:16px;font-size:12px;color:#d9a89a}
         </p>
         <p class="status" id="status">12月13日（日）0:00 スタート！</p>
       </div>
-      <span class="podium" aria-hidden="true"></span>
     </div>
 
     <div class="cans" aria-hidden="true">
@@ -595,7 +618,7 @@ footer p{margin-top:16px;font-size:12px;color:#d9a89a}
 <section class="sec perk" id="point">
   <div class="wrap">
     <h2 class="shout"><span class="kick">BENEFIT 01</span><span class="big">期間中は<em>全品</em>おトク！</span></h2>
-    <div class="p3n">
+    <div class="p3n d1">
       <p class="p3n-t">お店の商品<em>ぜんぶ</em></p>
       <div class="p3n-main">
         <p class="p3n-pt"><span class="p3n-tag">全<br>品</span><span class="w">ポイント</span><span class="n"><span class="p3n-burst" aria-hidden="true"></span>3</span><span class="w">倍</span></p>

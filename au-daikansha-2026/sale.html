@@ -1129,6 +1129,12 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
 @keyframes zbWobble{0%{transform:rotate(-8deg)}0.89%{transform:rotate(-18deg) translateX(-6px)}2.68%{transform:rotate(2deg) translateX(6px)}4.46%{transform:rotate(-16deg) translateX(-5px)}6.25%{transform:rotate(0deg) translateX(5px)}8.04%{transform:rotate(-13deg) translateX(-3px)}9.82%{transform:rotate(-4deg) translateX(3px)}10.71%{transform:rotate(-8deg)}100%{transform:rotate(-8deg)}}
 .p3n-pt .lc .zb{opacity:1;transform:rotate(-8deg);transform-origin:50% 90%;animation:zbWobble 11.2s 1s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.p3n-pt .lc .zb{animation:none}}
+
+/* クーポンの「先着」を黒に／お店へ の見出しを大きく・改行 */
+.tk .cnt i{background:#111!important;color:#fff!important}
+.tk .cnt span,.tk .cnt span b{color:#111!important}
+.shop .shout .shop-ttl{font-size:clamp(36px,10.4cqw,64px);line-height:1.3}
+.shop .shout .shop-ttl em{display:inline-block;font-size:1.25em}
 </style>
 </head>
 <body>
@@ -1493,7 +1499,7 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
 
 <section class="shop">
   <div class="wrap">
-    <h2 class="shout"><span class="big">ほかの商品も<em>ポイント3倍</em>！</span></h2>
+    <h2 class="shout"><span class="big shop-ttl">ほかの商品も<br><em>ポイント3倍！</em></span></h2>
     <a class="btn" href="/user/39744535" target="_blank" rel="noopener">お店のトップを見る</a>
   </div>
 </section>

@@ -1124,6 +1124,11 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
 .km.m4 .km-ttl{animation:m4ShakeL3 23.2s linear infinite}
 .km.m4 .km-bolt{animation:m4BoltL3 23.2s linear infinite}
 @media(prefers-reduced-motion:reduce){.km.m4 .km-main span,.km.m4 .km-flash,.km.m4 .km-ttl,.km.m4 .km-bolt{animation:none!important}}
+
+/* 「ぜんぶ」：左右に3回ゆらゆら → 10秒休み → くり返し（2026-11-26） */
+@keyframes zbWobble{0%{transform:rotate(-8deg)}0.89%{transform:rotate(-18deg) translateX(-6px)}2.68%{transform:rotate(2deg) translateX(6px)}4.46%{transform:rotate(-16deg) translateX(-5px)}6.25%{transform:rotate(0deg) translateX(5px)}8.04%{transform:rotate(-13deg) translateX(-3px)}9.82%{transform:rotate(-4deg) translateX(3px)}10.71%{transform:rotate(-8deg)}100%{transform:rotate(-8deg)}}
+.p3n-pt .lc .zb{opacity:1;transform:rotate(-8deg);transform-origin:50% 90%;animation:zbWobble 11.2s 1s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.p3n-pt .lc .zb{animation:none}}
 </style>
 </head>
 <body>

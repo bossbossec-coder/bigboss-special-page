@@ -1365,6 +1365,17 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
 .km.k1.n1.p2.g3 .km-main .c1{animation:kamiFlip 5s ease-in-out infinite!important}
 @keyframes kamiFlip{0%,70%,100%{transform:perspective(400px) rotateY(0)}85%{transform:perspective(400px) rotateY(360deg) scale(1.1)}}
 @media(prefers-reduced-motion:reduce){.km.k1.n1.p2 .km-main .c1{animation:none!important}}
+
+/* 「神」の動きは中の <i class="mv"> に付ける（外の span には !important の transform があり動かないため） */
+.km-main .c1 .mv{display:inline-block;font-style:normal;transform-origin:50% 55%}
+.km.k1.n1.p2.g1 .km-main .c1,.km.k1.n1.p2.g2 .km-main .c1,.km.k1.n1.p2.g3 .km-main .c1{animation:none!important}
+.km.k1.n1.p2.g1 .km-main .c1 .mv{animation:kamiGlow2 2.4s ease-in-out infinite}
+@keyframes kamiGlow2{0%,100%{filter:drop-shadow(0 0 0 #fff0)}50%{filter:drop-shadow(0 0 6px #fff) drop-shadow(0 0 16px #ffe100) drop-shadow(0 0 28px #ffe100)}}
+.km.k1.n1.p2.g2 .km-main .c1 .mv{animation:kamiBeat 4s ease-in-out infinite}
+.km.k1.n1.p2.g3 .km-main .c1{perspective:400px}
+.km.k1.n1.p2.g3 .km-main .c1 .mv{animation:kamiFlip2 5s ease-in-out infinite}
+@keyframes kamiFlip2{0%,70%,100%{transform:rotateY(0)}85%{transform:rotateY(360deg) scale(1.1)}}
+@media(prefers-reduced-motion:reduce){.km-main .c1 .mv{animation:none!important}}
 </style>
 </head>
 <body>
@@ -1529,7 +1540,7 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
       <svg class="km-laurel-def" width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="lgGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".35" stop-color="#f2c230"/><stop offset=".6" stop-color="#b8780a"/><stop offset="1" stop-color="#ffe17a"/></linearGradient><symbol id="laurel" viewBox="0 0 120 260"><path d="M96 252 Q-4 150 78 8" fill="none" stroke="url(#lgGold)" stroke-width="4" stroke-linecap="round"/><g fill="url(#lgGold)" stroke="#7a4a00" stroke-width=".8"><ellipse cx="74.1" cy="237.5" rx="14.7" ry="5.9" transform="rotate(-168 74.1 237.5)"/><ellipse cx="84.2" cy="228.9" rx="14.7" ry="5.9" transform="rotate(-92 84.2 228.9)"/><ellipse cx="60.2" cy="217.3" rx="14.2" ry="5.7" transform="rotate(-162 60.2 217.3)"/><ellipse cx="70.8" cy="210.1" rx="14.2" ry="5.7" transform="rotate(-86 70.8 210.1)"/><ellipse cx="49.4" cy="196.4" rx="13.7" ry="5.5" transform="rotate(-155 49.4 196.4)"/><ellipse cx="60.4" cy="190.9" rx="13.7" ry="5.5" transform="rotate(-79 60.4 190.9)"/><ellipse cx="41.6" cy="175.0" rx="13.3" ry="5.3" transform="rotate(-147 41.6 175.0)"/><ellipse cx="53.0" cy="171.1" rx="13.3" ry="5.3" transform="rotate(-71 53.0 171.1)"/><ellipse cx="37.0" cy="153.1" rx="12.8" ry="5.1" transform="rotate(-139 37.0 153.1)"/><ellipse cx="48.3" cy="150.9" rx="12.8" ry="5.1" transform="rotate(-63 48.3 150.9)"/><ellipse cx="35.4" cy="130.8" rx="12.3" ry="4.9" transform="rotate(-131 35.4 130.8)"/><ellipse cx="46.5" cy="130.1" rx="12.3" ry="4.9" transform="rotate(-55 46.5 130.1)"/><ellipse cx="36.7" cy="108.0" rx="11.9" ry="4.7" transform="rotate(-124 36.7 108.0)"/><ellipse cx="47.4" cy="108.8" rx="11.9" ry="4.7" transform="rotate(-48 47.4 108.8)"/><ellipse cx="40.9" cy="84.8" rx="11.4" ry="4.6" transform="rotate(-117 40.9 84.8)"/><ellipse cx="51.0" cy="86.7" rx="11.4" ry="4.6" transform="rotate(-41 51.0 86.7)"/><ellipse cx="47.9" cy="61.1" rx="10.9" ry="4.4" transform="rotate(-111 47.9 61.1)"/><ellipse cx="57.3" cy="64.0" rx="10.9" ry="4.4" transform="rotate(-35 57.3 64.0)"/><ellipse cx="57.8" cy="36.9" rx="10.4" ry="4.2" transform="rotate(-105 57.8 36.9)"/><ellipse cx="66.5" cy="40.5" rx="10.4" ry="4.2" transform="rotate(-29 66.5 40.5)"/><ellipse cx="70.5" cy="12.1" rx="10.0" ry="4.0" transform="rotate(-100 70.5 12.1)"/><ellipse cx="78.4" cy="16.3" rx="10.0" ry="4.0" transform="rotate(-24 78.4 16.3)"/><ellipse cx="79.4" cy="2.8" rx="6" ry="12" transform="rotate(30 79.4 2.8)"/></g></symbol></defs></svg><svg class="km-laurel l" viewBox="0 0 120 260" aria-hidden="true"><use href="#laurel"/></svg><svg class="km-laurel r" viewBox="0 0 120 260" aria-hidden="true"><use href="#laurel"/></svg><span class="km-crown" aria-hidden="true"></span><span class="km-tail l" aria-hidden="true"></span><span class="km-tail r" aria-hidden="true"></span>
       <p class="km-lim h1"><span class="rb"><span class="ln">LIMITED EDITION</span><span class="t">数量<b>100</b>本限定</span></span></p>
       <p class="km-sub">大感謝祭プライス</p>
-      <h2 class="km-main"><span class="c1">神</span><span class="c2">価</span><span class="c3">格</span><i class="km-shine" aria-hidden="true"></i></h2>
+      <h2 class="km-main"><span class="c1"><i class="mv">神</i></span><span class="c2">価</span><span class="c3">格</span><i class="km-shine" aria-hidden="true"></i></h2>
     </div>
     <div class="km-row1">
       <a class="km-card wide" href="/item/601112947" target="_blank" rel="noopener">

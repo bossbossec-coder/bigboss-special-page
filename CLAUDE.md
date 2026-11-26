@@ -124,3 +124,5 @@ auメルマガ・rakuten_yoru・予約テキスト削除・売上Excelアップ�
   APPLET・ARTICLE・ASIDE・AUDIO・CANVAS・COMMAND・DETAILS・FIELDSET・FIGCAPTION・FIGURE・FRAME・FRAMESET・LABEL・LAYER・LEGEND・
   LISTING・MAIN・MARK・MARQUEE・MENU・MULTICOL・NOEMBED・NOFRAMES・PLAINTEXT・SERVER・TEXTAREA・XMP。
   `<article>`（商品カード50個）と `<aside>`（PC左右の欄）を `<div>` に置き換え済み。新しく書くときもこれらは使わない
+- **画像は au の管理画面で先にアップロードが必要**（2026-11-26 ユーザー）。ユーザーがアップ後に画像のアドレスを知らせてくれるので、
+  `src="img/〇〇.webp"` をそのアドレスに置き換える（ページで使う画像は51点。`premol.webp` は未使用）。au が webp を受け付けない場合は png/jpg に作り直す

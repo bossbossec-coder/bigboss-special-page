@@ -120,3 +120,7 @@ auメルマガ・rakuten_yoru・予約テキスト削除・売上Excelアップ�
   チケット（`a.tk`）そのものをリンクにした。今は全部 `/user/39744535`。`data-coupon="1213-500"` などで日付と金額が分かるので、URL が来たらそこを差し替える
 - ポイント3倍：見出しは「お店の商品」だけ。「ぜんぶ」はオレンジ（`#ff7a00`）で斜めにして「全品」の上へ（`.lc .zb`）。「3」は `58cqw`、「倍」も大きく
 - 限界超価格：どどーん3回のあと、文字に光が走って星が「キラッ」と光る（`.kira` `.star`、3.4秒後）
+- **au の Plus ページで使えないタグ**（使うと閉じタグが消されてレイアウトが崩れる。2026-11-26 に実際に発生）：
+  APPLET・ARTICLE・ASIDE・AUDIO・CANVAS・COMMAND・DETAILS・FIELDSET・FIGCAPTION・FIGURE・FRAME・FRAMESET・LABEL・LAYER・LEGEND・
+  LISTING・MAIN・MARK・MARQUEE・MENU・MULTICOL・NOEMBED・NOFRAMES・PLAINTEXT・SERVER・TEXTAREA・XMP。
+  `<article>`（商品カード50個）と `<aside>`（PC左右の欄）を `<div>` に置き換え済み。新しく書くときもこれらは使わない

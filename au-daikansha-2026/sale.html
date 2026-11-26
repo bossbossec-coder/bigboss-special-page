@@ -1241,6 +1241,49 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
 .km.k1.n1.p4 .km-sub{letter-spacing:.18em}
 .km.k1.n1.p1 .km-sub::before,.km.k1.n1.p1 .km-sub::after{width:22px}
 .km.k1.n1.p4 .km-sub::before,.km.k1.n1.p4 .km-sub::after{width:26px}
+
+/* ===== 神価格 かっこいい6案（.km.k1.n1 に q1〜q6。文字色もそれぞれ変える） ===== */
+.km.k1.n1[class*=" q"] .km-ttl{box-sizing:border-box;max-width:calc(100% - 24px);margin-inline:auto;position:relative}
+.km.k1.n1[class*=" q"] .km-main{font-size:clamp(64px,19cqw,140px);gap:.1em}
+.km.k1.n1[class*=" q"] .km-main span{transform:none!important}
+.km.k1.n1[class*=" q"] .km-sub{white-space:nowrap;border:0;display:flex;align-items:center;justify-content:center;gap:12px;font-size:clamp(17px,5cqw,30px)}
+.km.k1.n1[class*=" q"] .km-sub::before,.km.k1.n1[class*=" q"] .km-sub::after{content:"";width:26px;height:1px;background:currentColor}
+/* q1：プラチナ（銀のクローム文字） */
+.km.k1.n1.q1 .km-ttl{background:linear-gradient(160deg,#1c1c1f,#08080a);border-radius:6px;box-shadow:inset 0 0 0 1px #d9dde3aa,inset 0 0 0 6px #0a0a0c,inset 0 0 0 7px #8d939c55,0 20px 40px #000c}
+.km.k1.n1.q1 .km-sub{color:#d9dde3;letter-spacing:.2em}
+.km.k1.n1.q1 .km-main span{background:#0d0d10!important;border-radius:3px;padding:.02em .08em;box-shadow:inset 0 0 0 1px #c9ced6,0 .08em .2em #000;color:transparent}
+.km.k1.n1.q1 .km-main span{background-image:linear-gradient(180deg,#ffffff 0%,#c9ced6 38%,#6f7680 52%,#e6e9ee 70%,#9aa1ab 100%)!important;-webkit-background-clip:text!important;background-clip:text!important;box-shadow:none;filter:drop-shadow(0 3px 0 #000) drop-shadow(0 0 1px #fff)!important}
+/* q2：赤いネオン（黒地に赤く光る文字） */
+.km.k1.n1.q2 .km-ttl{background:#070707;border-radius:14px;box-shadow:0 0 0 2px #ff2a3a,0 0 24px #ff2a3a66,inset 0 0 30px #ff2a3a22}
+.km.k1.n1.q2 .km-sub{color:#fff;text-shadow:0 0 8px #ff2a3a}
+.km.k1.n1.q2 .km-main span{background:#0b0b0b!important;color:#fff4f4;border-radius:.12em;padding:0 .06em;box-shadow:inset 0 0 0 .04em #ff2a3a,0 0 .2em #ff2a3a88;
+  text-shadow:0 0 .06em #fff,0 0 .15em #ff2a3a,0 0 .35em #ff2a3a,0 0 .6em #ff2a3a}
+/* q3：白いタイル×黒文字×赤い差し色（すっきりモダン） */
+.km.k1.n1.q3 .km-ttl{background:#111;border-radius:4px;box-shadow:inset 0 0 0 1px #ffffff55}
+.km.k1.n1.q3 .km-sub{color:#fff;letter-spacing:.24em}
+.km.k1.n1.q3 .km-sub::before,.km.k1.n1.q3 .km-sub::after{background:#e60012!important;height:3px!important}
+.km.k1.n1.q3 .km-main span{background:#fafafa!important;color:#111;border-radius:2px;padding:.02em .08em;box-shadow:0 .1em 0 #e60012,0 .14em .2em #000}
+.km.k1.n1.q3 .km-main .c2{background:#e60012!important;color:#fff;box-shadow:0 .1em 0 #fff,0 .14em .2em #000}
+/* q4：シャンパンゴールド×ネイビー（ホテルの招待状風） */
+.km.k1.n1.q4 .km-ttl{background:radial-gradient(ellipse at 50% 0,#1d2a4d,#0b1226 80%);border-radius:4px;box-shadow:inset 0 0 0 1px #e8d3a0,inset 0 0 0 6px #0b1226,inset 0 0 0 7px #e8d3a066,0 20px 40px #000c}
+.km.k1.n1.q4 .km-sub{color:#e8d3a0;letter-spacing:.24em}
+.km.k1.n1.q4 .km-main span{background:transparent!important;padding:0 .02em;color:transparent;
+  background-image:linear-gradient(180deg,#fff6dc 0%,#ecd8a4 40%,#b89452 60%,#f3e2b5 85%)!important;-webkit-background-clip:text!important;background-clip:text!important;filter:drop-shadow(0 3px 0 #050a18)!important}
+.km.k1.n1.q4 .km-main{gap:.04em}
+.km.k1.n1.q4 .km-main::after{content:"";position:absolute;left:12%;right:12%;bottom:-.08em;height:1px;background:linear-gradient(90deg,transparent,#e8d3a0,transparent)}
+/* q5：エレクトリック（黒×水色の発光・近未来） */
+.km.k1.n1.q5 .km-ttl{background:linear-gradient(180deg,#05080c,#0a1018);border-radius:6px;clip-path:polygon(18px 0,100% 0,100% calc(100% - 18px),calc(100% - 18px) 100%,0 100%,0 18px);box-shadow:inset 0 0 0 2px #29e3ff}
+.km.k1.n1.q5 .km-sub{color:#29e3ff;letter-spacing:.2em}
+.km.k1.n1.q5 .km-main span{background:#06090d!important;color:#e8fdff;border-radius:2px;padding:0 .06em;box-shadow:inset 0 0 0 .03em #29e3ff,0 0 .18em #29e3ff66;
+  text-shadow:0 0 .08em #29e3ff,0 0 .25em #29e3ff,0 .04em 0 #0a5d6b}
+/* q6：赤いタイル×白文字×黒ふち（力強い） */
+.km.k1.n1.q6 .km-ttl{background:#111;border-radius:16px;box-shadow:0 0 0 3px #fff,0 0 0 7px #111,0 0 0 8px #ffffff66}
+.km.k1.n1.q6 .km-sub{color:#fff}
+.km.k1.n1.q6 .km-main span{background:linear-gradient(180deg,#ff3a3a,#d40f19 55%,#a00a12)!important;color:#fff;border-radius:.12em;padding:0 .06em;
+  box-shadow:inset 0 .04em 0 #ff8a8a,0 .08em 0 #5e0208,0 .12em .15em #000a;text-shadow:3px 0 0 #111,-3px 0 0 #111,0 3px 0 #111,0 -3px 0 #111,2px 2px 0 #111,-2px 2px 0 #111,2px -2px 0 #111,-2px -2px 0 #111,0 6px 0 #111}
+
+.km.k1.n1.q4 .km-main span{box-shadow:none!important}
+.km.k1.n1.q2 .km-main span{text-shadow:0 0 .04em #fff,0 0 .12em #ff2a3a,0 0 .28em #ff2a3a;color:#ffe9ea}
 </style>
 </head>
 <body>

@@ -1040,6 +1040,35 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
 .km-lim::before{left:-30px}
 .km-lim::after{right:-30px;transform:scaleX(-1)}
 .km-lim .rb b{color:#ffe48a;text-shadow:0 2px 0 #5e0208}
+
+/* ===== 数量100本限定：見せ方 3案（.km-lim に l1 / l2 / l3。クラスなし＝赤いリボン） ===== */
+/* l1：金の額縁（黒地・金の二重線・角飾り） */
+.km-lim.l1::before,.km-lim.l1::after{display:none}
+.km-lim.l1 .rb{clip-path:none!important;padding:12px 34px 14px!important;background:#0e0b07!important;color:#ffe9a0;letter-spacing:.12em;
+  box-shadow:inset 0 0 0 2px #e9c46a,inset 0 0 0 6px #0e0b07,inset 0 0 0 7px #a8792a,0 0 18px #ffcf5a55!important}
+.km-lim.l1 .rb::before,.km-lim.l1 .rb::after{content:"\25C6";position:absolute;top:50%;transform:translateY(-50%);color:#e9c46a;font-size:14px}
+.km-lim.l1 .rb::before{left:12px}.km-lim.l1 .rb::after{right:12px}
+.km-lim.l1 .rb b{color:#fff;text-shadow:0 0 10px #ffcf5a}
+/* l2：金の札（金地・赤文字・左右に房飾り） */
+.km-lim.l2::before,.km-lim.l2::after{display:none}
+.km-lim.l2 .rb{clip-path:none!important;border-radius:6px!important;padding:10px 40px 12px!important;
+  background:linear-gradient(180deg,#fff4cf,#f2cd6b 40%,#c8962e 60%,#ffe9a0)!important;color:#7c0910;
+  box-shadow:inset 0 0 0 2px #fff6d6,inset 0 0 0 4px #8a5a14,0 6px 14px #000a!important}
+.km-lim.l2 .rb b{color:#c8102e;text-shadow:0 2px 0 #fff6d6}
+.km-lim.l2 .rb::before,.km-lim.l2 .rb::after{content:"";position:absolute;top:100%;width:10px;height:34px;background:linear-gradient(90deg,#8e0710,#e3242b,#8e0710);border-radius:0 0 5px 5px}
+.km-lim.l2 .rb::before{left:14px}.km-lim.l2 .rb::after{right:14px}
+.km-lim.l2 .rb{overflow:visible}
+.km-lim.l2{margin-bottom:22px}
+.km-lim.l2 .rb::before,.km-lim.l2 .rb::after{height:22px}
+/* l3：紅白の水引リボン（赤い帯に金の結び目） */
+.km-lim.l3::before,.km-lim.l3::after{display:none}
+.km-lim.l3 .rb{clip-path:none!important;border-radius:0!important;padding:10px 70px 12px!important;color:#fff;
+  background:linear-gradient(180deg,#e3242b,#9a0911)!important;box-shadow:0 3px 0 #ffd65a,0 -3px 0 #ffd65a,0 8px 14px #000a!important}
+.km-lim.l3 .rb::before,.km-lim.l3 .rb::after{content:"";position:absolute;top:50%;width:46px;height:46px;transform:translateY(-50%);
+  background:radial-gradient(circle at 50% 50%,#ffe48a 0 7px,transparent 7.5px),conic-gradient(from 45deg,#ffd65a 0 25%,#b8862a 0 50%,#ffd65a 0 75%,#b8862a 0);
+  clip-path:polygon(50% 50%,0 0,0 100%,50% 50%,100% 0,100% 100%);filter:drop-shadow(0 2px 3px #0008)}
+.km-lim.l3 .rb::before{left:10px}.km-lim.l3 .rb::after{right:10px}
+.km-lim.l3 .rb b{color:#ffe48a}
 </style>
 </head>
 <body>

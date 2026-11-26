@@ -879,6 +879,35 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
   animation:kmGold 3s linear infinite,kmPulse 2.4s ease-in-out infinite}
 @keyframes kmGold{from{background-position:120% 0}to{background-position:-120% 0}}
 .km.k1 .km-main{overflow:visible}
+
+/* ===== 神価格の動き 追加3案（.km.k1 に m4 / m5 / m6 を足す） ===== */
+.km-flash{position:absolute;inset:0;z-index:5;pointer-events:none;background:#fff;opacity:0}
+/* m4：雷がドーン（画面が光って文字が落ちてくる） */
+.km.m4 .km-main span{animation:kmGold 3s linear infinite,m4Drop 4s cubic-bezier(.5,0,.75,0) infinite}
+.km.m4 .km-main .c2{animation-delay:0s,.12s}.km.m4 .km-main .c3{animation-delay:0s,.24s}
+@keyframes m4Drop{0%{opacity:0;transform:translateY(-120%) scale(1.4)}12%{opacity:1;transform:translateY(0) scale(1)}16%{transform:translateY(0) scale(1.12,.86)}22%,100%{opacity:1;transform:none}}
+.km.m4 .km-flash{animation:m4Flash 4s linear infinite}
+@keyframes m4Flash{0%,13%{opacity:0}14%{opacity:.85}17%{opacity:0}19%{opacity:.5}23%,100%{opacity:0}}
+.km.m4 .km-ttl{animation:m4Shake 4s linear infinite}
+@keyframes m4Shake{0%,14%,30%,100%{transform:none}16%{transform:translate(-8px,6px)}19%{transform:translate(7px,-5px)}22%{transform:translate(-4px,3px)}25%{transform:translate(2px,-2px)}}
+.km.m4 .km-bolt{position:absolute;top:-10%;width:40px;height:120%;z-index:4;opacity:0;background:linear-gradient(#fff,#ffe48a);
+  clip-path:polygon(55% 0,25% 48%,48% 48%,20% 100%,80% 40%,55% 40%,80% 0);filter:drop-shadow(0 0 10px #ffd65a);animation:m4Bolt 4s linear infinite}
+.km.m4 .km-bolt.b1{left:6%}.km.m4 .km-bolt.b2{right:6%;animation-delay:.08s}
+@keyframes m4Bolt{0%,12%{opacity:0}13%,18%{opacity:1}21%,100%{opacity:0}}
+.km-bolt{display:none}.km.m4 .km-bolt{display:block}
+/* m5：判子がバン！（1文字ずつ押されて金の輪が広がる） */
+.km.m5 .km-main span{position:relative;animation:kmGold 3s linear infinite,m5Stamp 3.6s ease-out infinite}
+.km.m5 .km-main .c2{animation-delay:0s,.35s}.km.m5 .km-main .c3{animation-delay:0s,.7s}
+@keyframes m5Stamp{0%{opacity:0;transform:scale(2.6) rotate(-12deg)}10%{opacity:1;transform:scale(.9) rotate(0)}14%{transform:scale(1.06)}18%,100%{opacity:1;transform:none}}
+.km.m5 .km-main::after{content:"";position:absolute;left:50%;top:50%;width:60%;aspect-ratio:1;border-radius:50%;border:6px solid #ffd65a;transform:translate(-50%,-50%) scale(0);opacity:0;animation:m5Ring 3.6s .75s ease-out infinite;pointer-events:none}
+@keyframes m5Ring{0%{transform:translate(-50%,-50%) scale(.2);opacity:1}25%{transform:translate(-50%,-50%) scale(2.2);opacity:0}100%{opacity:0}}
+/* m6：金のコインのようにくるっと回る */
+.km.m6 .km-main{perspective:600px}
+.km.m6 .km-main span{animation:kmGold 3s linear infinite,m6Flip 3.6s ease-in-out infinite}
+.km.m6 .km-main .c2{animation-delay:0s,.25s}.km.m6 .km-main .c3{animation-delay:0s,.5s}
+@keyframes m6Flip{0%,40%,100%{transform:rotateY(0)}20%{transform:rotateY(360deg) scale(1.12)}}
+.km.m6 .km-fx i{animation-duration:1.6s}
+@media(prefers-reduced-motion:reduce){.km-flash,.km-bolt,.km-main::after{display:none}}
 /* ===== あげちゃうキャンペーン②：カレー（#curry） ===== */
 .cr{position:relative;overflow:hidden;text-align:center;background:#ff8a00 repeating-conic-gradient(from 0deg at 50% 20%,#ffa31a 0 7deg,#ff8a00 7deg 15deg);color:#2a0d0d}
 .cr-en{font-family:Archivo,sans-serif;font-stretch:125%;font-weight:900;font-size:clamp(44px,12.4cqw,100px);line-height:1;color:transparent;-webkit-text-stroke:2px #fff;white-space:nowrap}
@@ -1055,7 +1084,9 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
 <section class="sec km k1" id="kami">
   <div class="km-fx" aria-hidden="true"><span class="km-halo"></span><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <div class="wrap">
+    <span class="km-flash" aria-hidden="true"></span>
     <div class="km-ttl">
+      <i class="km-bolt b1" aria-hidden="true"></i><i class="km-bolt b2" aria-hidden="true"></i>
       <p class="km-lim"><span>数量<b>100</b>本限定</span></p>
       <p class="km-sub">大感謝祭プライス</p>
       <h2 class="km-main"><span class="c1">神</span><span class="c2">価</span><span class="c3">格</span><i class="km-shine" aria-hidden="true"></i></h2>

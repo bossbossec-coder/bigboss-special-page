@@ -1196,6 +1196,51 @@ a.tk:hover{transform:translateY(-2px);box-shadow:0 6px 14px #0006}
 .km.k1.n6 .km-sub::before,.km.k1.n6 .km-sub::after{content:"\25C0\25C0\25C0";font-size:.45em;color:#ffe100;letter-spacing:2px}
 .km.k1.n6 .km-sub::after{content:"\25B6\25B6\25B6"}
 .km.k1.n6 .km-main::after{content:"";position:absolute;left:8%;right:8%;bottom:-.04em;height:.08em;background:#ffe100;transform:skewX(-12deg)}
+
+/* ===== 神価格 A-1 改良案（.km.k1.n1 に p1〜p4） ===== */
+/* 共通：パネルの四隅にかぎ型の飾り */
+.km.k1.n1[class*=" p"] .km-ttl{position:relative}
+.km.k1.n1[class*=" p"] .km-ttl::before,.km.k1.n1[class*=" p"] .km-ttl::after{content:"";position:absolute;width:26px;height:26px;border:3px solid #ffe100;pointer-events:none}
+.km.k1.n1[class*=" p"] .km-ttl::before{left:-10px;top:-10px;border-right:0;border-bottom:0}
+.km.k1.n1[class*=" p"] .km-ttl::after{right:-10px;bottom:-10px;border-left:0;border-top:0}
+/* p1：立体の黄色タイル（面取り）＋細い二重線 */
+.km.k1.n1.p1 .km-ttl{box-shadow:0 0 0 2px #ffe100,0 0 0 7px #151515,0 0 0 8px #ffe100}
+.km.k1.n1.p1 .km-main span{transform:none!important;border-radius:.1em;background:linear-gradient(180deg,#fff27a,#ffe100 45%,#e6c800)!important;
+  box-shadow:inset 0 .04em 0 #fff8b0,inset 0 -.05em 0 #b39b00,0 .07em 0 #8a7700,0 .12em .12em #000a}
+.km.k1.n1.p1 .km-sub{border:0;display:flex;align-items:center;justify-content:center;gap:12px}
+.km.k1.n1.p1 .km-sub::before,.km.k1.n1.p1 .km-sub::after{content:"";width:34px;height:2px;background:#ffe100}
+/* p2：黒いタイルに黄色い文字と縁（光る） */
+.km.k1.n1.p2 .km-main span{transform:none!important;background:#0c0c0c!important;color:#ffe100;border-radius:.12em;
+  box-shadow:inset 0 0 0 .04em #ffe100,0 0 .18em #ffe10066;text-shadow:0 0 .12em #ffe10088}
+.km.k1.n1.p2 .km-main .c2{transform:translateY(-.08em)!important}
+.km.k1.n1.p2 .km-sub{color:#ffe100;border-color:#ffe10055}
+/* p3：黄色タイルに光が走る（CSS だけの動き・6秒ごと） */
+.km.k1.n1.p3 .km-main span{position:relative;overflow:hidden;transform:none!important;border-radius:.1em}
+.km.k1.n1.p3 .km-main span::after{content:"";position:absolute;top:-20%;bottom:-20%;left:-60%;width:35%;transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,#ffffffcc,transparent);animation:p3Shine 6s ease-in-out infinite}
+.km.k1.n1.p3 .km-main .c2::after{animation-delay:.15s}.km.k1.n1.p3 .km-main .c3::after{animation-delay:.3s}
+@keyframes p3Shine{0%,70%{left:-60%}85%,100%{left:130%}}
+.km.k1.n1.p3 .km-ttl{box-shadow:0 0 0 3px #ffe100,0 0 30px #ffe10033}
+@media(prefers-reduced-motion:reduce){.km.k1.n1.p3 .km-main span::after{animation:none}}
+/* p4：高級感・かっこいい（マットな黒・細い黄色の線・彫り込み文字） */
+.km.k1.n1.p4 .km-ttl{background:linear-gradient(160deg,#1d1d1d,#090909);border-radius:4px;padding:26px 22px 28px;
+  box-shadow:inset 0 0 0 1px #ffe10099,inset 0 0 0 6px #090909,inset 0 0 0 7px #ffe10044,0 20px 40px #000c}
+.km.k1.n1.p4 .km-ttl::before,.km.k1.n1.p4 .km-ttl::after{width:40px;height:40px;border-width:1px}
+.km.k1.n1.p4 .km-ttl::before{left:8px;top:8px}.km.k1.n1.p4 .km-ttl::after{right:8px;bottom:8px}
+.km.k1.n1.p4 .km-sub{border:0;color:#ffe100;letter-spacing:.3em;font-size:clamp(18px,5cqw,30px);display:flex;align-items:center;justify-content:center;gap:14px}
+.km.k1.n1.p4 .km-sub::before,.km.k1.n1.p4 .km-sub::after{content:"";width:40px;height:1px;background:#ffe100}
+.km.k1.n1.p4 .km-main{gap:.12em}
+.km.k1.n1.p4 .km-main span{transform:none!important;background:#0b0b0b!important;color:#ffe100;border-radius:2px;padding:.02em .08em;
+  box-shadow:inset 0 0 0 1px #ffe100aa,inset 0 0 0 .07em #0b0b0b,inset 0 0 0 calc(.07em + 1px) #ffe10055,0 .08em .2em #000;
+  text-shadow:0 -1px 0 #000,0 1px 0 #fff8a0,0 0 .2em #ffe10044}
+
+.km.k1.n1[class*=" p"] .km-ttl{box-sizing:border-box;max-width:calc(100% - 24px);margin-inline:auto}
+.km.k1.n1[class*=" p"] .km-main{font-size:clamp(64px,19cqw,140px)}
+.km.k1.n1[class*=" p"] .km-sub{white-space:nowrap}
+.km.k1.n1.p1 .km-sub,.km.k1.n1.p4 .km-sub{font-size:clamp(17px,5cqw,30px)}
+.km.k1.n1.p4 .km-sub{letter-spacing:.18em}
+.km.k1.n1.p1 .km-sub::before,.km.k1.n1.p1 .km-sub::after{width:22px}
+.km.k1.n1.p4 .km-sub::before,.km.k1.n1.p4 .km-sub::after{width:26px}
 </style>
 </head>
 <body>

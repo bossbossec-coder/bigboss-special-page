@@ -201,4 +201,4 @@ auメルマガ・rakuten_yoru・予約テキスト削除・売上Excelアップ�
 - 2026-11-27：ポイント3倍の下に au のイベントバナー2つ（1行2コマ、`.evbn`）：三太郎の日 `/event/3taro`（`img/bn-3taro.jpg`）・
   お買い物ラリー `/feature/okaimonorally`（`img/bn-okaimonorally.jpg`）。
   アウトレットの並びは 1段目 麦とホップ350・ゴールドスター350／2段目 麦とホップ500・ゴールドスター500。
-  クーポン見出しの上に「ポンタパス会員限定」の白い札（`.cp .shout .ponta`）
+  クーポン見出しの上に「Pontaパス会員限定」の白い札（`.cp .shout .ponta`。「ポンタ」ではなく「Ponta」と書く）

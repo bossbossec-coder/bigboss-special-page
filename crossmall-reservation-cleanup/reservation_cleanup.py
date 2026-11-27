@@ -427,8 +427,10 @@ def edit_one(page, idx, kind, dates, dry_run):
             pass
 
 
-def process_shop(page, shop, dates, dry_run, errors, name_search=False):
+def process_shop(page, shop, dates, dry_run, errors, name_search=False, au_codes=None):
+    """au_codes: Wowma系の店舗で名前を直せた商品の商品コードを集める集合(翌日以降のau再送信用)"""
     sid, name, kind = shop
+    codes = au_codes if kind == "wowma" else None
     logging.info("=== %s (%s) ===", name, sid)
     switch_shop(page, sid)
     updated = 0
@@ -451,7 +453,7 @@ def process_shop(page, shop, dates, dry_run, errors, name_search=False):
         set_conditions(page, "", True)
         n = search(page)
         logging.info("%s 検索(Mark有): %d件", name, n)
-        updated += run_items(page, n, kind, dates, dry_run, errors, name)
+        updated += run_items(page, n, kind, dates, dry_run, errors, name, codes=codes)
         if name_search:
             # 楽天側はもう消えていて、この店舗にだけ残っている予約テキストを拾う(さかのぼり用)。
             # 店舗商品名を日付(例 2026年11月15日)で検索し、Markを付けてから名前を直す。
@@ -466,7 +468,7 @@ def process_shop(page, shop, dates, dry_run, errors, name_search=False):
                     tick_marks_and_update(page)
                     set_conditions(page, key, False)
                     n = search(page)
-                updated += run_items(page, n, kind, dates, dry_run, errors, name)
+                updated += run_items(page, n, kind, dates, dry_run, errors, name, codes=codes)
     return updated
 
 
@@ -632,6 +634,93 @@ def shipping_job(page, dates, dry_run, errors, only=None):
     return total
 
 
+# ---------------------------------------------------------------- au(Wowma)への再送信
+# au側でタイムセール中の商品は、出品処理を送っても弾かれる。タイムセールは23:59に終わるので、
+# 予約テキストを消したWowma系の商品を記録しておき、翌日以降の深夜(0:30)にWowma系の店舗だけへ
+# 送り直す(決まった日数だけ)。成功したかは画面で判定できないため、日数で打ち切る。
+AU_SHOPS = [("8014", "Wowma"), ("9365", "Wowma2店舗目")]
+AU_RESEND_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "au_resend.json")
+
+CLEAR_ALL_CONDITIONS_JS = """(() => {
+    const nameEl = document.getElementById('item_name');
+    const root = (nameEl && nameEl.form) || document;
+    const fire = el => el.dispatchEvent(new Event('change', {bubbles: true}));
+    root.querySelectorAll('input,select,textarea').forEach(el => {
+        const key = el.id || el.name || '';
+        if (key === 'shop_id') return;
+        if (el.closest('[class*="x-grid"]') || el.classList.contains('chk_mark')) return;
+        const type = (el.type || '').toLowerCase();
+        if (['hidden', 'button', 'submit', 'reset', 'radio', 'image'].includes(type)) return;
+        if (el.tagName === 'SELECT') {
+            if (el.value !== '' && [...el.options].some(o => o.value === '')) { el.value = ''; fire(el); }
+            return;
+        }
+        if (type === 'checkbox') { if (el.checked) { el.checked = false; fire(el); } return; }
+        if (el.value) { el.value = ''; fire(el); }
+    });
+})()"""
+
+
+def load_au_resend():
+    try:
+        with open(AU_RESEND_FILE, encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+    except Exception as e:
+        logging.warning("au再送信の記録が読めません(%s)。空として扱います", e)
+        return {}
+
+
+def save_au_resend(data):
+    tmp = AU_RESEND_FILE + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=1, sort_keys=True)
+    os.replace(tmp, AU_RESEND_FILE)
+
+
+def record_au_resend(codes, today):
+    """予約テキストを消したWowma系の商品を、翌日以降の再送信の対象として記録する。"""
+    data = load_au_resend()
+    for c in sorted(codes):
+        data[c] = {"added": today.isoformat(), "sent": 0}
+    save_au_resend(data)
+    logging.info("au再送信の対象に記録: %d件 %s", len(codes), sorted(codes))
+
+
+def au_resend(page, today, days, dry_run):
+    """記録した商品のうち、前日以前に記録したものを、Wowma系の店舗だけに送り直す。
+    days 回送ったら記録から外す。戻り値: 送り直した商品の数。"""
+    data = load_au_resend()
+    due = sorted(c for c, v in data.items() if v.get("added", "") < today.isoformat() and v.get("sent", 0) < days)
+    logging.info("########## au再送信 (Wowma / Wowma2店舗目) ##########")
+    logging.info("記録 %d件 / 今回の対象 %d件 %s", len(data), len(due), due)
+    if not due:
+        return 0
+    for sid, name in AU_SHOPS:
+        switch_shop(page, sid)
+        for i in range(0, len(due), 50):
+            chunk = due[i:i + 50]
+            page.ev(CLEAR_ALL_CONDITIONS_JS)
+            page.ev("""(()=>{const e=document.getElementById('item_cd_plural'); e.value=%s;
+                e.dispatchEvent(new Event('change',{bubbles:true}));})()""" % json.dumps(",".join(chunk)))
+            n = search(page, zero_wait=20)
+            logging.info("%s 検索(商品コード %d件): %d件", name, len(chunk), n)
+            if n and not dry_run:
+                bulk_upload(page, only_shops=[sid])
+    if dry_run:
+        return len(due)
+    for c in due:
+        data[c]["sent"] = data[c].get("sent", 0) + 1
+        data[c]["last"] = today.isoformat()
+    done = [c for c in due if data[c]["sent"] >= days]
+    for c in done:
+        del data[c]
+    save_au_resend(data)
+    logging.info("au再送信 完了: %d件(%d回送ったため記録から外した: %d件)", len(due), days, len(done))
+    return len(due)
+
+
 def reset_search_form():
     """終了時に、このスクリプトが入れた検索条件を空に戻す。
     クロスモールは最後の検索条件を覚えていて、他の自動化(低在庫予約など)が開いたときにも復元されるため、
@@ -674,6 +763,10 @@ def _main():
     ap.add_argument("--ship-only", action="store_true",
                     help="予約テキストの処理を飛ばし、出荷日表記(+楽天の最強配送)の処理だけ行う")
     ap.add_argument("--only-codes", help="この商品コードだけ処理する(カンマ区切り。テスト用)")
+    ap.add_argument("--au-resend", action="store_true",
+                    help="記録したWowma系の商品を、Wowma・Wowma2店舗目だけに送り直す(深夜0:30の実行用)")
+    ap.add_argument("--au-resend-days", type=int, default=7,
+                    help="au再送信を何日(何回)続けるか(既定7)")
     ap.add_argument("--upload-marked", action="store_true",
                     help="商品名の処理はせず、Markの付いた商品を全店舗に一括出品してからMarkを外す(途中で止まった実行の後始末用)")
     ap.add_argument("--clear-marks-only", action="store_true",
@@ -691,6 +784,21 @@ def _main():
     ship_dates = [today - datetime.timedelta(days=a.ship_offset + i) for i in range(a.days)]
     logging.info("開始 対象発売日: %s 出荷日表記: %s dry_run=%s", [jp_date(d) for d in dates],
                  [ship_text(d) for d in ship_dates], a.dry_run)
+
+    if a.au_resend:
+        try:
+            ensure_chrome()
+            page = find_crossmall_page()
+            open_bulk_page(page)
+            au_resend(page, today, a.au_resend_days, a.dry_run)
+        except LoginRequired:
+            logging.error("ログインが切れています。自動化用Chromeでログインし直してください")
+            return 2
+        except Exception:
+            logging.error("致命的エラー\n%s", traceback.format_exc())
+            return 1
+        logging.info("完了(au再送信)")
+        return 0
 
     if a.clear_marks_only or a.upload_marked:
         try:
@@ -715,6 +823,7 @@ def _main():
 
     only = {c.strip() for c in a.only_codes.split(",") if c.strip()} if a.only_codes else None
     errors, total = [], 0
+    au_codes = set()
     try:
         ensure_chrome()
         page = find_crossmall_page()
@@ -722,7 +831,7 @@ def _main():
         if not a.ship_only:
             for shop in SHOPS:
                 try:
-                    total += process_shop(page, shop, dates, a.dry_run, errors, a.name_search)
+                    total += process_shop(page, shop, dates, a.dry_run, errors, a.name_search, au_codes)
                 except LoginRequired:
                     raise
                 except Exception as e:
@@ -733,6 +842,8 @@ def _main():
                 set_conditions(page, "", True)
                 logging.info("出品対象 Mark有: %d件", search(page))
                 bulk_upload(page)
+                if au_codes:  # au側がタイムセール中だと弾かれるため、翌日以降の深夜に送り直す
+                    record_au_resend(au_codes, today)
                 if not errors:  # 失敗があった日はMarkを残し、翌日以降に再実行できるようにする
                     clear_marks(page)
                 else:
